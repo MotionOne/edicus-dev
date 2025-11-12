@@ -73,6 +73,12 @@ export function get_project_list(user_id, callback) {
 	callEdicusAPI(url, 'GET', additionalHeaders, {}, callback);
 }
 
+export function get_project_data(user_id, project_id, callback) {
+	const url = server_env.apiHost + '/api/projects/' + project_id;
+	const additionalHeaders = { 'edicus-uid': user_id };
+	callEdicusAPI(url, 'GET', additionalHeaders, {}, callback);
+}
+
 export function clone_project(user_id, project_id, callback) {
 	// Edicus Server API 구글독스 문서 (문서접근에 권한이 필요하니, 바로 열리지 않으면 연락바랍니다.)
 	// https://docs.google.com/document/d/1OhWdgv9Sz8By4N48eY0uO_84M3keLVQvdpdpK9u_3bA/edit#heading=h.12nm233v8th7

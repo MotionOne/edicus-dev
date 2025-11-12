@@ -37,6 +37,7 @@ var editorCtx = null;
 var isProjectOpen = false;
 
 var project_arr = [];
+var project_data = null;
 
 
 // 이 소스파일 끝에서 init()을 호출함.
@@ -55,7 +56,7 @@ function bind_button_events() {
 	$('#btn_user_logout').click(on_user_logout);
 	
 	$('#btn_get_project_list').click(on_get_project_list);
-	$('#select-project-id').change(btn_show_preview_tn);
+	$('#select-project-id').change(on_select_project_id);
 	$('#btn_open_project').click(on_open_project);
 	$('#btn_clone_project').click(on_clone_project);
 	$('#btn_delete_project').click(on_delete_project);
@@ -107,7 +108,10 @@ function on_user_login(event) {
 		update_login_ui(true);
 
 		// 로그인 직후 프로젝트 목록 조회
-		on_get_project_list();
+		on_get_project_list(null, () => {
+			$('#select-project-id').val(project_arr[0].project_id);
+			on_select_project_id();
+		});
 	})
 }
 
@@ -119,7 +123,7 @@ function on_user_logout(event) {
 	update_login_ui(false);
 }
 
-function on_get_project_list(event) {
+function on_get_project_list(event, callback) {
 	server.get_project_list(client_env.uid, function(err, data) {
 		console.log('project list: ', data.projects)
 		project_arr = data.projects;
@@ -132,6 +136,8 @@ function on_get_project_list(event) {
 			$option.attr('value', project.project_id)
 			$('#select-project-id').append($option);
 		})
+
+		callback && callback();
 	})
 }
 
@@ -245,6 +251,74 @@ function on_delete_project() {
 	})    
 }
 
+function on_select_project_id() {
+	var project_id = $('#select-project-id option:selected').val()
+
+	server.get_project_data(client_env.uid, project_id, function(err, data) {
+		console.log('project data: ', data)
+		project_data = data;
+		update_project_data_table();
+	})
+
+	btn_show_preview_tn();
+}
+
+function update_project_data_table() {
+	var $container = $('#project_data_table_container');
+	$container.empty();
+	
+	if (!project_data) {
+		return;
+	}
+	
+	var $table = $('<table></table>');
+	$table.css({
+		'border-collapse': 'collapse',
+		'border': '1px solid #ddd',
+		'width': '100%',
+		'max-width': '800px'
+	});
+	
+	// 테이블 헤더
+	var $thead = $('<thead></thead>');
+	var $headerRow = $('<tr></tr>');
+	['Project ID', 'Order ID', 'Status', 'Title'].forEach(function(header) {
+		var $th = $('<th></th>').text(header);
+		$th.css({
+			'border': '1px solid #ddd',
+			'padding': '8px',
+			'background-color': '#f2f2f2',
+			'text-align': 'left'
+		});
+		$headerRow.append($th);
+	});
+	$thead.append($headerRow);
+	$table.append($thead);
+	
+	// 테이블 바디
+	var $tbody = $('<tbody></tbody>');
+	var $dataRow = $('<tr></tr>');
+	
+	// 데이터 행 추가
+	[
+		project_data.project_id || '-',
+		project_data.order_id || '-',
+		project_data.status || '-',
+		project_data.title || '-'
+	].forEach(function(value) {
+		var $td = $('<td></td>').text(value);
+		$td.css({
+			'border': '1px solid #ddd',
+			'padding': '8px'
+		});
+		$dataRow.append($td);
+	});
+	
+	$tbody.append($dataRow);
+	$table.append($tbody);
+	$container.append($table);
+}
+
 function btn_show_preview_tn() {
 	var project_id = $('#select-project-id option:selected').val()
 	console.log(project_id)
@@ -254,7 +328,7 @@ function btn_show_preview_tn() {
 			console.log(ret)
 			$('#preview_tn_container').empty();
 			ret.urls.forEach(function(url) {
-				var $tn = $('<img src="' + url + '" style="max-width:300px; max-height:300px; padding-right:10px;">')
+				var $tn = $('<img src="' + url + '" style="max-width:300px; max-height:300px; padding-right:10px; border: 1px solid #ddd; ">')
 				$('#preview_tn_container').append($tn);
 			})
 		}
