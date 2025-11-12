@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>Edicus Site Sample</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<script src='https://code.jquery.com/jquery-1.12.4.min.js'></script>
+	<style type='text/css'>
+		body {
+			background-color: #D3D3D3;  
+		}
+
+		.editor-frame {
+			position:relative;
+			margin: 10px;
+			height: 760px;
+			background-color: cyan;
+		}   
+		.line-head {
+			display: inline-block;
+			width: 90px;
+		} 
+	</style>
+</head>
+
+<body>
+	<h3>Edicus Cloud Editor / Site Integration Test</h3>
+	<div style='margin: 10px 0px;'>	
+		<span class='line-head'>Login : </span>
+		<input type='button' id='btn_user_login' value='User Login'>
+		<input type='button' id='btn_staff_login' value='Staff Login (edicus manager에 등록된 계정 로그인)'>		
+	</div>
+	<hr>
+	<div style='margin: 10px 0px;'>	
+		<span class='line-head'>Options :</span>
+	  <label><input id='checkbox_mobile' type='checkbox'>mobile</label>
+	</div>
+	<div style='margin: 10px 0px;'>	
+		<span class='line-head'>Project :</span>
+		<input type='button' id='btn_get_project_list' value='get project list'>
+		<select id='select-project-id' style='height:26px'>
+			<option >select project id here</option>
+		</select>
+		<input type='button' id='btn_open_project' value='open'>
+		<input type='button' id='btn_clone_project' value='clone'>
+		<input type='button' id='btn_delete_project' value='delete'>
+		<span> (프로젝트 선택후 order 또는 delete 가능)</span>
+	</div>		
+	<div style='margin: 10px 0px;'>	
+		<span class='line-head'>Preivew : </span>
+		<input type='button' id='btn_show_preview_tn' value='get preview thumbnail(s)'>
+		<div id='preview_tn_container'></div>
+	</div>
+	<div style='margin: 10px 0px;'>	
+		<span class='line-head'>Order : </span>
+		<input type='button' id='btn_tentative_order_project' value='tentative order'>
+		<input type='button' id='btn_tentative_order_vdp' value='tentative order with vdp-dataset'>
+		<input type='button' id='btn_definitive_order_project' value='definitive order'>
+		<input type='button' id='btn_cancel_order_project' value='cancel order'>
+	</div>		
+	<hr>
+	<div style='margin: 10px 0px;'>
+		<span class='line-head'>상품 생성 : </span>
+		<input type='button' id='btn_create_one'   value='create 명함'>
+	</div>
+	<div style='margin: 10px 0px;'>
+		<span class='line-head'>Editor : </span>
+		<input type='button' id='btn_open_edit_template' value='open edit template'>
+	</div>
+
+	<div style='margin: 10px 0px;'>
+		Log: <span id='action-log'></span>
+	</div>
+
+	<div id='edicus_container' class='editor-frame'>
+	</div>
+
+	<script src='../edicus-sdk-v2.js'></script>	
+	<!-- <script src='server.js'></script> -->
+	<script type="module" src='demo.js'></script>	
+</body>
+
+</html>
