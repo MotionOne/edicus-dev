@@ -42,13 +42,16 @@ var project_arr = [];
 function init() {
 	editorCtx = window.edicusSDK.init({});
 
+	// input 필드에 기본 uid 설정
+	$('#input_user_id').val(client_env.uid);
+
 	bind_button_events();
-	on_user_login(); // 초기에 무조건 로그인 하도록 함.
+	// on_user_login(); // 초기에 무조건 로그인 하도록 함.
 }
 
 function bind_button_events() {
 	$('#btn_user_login').click(on_user_login);
-	$('#btn_staff_login').click(on_staff_login);
+	$('#btn_user_logout').click(on_user_logout);
 	
 	$('#btn_get_project_list').click(on_get_project_list);
 	$('#btn_open_project').click(on_open_project);
@@ -67,6 +70,17 @@ function bind_button_events() {
 }
 
 
+function update_login_ui(is_logged_in) {
+	if (is_logged_in) {
+		$('#logged_user_id').text(client_env.uid);
+		$('#login_status').show();
+		$('#login_form').hide();
+	} else {
+		$('#login_status').hide();
+		$('#login_form').show();
+	}
+}
+
 function on_user_login(event) {
 	/*  
 		고객사 자체 login이 성공하면 uid를 확보하도록 하고, 
@@ -79,28 +93,30 @@ function on_user_login(event) {
 		- 숫자, 알파벳, "-"으로 구성되며, 64자로 제한됩니다.
 	*/
 
+	// input 필드에서 uid 읽어오기
+	var uid = $('#input_user_id').val();
+	if (!uid) {
+		alert('User ID를 입력해주세요.');
+		return;
+	}
+	client_env.uid = uid;
+
 	server.get_custom_token(client_env.uid, function(err, data) {
 		client_env.user_token = data.token;
 		$('#action-log').text('user token received.')
+		update_login_ui(true);
+
+		// 로그인 직후 프로젝트 목록 조회
+		on_get_project_list();
 	})
 }
 
-function on_staff_login(event) {
-	/*  
-		edicus manager에 등록된 계정으로 로그인 합니다.
-		이 uid를 이용해 edicus server로 부터 token을 받으면 edicus 사용 준비가 완료됩니다.
-		이 계정으로 로그인시, edicus editor에서 resource 업데이트가 가능합니다.
-	*/
-
-	var staff_info = {
-		email: "",
-		pwd: ""
-	}
-
-	server.get_custom_token_of_staff(staff_info, function(err, data) {
-		client_env.user_token = data.token;
-		$('#action-log').text('user token received.')
-	})
+function on_user_logout(event) {
+	client_env.uid = null;
+	client_env.user_token = null;
+	$('#input_user_id').val('');
+	$('#action-log').text('logged out.');
+	update_login_ui(false);
 }
 
 function on_get_project_list(event) {

@@ -29,9 +29,16 @@
 <body>
 	<h3>Edicus Cloud Editor / Site Integration Test</h3>
 	<div style='margin: 10px 0px;'>	
+		<!-- 로그인 및 로그아웃 관련 UI -->
 		<span class='line-head'>Login : </span>
-		<input type='button' id='btn_user_login' value='User Login'>
-		<input type='button' id='btn_staff_login' value='Staff Login (edicus manager에 등록된 계정 로그인)'>		
+		<span id='login_status' style='display: none;'>
+			<strong id='logged_user_id'></strong>
+			<input type='button' id='btn_user_logout' value='Logout' style='margin-left: 10px;'>
+		</span>
+		<span id='login_form'>
+			<input type='text' id='input_user_id' value='' placeholder='User ID' style='width: 200px; margin-right: 10px;'>
+			<input type='button' id='btn_user_login' value='Login'>
+		</span>
 	</div>
 	<hr>
 	<div style='margin: 10px 0px;'>	
