@@ -54,6 +54,7 @@ function bind_button_events() {
 	$('#btn_user_logout').click(on_user_logout);
 	
 	$('#btn_get_project_list').click(on_get_project_list);
+	$('#select-project-id').change(btn_show_preview_tn);
 	$('#btn_open_project').click(on_open_project);
 	$('#btn_clone_project').click(on_clone_project);
 	$('#btn_delete_project').click(on_delete_project);
@@ -241,7 +242,7 @@ function btn_show_preview_tn() {
 			console.log(ret)
 			$('#preview_tn_container').empty();
 			ret.urls.forEach(function(url) {
-				var $tn = $('<img src="' + url + '" style="padding-right:10px">')
+				var $tn = $('<img src="' + url + '" style="max-width:300px; max-height:300px; padding-right:10px;">')
 				$('#preview_tn_container').append($tn);
 			})
 		}
