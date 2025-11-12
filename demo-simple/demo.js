@@ -46,7 +46,7 @@ function init() {
 	$('#input_user_id').val(client_env.uid);
 
 	bind_button_events();
-	// on_user_login(); // 초기에 무조건 로그인 하도록 함.
+	on_user_login(); // 초기에 무조건 로그인 하도록 함.
 }
 
 function bind_button_events() {
@@ -198,7 +198,7 @@ function on_clone_project() {
 	var project_id = $('#select-project-id option:selected').val()
 	console.log(project_id)
 
-	if (window.confirm('clone project?') != true)
+	if (window.confirm('프로젝트를 복제하시겠습니까?') != true)
 		return;
 
 	server.clone_project(client_env.uid, project_id, function(result) {
@@ -217,7 +217,7 @@ function on_delete_project() {
 	var project_id = $('#select-project-id option:selected').val()
 	console.log(project_id)
 
-	if (window.confirm('delete project?') != true)
+	if (window.confirm('프로젝트를 삭제하시겠습니까?') != true)
 		return;
 
 	server.delete_project(client_env.uid, project_id, function(err) {
