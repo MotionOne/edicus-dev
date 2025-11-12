@@ -67,8 +67,6 @@ function bind_button_events() {
 	$('#btn_cancel_order_project').click(on_cancel_order_project);
 	
 	$('#btn_create_one').click(on_btn_create_one);
-
-	$('#btn_open_edit_template').click(on_open_edit_template);	
 }
 
 
@@ -282,7 +280,7 @@ function on_tentative_order_project() {
 	}
 	server.tentative_order_project(client_env.uid, project_id, order, function(err) {
 		if (err == null)
-			alert("project " + project_id + " is ordered (tentative order).")
+			alert(`이 잠정 주문 되었습니다. (project_id: ${project_id})`)
 		else {
 			console.log('order failed: ', err);
 			alert("project " + project_id + " order failed. " + err.message)
@@ -297,11 +295,11 @@ function on_tentative_order_with_vdp() {
 	// dataset of "variable data printing" mode
 	var vdp_dataset = {
 		rows: [{
-			cols: [{id:'name', value:'전  지  현'}, {id:'title-role', value:'최강미모'}]
+			cols: [{id:'name', value:'정 진 수'}, {id:'title-role', value:'영업 이사'}]
 		}, {
-			cols: [{id:'name', value:'송  혜  교'}, {id:'title-role', value:'절대지존'}]
+			cols: [{id:'name', value:'이 정 민'}, {id:'title-role', value:'마케팅 부장'}]
 		}, {
-			cols: [{id:'name', value:'김  희  선'}, {id:'title-role', value:'세계최강'}]
+			cols: [{id:'name', value:'김 준 호'}, {id:'title-role', value:'개발 부장'}]
 		}]		
 	}
 	var order = {
@@ -357,35 +355,6 @@ function on_cancel_order_project() {
 		}
 	})    
 }	
-
-function on_open_edit_template(event) {
-	// 프로젝트가 이미 열려있으면 먼저 닫기
-	if (isProjectOpen) {
-		console.log('Closing existing project before opening template editor...')
-		editorCtx.destroy({
-			parent_element: client_env.parent_element
-		})
-		isProjectOpen = false;
-	}
-
-	var params = {
-		parent_element: client_env.parent_element,
-		ps_code: '50x90@NC',
-		template_uri: 'gcs://template/partners/motion1/res/template/269090.json',
-		token: client_env.user_token
-	}
-	editorCtx.edit_template(params, function (err, data) {
-		if (data.action == 'close' || data.action == 'goto-cart') {
-			editorCtx.destroy({
-				parent_element: client_env.parent_element,        
-			})
-			isProjectOpen = false;
-		}
-	})
-	
-	// 프로젝트 열림 상태로 설정
-	isProjectOpen = true;
-}
 
 function create_product(obj) {
 	// 프로젝트가 이미 열려있으면 먼저 닫기
