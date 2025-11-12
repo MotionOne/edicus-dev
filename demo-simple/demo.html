@@ -21,7 +21,7 @@
 		}   
 		.line-head {
 			display: inline-block;
-			width: 90px;
+			width: 110px;
 		} 
 	</style>
 
@@ -53,26 +53,26 @@
 	</div>
 	<div style='margin: 10px 0px;'>	
 		<span class='line-head'>Project :</span>
-		<input type='button' id='btn_get_project_list' value='get project list'>
 		<select id='select-project-id' style='height:26px'>
 			<option >select project id here</option>
 		</select>
-		<input type='button' id='btn_open_project' value='open'>
-		<input type='button' id='btn_clone_project' value='clone'>
-		<input type='button' id='btn_delete_project' value='delete'>
+		<input type='button' id='btn_get_project_list' value='프로젝트 리스트 얻기'>
+		<input type='button' id='btn_open_project' value='열기'>
+		<input type='button' id='btn_clone_project' value='복제'>
+		<input type='button' id='btn_delete_project' value='삭제'>
 		<span> (프로젝트 선택후 order 또는 delete 가능)</span>
 	</div>		
 	<div style='margin: 10px 0px;'>	
-		<span class='line-head'>Preivew : </span>
-		<input type='button' id='btn_show_preview_tn' value='get preview thumbnail(s)'>
-		<div id='preview_tn_container' style="margin-top: 10px; margin-left: 90px;"></div>
+		<span class='line-head'>썸네일  : </span>
+		<input type='button' id='btn_show_preview_tn' value='썸네일 가져오기'>
+		<div id='preview_tn_container' style="margin-top: 10px; margin-left: 110px;"></div>
 	</div>
 	<div style='margin: 10px 0px;'>	
 		<span class='line-head'>Order : </span>
-		<input type='button' id='btn_tentative_order_project' value='tentative order'>
-		<input type='button' id='btn_tentative_order_vdp' value='tentative order with vdp-dataset'>
-		<input type='button' id='btn_definitive_order_project' value='definitive order'>
-		<input type='button' id='btn_cancel_order_project' value='cancel order'>
+		<input type='button' id='btn_tentative_order_project' value='잠정 주문'>
+		<input type='button' id='btn_tentative_order_vdp' value='잠정 주문 (vdp-dataset 포함)'>
+		<input type='button' id='btn_definitive_order_project' value='확정 주문'>
+		<input type='button' id='btn_cancel_order_project' value='주문 취소'>
 	</div>		
 	<hr>
 	<div style='margin: 10px 0px;'>
