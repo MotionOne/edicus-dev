@@ -20,7 +20,7 @@
 */
 
 
-// import { get_custom_token__from_server, get_custom_token_of_staff__from_server, get_project_list__from_server, clone_project__from_server, delete_project__from_server, get_preview_urls__from_server, tentative_order_project__from_server, definitive_order_project__from_server, cancel_order_project__from_server } from './server.js';
+// import { get_custom_token, get_custom_token_of_staff, get_project_list, clone_project, delete_project, get_preview_urls, tentative_order_project, definitive_order_project, cancel_order_project } from './server.js';
 import * as server from './server.js';
 import { client_env_vars } from '../.client-env.js';
 
@@ -79,7 +79,7 @@ function on_user_login(event) {
 		- 숫자, 알파벳, "-"으로 구성되며, 64자로 제한됩니다.
 	*/
 
-	server.get_custom_token__from_server(client_env.uid, function(err, data) {
+	server.get_custom_token(client_env.uid, function(err, data) {
 		client_env.user_token = data.token;
 		$('#action-log').text('user token received.')
 	})
@@ -97,14 +97,14 @@ function on_staff_login(event) {
 		pwd: ""
 	}
 
-	server.get_custom_token_of_staff__from_server(staff_info, function(err, data) {
+	server.get_custom_token_of_staff(staff_info, function(err, data) {
 		client_env.user_token = data.token;
 		$('#action-log').text('user token received.')
 	})
 }
 
 function on_get_project_list(event) {
-	server.get_project_list__from_server(client_env.uid, function(err, data) {
+	server.get_project_list(client_env.uid, function(err, data) {
 		console.log('project list: ', data.projects)
 		project_arr = data.projects;
 		$('#action-log').text('received project list. (브라우저 console창에서 확인하세요)')
@@ -164,7 +164,7 @@ function on_open_project() {
 			/* 참고
 				https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#bookmark=id.ctloxkjukfm
 			*/
-			server.get_custom_token__from_server(client_env.uid, function(err, data) {
+			server.get_custom_token(client_env.uid, function(err, data) {
 				client_env.user_token = data.token;
 				$('#action-log').text('user token received.')
 
@@ -185,7 +185,7 @@ function on_clone_project() {
 	if (window.confirm('clone project?') != true)
 		return;
 
-	server.clone_project__from_server(client_env.uid, project_id, function(result) {
+	server.clone_project(client_env.uid, project_id, function(result) {
 		if (result) {
 			alert("cloned project: " + result.project_id)
 		}
@@ -204,7 +204,7 @@ function on_delete_project() {
 	if (window.confirm('delete project?') != true)
 		return;
 
-	server.delete_project__from_server(client_env.uid, project_id, function(err) {
+	server.delete_project(client_env.uid, project_id, function(err) {
 		if (err == null) {
 			alert('project ' + project_id + ' is deleted.')
 		}
@@ -220,7 +220,7 @@ function btn_show_preview_tn() {
 	var project_id = $('#select-project-id option:selected').val()
 	console.log(project_id)
 
-	server.get_preview_urls__from_server(project_id, function(err, ret) {
+	server.get_preview_urls(project_id, function(err, ret) {
 		if (err == null) {
 			console.log(ret)
 			$('#preview_tn_container').empty();
@@ -249,7 +249,7 @@ function on_tentative_order_project() {
 		partner_order_id: 'test',
 		order_name: 'test'
 	}
-	server.tentative_order_project__from_server(client_env.uid, project_id, order, function(err) {
+	server.tentative_order_project(client_env.uid, project_id, order, function(err) {
 		if (err == null)
 			alert("project " + project_id + " is ordered (tentative order).")
 		else {
@@ -281,7 +281,7 @@ function on_tentative_order_with_vdp() {
 		order_name: 'test',
 		vdp_dataset: vdp_dataset
 	}
-	server.tentative_order_project__from_server(client_env.uid, project_id, order, function(err) {
+	server.tentative_order_project(client_env.uid, project_id, order, function(err) {
 		if (err == null)
 			alert("project " + project_id + " is ordered (tentative order).")
 		else {
@@ -297,7 +297,7 @@ function on_definitive_order_project() {
 	var project_id = $('#select-project-id option:selected').val()
 	console.log(project_id)
 
-	server.definitive_order_project__from_server(client_env.uid, project_id, function(err) {
+	server.definitive_order_project(client_env.uid, project_id, function(err) {
 		if (err == null)
 			alert("project " + project_id + " is ordered. (definitive order)")
 		else {
@@ -317,7 +317,7 @@ function on_cancel_order_project() {
 
 	var project = project_arr.find(function(project) { return project.project_id == project_id })
 
-	server.cancel_order_project__from_server(client_env.uid, project.order_id, function(err) {
+	server.cancel_order_project(client_env.uid, project.order_id, function(err) {
 		if (err == null)
 			alert("order canceled.")
 		else {
@@ -367,7 +367,7 @@ function create_product(obj) {
 		}
 		else if (data.action == 'request-user-token') {
 			// Edicus로 부터 user token요청을 받으면 "send-token" action으로 대응한다.
-			get_custom_token__from_server(client_env.uid, function(err, data) {
+			get_custom_token(client_env.uid, function(err, data) {
 				client_env.user_token = data.token;
 				$('#action-log').text('user token received.')
 

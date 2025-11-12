@@ -45,7 +45,7 @@ function callEdicusAPI(url, method, additionalHeaders = {}, data = {}, callback)
 	});
 }
 
-export function get_custom_token__from_server(user_id, callback) {
+export function get_custom_token(user_id, callback) {
 	// Edicus Server API 구글독스 문서 (문서접근에 권한이 필요하니, 바로 열리지 않으면 연락바랍니다.)
 	// https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#heading=h.lu754uc9u7g
 	const url = server_env.apiHost + '/api/auth/token';
@@ -54,7 +54,7 @@ export function get_custom_token__from_server(user_id, callback) {
 }
 
 
-export function get_custom_token_of_staff__from_server(staff_info, callback) {
+export function get_custom_token_of_staff(staff_info, callback) {
 	// Edicus Server API 구글독스 문서 (문서접근에 권한이 필요하니, 바로 열리지 않으면 연락바랍니다.)
 	// https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#heading=h.5p6krexjtpgi
 	const url = server_env.apiHost + '/api/auth/staff/token';
@@ -65,7 +65,7 @@ export function get_custom_token_of_staff__from_server(staff_info, callback) {
 	callEdicusAPI(url, 'POST', additionalHeaders, {}, callback);
 }
 
-export function get_project_list__from_server(user_id, callback) {
+export function get_project_list(user_id, callback) {
 	// Edicus Server API 구글독스 문서 (문서접근에 권한이 필요하니, 바로 열리지 않으면 연락바랍니다.)
 	// https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#heading=h.gqp5xb7uwjxa    
 	const url = server_env.apiHost + '/api/projects';
@@ -73,7 +73,7 @@ export function get_project_list__from_server(user_id, callback) {
 	callEdicusAPI(url, 'GET', additionalHeaders, {}, callback);
 }
 
-export function clone_project__from_server(user_id, project_id, callback) {
+export function clone_project(user_id, project_id, callback) {
 	// Edicus Server API 구글독스 문서 (문서접근에 권한이 필요하니, 바로 열리지 않으면 연락바랍니다.)
 	// https://docs.google.com/document/d/1OhWdgv9Sz8By4N48eY0uO_84M3keLVQvdpdpK9u_3bA/edit#heading=h.12nm233v8th7
 	const url = server_env.apiHost + '/api/projects/' + project_id + '/clone';
@@ -83,7 +83,7 @@ export function clone_project__from_server(user_id, project_id, callback) {
 	});
 }
 
-export function delete_project__from_server(user_id, project_id, callback) {
+export function delete_project(user_id, project_id, callback) {
 	// Edicus Server API 구글독스 문서 (문서접근에 권한이 필요하니, 바로 열리지 않으면 연락바랍니다.)
 	// https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#heading=h.3uglpt2407ob
 	const url = server_env.apiHost + '/api/projects/' + project_id;
@@ -93,7 +93,7 @@ export function delete_project__from_server(user_id, project_id, callback) {
 	});
 }
 
-export function tentative_order_project__from_server(user_id, project_id, order, callback) {
+export function tentative_order_project(user_id, project_id, order, callback) {
 	console.log(user_id, project_id, order);
 	const url = server_env.apiHost + '/api/projects/' + project_id + '/order/tentative';
 	const additionalHeaders = { 'edicus-uid': user_id };
@@ -102,7 +102,7 @@ export function tentative_order_project__from_server(user_id, project_id, order,
 	});
 }    
 
-export function definitive_order_project__from_server(user_id, project_id, callback) {
+export function definitive_order_project(user_id, project_id, callback) {
 	console.log(user_id, project_id);
 	const url = server_env.apiHost + '/api/projects/' + project_id + '/order/definitive';
 	const additionalHeaders = { 'edicus-uid': user_id };
@@ -111,7 +111,7 @@ export function definitive_order_project__from_server(user_id, project_id, callb
 	});
 }    
 
-export function cancel_order_project__from_server(user_id, order_id, callback) {
+export function cancel_order_project(user_id, order_id, callback) {
 	console.log(user_id, order_id);
 	const url = server_env.apiHost + '/api/orders/' + order_id + '/cancel';
 	const additionalHeaders = { 'edicus-uid': user_id };
@@ -121,7 +121,7 @@ export function cancel_order_project__from_server(user_id, order_id, callback) {
 }    
 
 
-export function get_preview_urls__from_server(project_id, callback) {
+export function get_preview_urls(project_id, callback) {
 	// Edicus Server API 구글독스 문서 (문서접근에 권한이 필요하니, 바로 열리지 않으면 연락바랍니다.)
 	// https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#heading=h.1pl8dok8mgjo
 	const url = server_env.apiHost + '/api/projects/' + project_id + '/preview_urls';
