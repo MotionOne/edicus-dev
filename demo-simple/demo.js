@@ -34,6 +34,7 @@ var client_env = {
 }
 
 var editorCtx = null;
+var isProjectOpen = false;
 
 var project_arr = [];
 
@@ -137,6 +138,15 @@ function on_get_project_list(event) {
 }
 
 function on_open_project() {
+	// 프로젝트가 이미 열려있으면 먼저 닫기
+	if (isProjectOpen) {
+		console.log('Closing existing project before opening new one...')
+		editorCtx.destroy({
+			parent_element: client_env.parent_element
+		})
+		isProjectOpen = false;
+	}
+
 	var project_id = $('#select-project-id option:selected').val()
 	console.log(project_id)
 
@@ -158,6 +168,7 @@ function on_open_project() {
 			editorCtx.destroy({
 				parent_element: client_env.parent_element
 			})
+			isProjectOpen = false;
 		}
 		else if (data.action == 'save-doc-report') {
 			// 저장직후 여러 결과물을 확인 가능. 
@@ -179,7 +190,7 @@ function on_open_project() {
 		else if (data.action == 'request-user-token') {
 			// Edicus로 부터 user token요청을 받으면 "send-token" action으로 대응한다.
 			/* 참고
-				https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#bookmark=id.ctloxkjukfm
+				https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#heading=h.ctloxkjukfm
 			*/
 			server.get_custom_token(client_env.uid, function(err, data) {
 				client_env.user_token = data.token;
@@ -192,7 +203,10 @@ function on_open_project() {
 	
 			})
 		}
-	})		
+	})
+	
+	// 프로젝트 열림 상태로 설정
+	isProjectOpen = true;
 }
 
 function on_clone_project() {
@@ -345,6 +359,15 @@ function on_cancel_order_project() {
 }	
 
 function on_open_edit_template(event) {
+	// 프로젝트가 이미 열려있으면 먼저 닫기
+	if (isProjectOpen) {
+		console.log('Closing existing project before opening template editor...')
+		editorCtx.destroy({
+			parent_element: client_env.parent_element
+		})
+		isProjectOpen = false;
+	}
+
 	var params = {
 		parent_element: client_env.parent_element,
 		ps_code: '50x90@NC',
@@ -355,12 +378,25 @@ function on_open_edit_template(event) {
 		if (data.action == 'close' || data.action == 'goto-cart') {
 			editorCtx.destroy({
 				parent_element: client_env.parent_element,        
-			})                        
+			})
+			isProjectOpen = false;
 		}
 	})
+	
+	// 프로젝트 열림 상태로 설정
+	isProjectOpen = true;
 }
 
 function create_product(obj) {
+	// 프로젝트가 이미 열려있으면 먼저 닫기
+	if (isProjectOpen) {
+		console.log('Closing existing project before creating new one...')
+		editorCtx.destroy({
+			parent_element: client_env.parent_element
+		})
+		isProjectOpen = false;
+	}
+
 	var mobile = document.querySelector('#checkbox_mobile').checked;
 
 	var params = {
@@ -380,7 +416,8 @@ function create_product(obj) {
 		else if (data.action == 'close' || data.action == 'goto-cart') {
 			editorCtx.destroy({
 				parent_element: client_env.parent_element,        
-			})                        
+			})
+			isProjectOpen = false;
 		}
 		else if (data.action == 'request-user-token') {
 			// Edicus로 부터 user token요청을 받으면 "send-token" action으로 대응한다.
@@ -395,7 +432,10 @@ function create_product(obj) {
 	
 			})
 		}
-	})	
+	})
+	
+	// 프로젝트 열림 상태로 설정
+	isProjectOpen = true;
 }
 
 function on_btn_create_one(event) {
