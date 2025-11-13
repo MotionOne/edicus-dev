@@ -183,7 +183,7 @@ function on_open_project() {
 			*/
 		}
 		else if (data.action == 'request-help-message') {
-			// mobile모드에서 사진탭의 도움말 버튼을 클릭한 경우 이벤트 발생
+			// mobile모드에서 사진탭의 도움말 버튼을 클릭한 경우 이벤트 발생 (자체 도움 메시지 출력용)
 			/* 참고
 				https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#bookmark=id.k1dp1go7tw63
 			*/
@@ -354,10 +354,10 @@ function on_tentative_order_project() {
 	}
 	server.tentative_order_project(client_env.uid, project_id, order, function(err) {
 		if (err == null)
-			alert(`이 잠정 주문 되었습니다. (project_id: ${project_id})`)
+			alert(`잠정 주문이 완료되었습니다. (project_id: ${project_id})`)
 		else {
 			console.log('order failed: ', err);
-			alert("project " + project_id + " order failed. " + err.message)
+			alert(`잠정 주문이 실패했습니다. (project_id: ${project_id}) ${err.message}`)
 		}
 	})
 }
@@ -386,10 +386,10 @@ function on_tentative_order_with_vdp() {
 	}
 	server.tentative_order_project(client_env.uid, project_id, order, function(err) {
 		if (err == null)
-			alert("project " + project_id + " is ordered (tentative order).")
+			alert(`잠정 주문이 완료되었습니다. (project_id: ${project_id})`)
 		else {
 			console.log('order failed: ', err);
-			alert("project " + project_id + " order failed. " + err.message)
+			alert(`잠정 주문이 실패했습니다. (project_id: ${project_id}) ${err.message}`)
 		}
 	})    
 }
@@ -412,9 +412,6 @@ function on_definitive_order_project() {
 }	
 
 function on_cancel_order_project() {
-	// _on_cancel_order_all_projects();
-	// return;
-
 	var project_id = $('#select-project-id option:selected').val()
 	// console.log(project_id)
 
@@ -433,7 +430,6 @@ function on_cancel_order_project() {
 function create_product(obj) {
 	// 프로젝트가 이미 열려있으면 먼저 닫기
 	if (isProjectOpen) {
-		console.log('Closing existing project before creating new one...')
 		editorCtx.destroy({
 			parent_element: client_env.parent_element
 		})
