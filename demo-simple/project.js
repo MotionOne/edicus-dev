@@ -11,12 +11,12 @@ import * as server from './server.js';
  * @param {string} project_id - 프로젝트 ID
  */
 export function on_open_project(client_env, project_id) {
-    let { editorCtx } = client_env;
+    let { editor } = client_env;
 	
 	// 프로젝트가 이미 열려있으면 먼저 닫기
 	if (client_env.isProjectOpen) {
-		console.log('Closing existing project before opening new one...')
-		editorCtx.destroy({
+		console.log('기존 편집기를 닫고 새로운 프로젝트를 엽니다...')
+		editor.destroy({
 			parent_element: client_env.parent_element
 		})
 		client_env.isProjectOpen = false;
@@ -35,11 +35,11 @@ export function on_open_project(client_env, project_id) {
 		// run_mode: '',
 		// edit_mode: ''
 	}
-	editorCtx.open_project(params, function(err, data) {
+	editor.open_project(params, function(err, data) {
 		console.log('callback data: ', data)
 
 		if (data.action == 'close' || data.action == 'goto-cart') {
-			editorCtx.destroy({
+			editor.destroy({
 				parent_element: client_env.parent_element
 			})
 			client_env.isProjectOpen = false;
@@ -74,7 +74,7 @@ export function on_open_project(client_env, project_id) {
 				let info = {
 					token: data.token
 				}
-				editorCtx.post_to_editor("send-user-token", info)
+				editor.post_to_editor("send-user-token", info)
 	
 			})
 		}
