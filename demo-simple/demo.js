@@ -143,6 +143,18 @@ function on_get_project_list(event, callback) {
 	})
 }
 
+function on_select_project_id() {
+	var project_id = get_project_id()
+
+	server.get_project_data(client_env.uid, project_id, function(err, data) {
+		console.log('project data: ', data)
+		project_data = data;
+		update_project_data_table(project_data);
+	})
+
+	on_get_preview_tn();
+}
+
 function get_project_id() {
 	return $('#select-project-id option:selected').val()
 }
@@ -162,17 +174,6 @@ function on_delete_project() {
 	projectModule.on_delete_project(client_env, project_id);
 }
 
-function on_select_project_id() {
-	var project_id = get_project_id()
-
-	server.get_project_data(client_env.uid, project_id, function(err, data) {
-		console.log('project data: ', data)
-		project_data = data;
-		update_project_data_table(project_data);
-	})
-
-	on_get_preview_tn();
-}
 
 function on_get_preview_tn() {
 	var project_id = get_project_id()
@@ -231,7 +232,7 @@ function create_product(obj) {
 			isProjectOpen = false;
 		}
 		else if (data.action == 'request-user-token') {
-			// Edicus로 부터 user token요청을 받으면 "send-token" action으로 대응한다.
+			// Edicus로 부터 user token요청을 받으면 "send-user-token" action으로 대응한다.
 			get_custom_token(client_env.uid, function(err, data) {
 				client_env.user_token = data.token;
 				$('#action-log').text('user token received.')
