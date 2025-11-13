@@ -37,16 +37,16 @@ import { update_project_data_table } from './table-ui.js';
 */
 var client_env = {
 	partner: client_env_vars.partner,
-	uid: "user-001",    
+	uid: "test-uid-of-sandbox",    
 	user_token: null,
 	parent_element: document.getElementById("edicus_container"),
 	editor: null,
 	isProjectOpen: false,
 }
 
-
 var project_arr = [];
 var project_data = null;
+
 
 // isProjectOpen 상태에 따라 에디터 컨테이너 표시/숨김 업데이트
 function updateEditorContainerVisibility() {
@@ -267,9 +267,18 @@ function create_product(obj) {
 }
 
 function on_btn_create_one(event) {
+	/*
+		edicus manager 사이트에서 ps_code와 template_uri를 확인하고 입력해야 합니다.
+		사이트 : https://edicus-man.firebaseapp.com/#/manager/resource/
+		1. 사이트에 로그인 합니다.
+		2. 좌측 메뉴에서 "Resource"을 클릭합니다.
+		3. "Resoruce"페이지 상단의 "Search" 버튼을 클릭하여 등록된 템플릿을 불러옵니다.
+		4. 템플릿 상세 페이지(화면 오른쪽)에서 "ps-codes"와 "resUri"을 확인합니다.
+		5. ps-codes와 resUri를 복사해서 아래 obj에 붙여넣습니다.
+	*/
 	var obj = {
 		ps_code: '90x50@NC',
-		template_uri: 'gcs://template/partners/dongapr7/res/template/2940313.json',
+		template_uri: 'gcs://template/partners/sandbox/res/template/2704164.json',
 		title: '명함 샘플',
 	}
 	create_product(obj);
