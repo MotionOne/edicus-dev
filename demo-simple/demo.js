@@ -40,18 +40,24 @@ var client_env = {
 	uid: "user-001",    
 	user_token: null,
 	parent_element: document.getElementById("edicus_container"),
+	editorCtx: null,
+	isProjectOpen: false,
+	
 }
 
-var editorCtx = null;
-var isProjectOpen = false;
 
 var project_arr = [];
 var project_data = null;
 
+// isProjectOpen 상태에 따라 에디터 컨테이너 표시/숨김 업데이트
+function updateEditorContainerVisibility() {
+	client_env.parent_element.style.display = client_env.isProjectOpen ? 'block' : 'none';
+}
+
 
 // 이 소스파일 끝에서 init()을 호출함.
 function init() {
-	editorCtx = window.edicusSDK.init({});
+	client_env.editorCtx = window.edicusSDK.init({});
 
 	// input 필드에 기본 uid 설정
 	$('#input_user_id').val(client_env.uid);
@@ -168,7 +174,8 @@ function get_project_id() {
 
 function on_open_project() {
 	var project_id = get_project_id()
-	isProjectOpen = projectModule.on_open_project({ editorCtx, isProjectOpen, client_env }, project_id);
+	projectModule.on_open_project(client_env, project_id);
+	updateEditorContainerVisibility();
 }
 
 function on_clone_project() {
@@ -209,11 +216,12 @@ function on_cancel_order_project() {
 
 function create_product(obj) {
 	// 프로젝트가 이미 열려있으면 먼저 닫기
-	if (isProjectOpen) {
+	if (client_env.isProjectOpen) {
 		editorCtx.destroy({
 			parent_element: client_env.parent_element
 		})
-		isProjectOpen = false;
+		client_env.isProjectOpen = false;
+		updateEditorContainerVisibility();
 	}
 
 	var mobile = document.querySelector('#checkbox_mobile').checked;
@@ -228,15 +236,16 @@ function create_product(obj) {
 		token: client_env.user_token
 		//edit_mode: 'design' // for design mode 
 	}
-	editorCtx.create_project(params, function (err, data) {
+	client_env.editorCtx.create_project(params, function (err, data) {
 		if (data.action == 'project-id-created') {
 			console.log('project-id-created: ', data.project_id)
 		}
 		else if (data.action == 'close' || data.action == 'goto-cart') {
-			editorCtx.destroy({
+			client_env.editorCtx.destroy({
 				parent_element: client_env.parent_element,        
 			})
-			isProjectOpen = false;
+			client_env.isProjectOpen = false; 
+			updateEditorContainerVisibility();
 		}
 		else if (data.action == 'request-user-token') {
 			// Edicus로 부터 user token요청을 받으면 "send-user-token" action으로 대응한다.
@@ -247,14 +256,15 @@ function create_product(obj) {
 				let info = {
 					token: data.token
 				}
-				editorCtx.post_to_editor("send-user-token", info)
+				client_env.editorCtx.post_to_editor("send-user-token", info)
 	
 			})
 		}
 	})
 	
 	// 프로젝트 열림 상태로 설정
-	isProjectOpen = true;
+	client_env.isProjectOpen = true;
+	updateEditorContainerVisibility();
 }
 
 function on_btn_create_one(event) {

@@ -7,21 +7,19 @@ import * as server from './server.js';
 
 /**
  * 프로젝트 열기
- * @param {Object} context - 컨텍스트 객체 { editorCtx, isProjectOpen, client_env }
+ * @param {Object} client_env - 클라이언트 환경 객체
  * @param {string} project_id - 프로젝트 ID
- * @returns {boolean} 프로젝트 열림 상태
  */
-export function on_open_project(context, project_id) {
-	const { editorCtx, client_env } = context;
-	let { isProjectOpen } = context;
+export function on_open_project(client_env, project_id) {
+    let { editorCtx } = client_env;
 	
 	// 프로젝트가 이미 열려있으면 먼저 닫기
-	if (isProjectOpen) {
+	if (client_env.isProjectOpen) {
 		console.log('Closing existing project before opening new one...')
 		editorCtx.destroy({
 			parent_element: client_env.parent_element
 		})
-		isProjectOpen = false;
+		client_env.isProjectOpen = false;
 	}
 
 	console.log(project_id)
@@ -44,7 +42,8 @@ export function on_open_project(context, project_id) {
 			editorCtx.destroy({
 				parent_element: client_env.parent_element
 			})
-			isProjectOpen = false;
+			client_env.isProjectOpen = false;
+			client_env.parent_element.style.display = 'none';
 		}
 		else if (data.action == 'save-doc-report') {
 			// 저장직후 여러 결과물을 확인 가능. 
@@ -80,10 +79,9 @@ export function on_open_project(context, project_id) {
 			})
 		}
 	})
-	
-	// 프로젝트 열림 상태로 설정
-	isProjectOpen = true;
-	return isProjectOpen;
+
+    client_env.isProjectOpen = true;
+    client_env.parent_element.style.display = 'block';
 }
 
 /**
