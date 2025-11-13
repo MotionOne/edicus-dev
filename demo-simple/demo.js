@@ -27,10 +27,17 @@ import * as projectModule from './project.js';
 import { update_project_data_table } from './table-ui.js';
 
 /*
+	uid 설명
+	- 고객사의 user unique id. 
+	- 이 uid를 이용해 edicus server로 부터 token을 받으면 edicus 사용 준비가 완료됩니다.
+	- 이 uid는 고객의 로그인 계정과 1:1 대응되는 unique id입니다.
+	- uid는 고객의 개인 정보를 유추할 수 없도록 생성되어야 합니다. (email, 이름등으로 구성되지 않도록 해야 합니다)
+	- 숫자, 알파벳, "-"으로 구성되며, 64자로 제한됩니다.
+	- uid는 에디쿠스 서버에서 별도의 생성 절차가 없습니다. 해당 uid가 사용한 적이 없으면 내부적으로 계정을 생성하며, 있으면 기존 계정을 사용합니다.
 */
 var client_env = {
 	partner: client_env_vars.partner,
-	uid: "tester-123456",    // 고객사의 user unique id.
+	uid: "user-001",    
 	user_token: null,
 	parent_element: document.getElementById("edicus_container"),
 }
