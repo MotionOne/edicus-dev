@@ -8,9 +8,10 @@ import * as server from './server.js';
 /**
  * 프로젝트 열기
  * @param {Object} context - 컨텍스트 객체 { editorCtx, isProjectOpen, client_env }
+ * @param {string} project_id - 프로젝트 ID
  * @returns {boolean} 프로젝트 열림 상태
  */
-export function on_open_project(context) {
+export function on_open_project(context, project_id) {
 	const { editorCtx, client_env } = context;
 	let { isProjectOpen } = context;
 	
@@ -23,7 +24,6 @@ export function on_open_project(context) {
 		isProjectOpen = false;
 	}
 
-	var project_id = $('#select-project-id option:selected').val()
 	console.log(project_id)
 
 	var mobile = document.querySelector('#checkbox_mobile').checked;
@@ -89,9 +89,9 @@ export function on_open_project(context) {
 /**
  * 프로젝트 복제
  * @param {Object} client_env - 클라이언트 환경 객체
+ * @param {string} project_id - 프로젝트 ID
  */
-export function on_clone_project(client_env) {
-	var project_id = $('#select-project-id option:selected').val()
+export function on_clone_project(client_env, project_id) {
 	console.log(project_id)
 
 	if (window.confirm('프로젝트를 복제하시겠습니까?') != true)
@@ -112,9 +112,9 @@ export function on_clone_project(client_env) {
 /**
  * 프로젝트 삭제
  * @param {Object} client_env - 클라이언트 환경 객체
+ * @param {string} project_id - 프로젝트 ID
  */
-export function on_delete_project(client_env) {
-	var project_id = $('#select-project-id option:selected').val()
+export function on_delete_project(client_env, project_id) {
 	console.log(project_id)
 
 	if (window.confirm('프로젝트를 삭제하시겠습니까?') != true)
@@ -132,3 +132,29 @@ export function on_delete_project(client_env) {
 	})    
 }
 
+
+/**
+ * 썸네일 가져오기
+ * @param {Object} project_id - 프로젝트 ID
+ */
+export function on_get_preview_tn(project_id) {
+	server.get_preview_urls(project_id, function(err, ret) {
+		if (err == null) {
+			console.log(ret)
+		$('#preview_tn_container').empty();
+		if (ret.urls && ret.urls.length > 0) {
+			ret.urls.forEach(function(url) {
+				var $tn = $('<img src="' + url + '" style="max-width:300px; max-height:300px; padding-right:10px; border: 1px solid #ddd; ">')
+				$('#preview_tn_container').append($tn);
+			})
+		} else {
+			$('#preview_tn_container').append('<p style="color: #666;">썸네일이 없습니다.</p>');
+		}
+		}
+		else {
+			console.log('get preview thumbnail url list failed: ', err);
+			alert("get preview thumbnail url list failed: " + err.message)
+		}
+		
+	})    
+}

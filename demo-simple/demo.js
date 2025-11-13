@@ -2,7 +2,7 @@
  * Edicus Cloud Editor 테스트 모듈
  * 
  * @license
- * Copyright (c) 2017 MoitionOne Corporation Inc.
+ * Copyright (c) 2025 MoitionOne Corporation Inc.
  * 
 */
 
@@ -20,11 +20,11 @@
 */
 
 
-// import { get_custom_token, get_custom_token_of_staff, get_project_list, clone_project, delete_project, get_preview_urls, tentative_order_project, definitive_order_project, cancel_order_project } from './server.js';
 import * as server from './server.js';
 import { client_env_vars } from '../.client-env.js';
 import * as orderModule from './order.js';
 import * as projectModule from './project.js';
+import { update_project_data_table } from './table-ui.js';
 
 /*
 */
@@ -62,7 +62,7 @@ function bind_button_events() {
 	$('#btn_open_project').click(on_open_project);
 	$('#btn_clone_project').click(on_clone_project);
 	$('#btn_delete_project').click(on_delete_project);
-	$('#btn_show_preview_tn').click(btn_show_preview_tn);
+	$('#btn_show_preview_tn').click(on_get_preview_tn);
 	
 	$('#btn_tentative_order_project').click(on_tentative_order_project);
 	$('#btn_tentative_order_vdp').click(on_tentative_order_with_vdp);
@@ -143,125 +143,59 @@ function on_get_project_list(event, callback) {
 	})
 }
 
+function get_project_id() {
+	return $('#select-project-id option:selected').val()
+}
+
 function on_open_project() {
-	isProjectOpen = projectModule.on_open_project({ editorCtx, isProjectOpen, client_env });
+	var project_id = get_project_id()
+	isProjectOpen = projectModule.on_open_project({ editorCtx, isProjectOpen, client_env }, project_id);
 }
 
 function on_clone_project() {
-	projectModule.on_clone_project(client_env);
+	var project_id = get_project_id()
+	projectModule.on_clone_project(client_env, project_id);
 }
 
 function on_delete_project() {
-	projectModule.on_delete_project(client_env);
+	var project_id = get_project_id()
+	projectModule.on_delete_project(client_env, project_id);
 }
 
 function on_select_project_id() {
-	var project_id = $('#select-project-id option:selected').val()
+	var project_id = get_project_id()
 
 	server.get_project_data(client_env.uid, project_id, function(err, data) {
 		console.log('project data: ', data)
 		project_data = data;
-		update_project_data_table();
+		update_project_data_table(project_data);
 	})
 
-	btn_show_preview_tn();
+	on_get_preview_tn();
 }
 
-function update_project_data_table() {
-	var $container = $('#project_data_table_container');
-	$container.empty();
-	
-	if (!project_data) {
-		return;
-	}
-	
-	var $table = $('<table></table>');
-	$table.css({
-		'border-collapse': 'collapse',
-		'border': '1px solid #ddd',
-		'width': '100%',
-		'max-width': '800px'
-	});
-	
-	// 테이블 헤더
-	var $thead = $('<thead></thead>');
-	var $headerRow = $('<tr></tr>');
-	['Project ID', 'Order ID', 'Status', 'Title'].forEach(function(header) {
-		var $th = $('<th></th>').text(header);
-		$th.css({
-			'border': '1px solid #ddd',
-			'padding': '8px',
-			'background-color': '#f2f2f2',
-			'text-align': 'left'
-		});
-		$headerRow.append($th);
-	});
-	$thead.append($headerRow);
-	$table.append($thead);
-	
-	// 테이블 바디
-	var $tbody = $('<tbody></tbody>');
-	var $dataRow = $('<tr></tr>');
-	
-	// 데이터 행 추가
-	[
-		project_data.project_id || '-',
-		project_data.order_id || '-',
-		project_data.status || '-',
-		project_data.title || '-'
-	].forEach(function(value) {
-		var $td = $('<td></td>').text(value);
-		$td.css({
-			'border': '1px solid #ddd',
-			'padding': '8px'
-		});
-		$dataRow.append($td);
-	});
-	
-	$tbody.append($dataRow);
-	$table.append($tbody);
-	$container.append($table);
+function on_get_preview_tn() {
+	var project_id = get_project_id()
+	projectModule.on_get_preview_tn(project_id);
 }
-
-function btn_show_preview_tn() {
-	var project_id = $('#select-project-id option:selected').val()
-	console.log(project_id)
-
-	server.get_preview_urls(project_id, function(err, ret) {
-		if (err == null) {
-			console.log(ret)
-			$('#preview_tn_container').empty();
-			ret.urls.forEach(function(url) {
-				var $tn = $('<img src="' + url + '" style="max-width:300px; max-height:300px; padding-right:10px; border: 1px solid #ddd; ">')
-				$('#preview_tn_container').append($tn);
-			})
-		}
-		else {
-			console.log('get preview thumbnail url list failed: ', err);
-			alert("get preview thumbnail url list failed: " + err.message)
-		}
-		
-	})    
-}
-
 
 function on_tentative_order_project() {
-	var project_id = $('#select-project-id option:selected').val()
+	var project_id = get_project_id()
 	orderModule.on_tentative_order_project(client_env, project_id)
 }
 
 function on_tentative_order_with_vdp() {
-	var project_id = $('#select-project-id option:selected').val()
+	var project_id = get_project_id()
 	orderModule.on_tentative_order_with_vdp(client_env, project_id)
 }
 
 function on_definitive_order_project() {
-	var project_id = $('#select-project-id option:selected').val()
+	var project_id = get_project_id()
 	orderModule.on_definitive_order_project(client_env, project_id)
 }
 
 function on_cancel_order_project() {
-	var project_id = $('#select-project-id option:selected').val()
+	var project_id = get_project_id()
 	orderModule.on_cancel_order_project(client_env, project_arr, project_id)
 }	
 
