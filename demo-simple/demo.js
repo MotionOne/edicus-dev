@@ -21,7 +21,7 @@
 
 
 import * as server from './server.js';
-import { client_env_vars } from '../.client-env.js';
+import { client_env_vars } from '../client-env.js';
 import * as orderModule from './order.js';
 import * as projectModule from './project.js';
 import { update_project_data_table } from './table-ui.js';
