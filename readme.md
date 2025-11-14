@@ -17,7 +17,7 @@
 ```javascript
 export let server_env = {
     apiHost: 'https://api-dot-edicusbase.appspot.com',
-	apiKey: 'xxxx-xxxx-xxxxxxxxx' // 모션원에서 발급받은 api를 입력해야 합니다.
+	apiKey: '발급받은 edicus api key를 입력하세요' // 모션원에서 발급받은 api를 입력해야 합니다.
 }
 ```
 - 이 파일은 .gitignore에서 버전관리 되지 않도록 제외되어 있습니다. 
