@@ -23,6 +23,10 @@
 			display: inline-block;
 			width: 110px;
 		} 
+
+		.section {
+			margin: 20px 0px;
+		}
 	</style>
 
 	<!-- Edicus SDK 스크립트 -->
@@ -34,9 +38,9 @@
 <body>
 
 	<h3>Edicus Editor Demo</h3>
-	<div style='margin: 10px 0px;'>	
+	<div class="section">	
 		<!-- 로그인 및 로그아웃 관련 UI -->
-		<span class='line-head'>Login : </span>
+		<span class='line-head'>로그인 : </span>
 		<span id='login_status' style='display: none;'>
 			<strong id='logged_user_id'></strong>
 			<input type='button' id='btn_user_logout' value='Logout' style='margin-left: 10px;'>
@@ -47,12 +51,12 @@
 		</span>
 	</div>
 	<hr>
-	<div style='margin: 10px 0px;'>	
-		<span class='line-head'>Options :</span>
+	<div class="section">	
+		<span class='line-head'>옵션 :</span>
 	  <label><input id='checkbox_mobile' type='checkbox'>mobile</label>
 	</div>
-	<div style='margin: 10px 0px;'>	
-		<span class='line-head'>Project :</span>
+	<div class="section">	
+		<span class='line-head'>프로젝트 :</span>
 		<select id='select-project-id' style='height:26px'>
 			<option >select project id here</option>
 		</select>
@@ -64,12 +68,12 @@
 		<div id="project_data_table_container" style="margin-top: 10px; margin-left: 110px;">
 		</div>
 	</div>		
-	<div style='margin: 10px 0px;'>	
+	<div class="section">	
 		<span class='line-head'>썸네일  : </span>
 		<input type='button' id='btn_show_preview_tn' value='썸네일 가져오기'>
 		<div id='preview_tn_container' style="margin-top: 10px; margin-left: 110px;"></div>
 	</div>
-	<div style='margin: 10px 0px;'>	
+	<div class="section">	
 		<span class='line-head'>Order : </span>
 		<input type='button' id='btn_tentative_order_project' value='잠정 주문'>
 		<input type='button' id='btn_tentative_order_vdp' value='잠정 주문 (vdp-dataset 포함)'>
@@ -77,12 +81,12 @@
 		<input type='button' id='btn_cancel_order_project' value='주문 취소'>
 	</div>		
 	<hr>
-	<div style='margin: 10px 0px;'>
+	<div class="section">
 		<span class='line-head'>상품 생성 : </span>
 		<input type='button' id='btn_create_one'   value='create 명함'>
 	</div>
 
-	<div style='margin: 10px 0px;'>
+	<div class="section">
 		로그: <span id='action-log'></span>
 	</div>
 

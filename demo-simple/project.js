@@ -103,7 +103,6 @@ export function on_clone_project(client_env, project_id) {
 			console.log('fail to clone: ', err);
 			alert("project " + project_id + " cloning failed. " + err.message)
 		}
-		
 	}) 		
 }
 

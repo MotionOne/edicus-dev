@@ -35,7 +35,7 @@ import { update_project_data_table } from './table-ui.js';
 	- 숫자, 알파벳, "-"으로 구성되며, 64자로 제한됩니다.
 	- uid는 에디쿠스 서버에서 별도의 생성 절차가 없습니다. 해당 uid가 사용한 적이 없으면 내부적으로 계정을 생성하며, 있으면 기존 계정을 사용합니다.
 */
-var client_env = {
+let client_env = {
 	partner: client_env_vars.partner,
 	uid: "test-uid-of-sandbox",    
 	user_token: null,
@@ -43,9 +43,9 @@ var client_env = {
 	editor: null,
 	isProjectOpen: false,
 }
+let project_arr = [];
+let project_data = null;
 
-var project_arr = [];
-var project_data = null;
 
 
 // isProjectOpen 상태에 따라 에디터 컨테이너 표시/숨김 업데이트
@@ -130,9 +130,9 @@ function on_user_login(event) {
 }
 
 function on_user_logout(event) {
-	client_env.uid = null;
+	// client_env.uid = null;
 	client_env.user_token = null;
-	$('#input_user_id').val('');
+	$('#input_user_id').val(client_env.uid);
 	$('#action-log').text('logged out.');
 	update_login_ui(false);
 }
