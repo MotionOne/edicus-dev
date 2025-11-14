@@ -25,6 +25,7 @@ import { client_env_vars } from '../client-env.js';
 import * as orderModule from './order.js';
 import * as projectModule from './project.js';
 import { update_project_data_table } from './table-ui.js';
+import { edicusTemplates } from './edicus-templates.js';
 
 /*
 	uid 설명
@@ -60,6 +61,9 @@ function init() {
 
 	// input 필드에 기본 uid 설정
 	$('#input_user_id').val(client_env.uid);
+
+	// 템플릿 목록을 드롭다운에 채우기
+	populate_template_dropdown();
 
 	bind_button_events();
 	on_user_login(); // 초기에 무조건 로그인 하도록 함.
@@ -289,9 +293,23 @@ function create_product(obj) {
 	updateEditorContainerVisibility();
 }
 
+function populate_template_dropdown() {
+	const $select = $('#select-template');
+	edicusTemplates.forEach((template, index) => {
+		const $option = $('<option></option>');
+		$option.text(template.title);
+		$option.attr('value', index);
+		$select.append($option);
+	});
+}
 
 function on_btn_create_one(event) {
-	create_product(edicusTemplates[0]);
+	const selectedIndex = $('#select-template').val();
+	if (selectedIndex === '') {
+		alert('템플릿을 선택해주세요.');
+		return;
+	}
+	create_product(edicusTemplates[selectedIndex]);
 }
 
 
