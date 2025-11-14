@@ -15,9 +15,10 @@
 
 		.editor-frame {
 			position:relative;
-			margin: 10px;
+			margin: 20px 10px 40px 10px;
 			height: 760px;
-			background-color: lightgray;
+			background-color: #f0f0f0;
+			border: 1px solid #ddd;
 		}   
 		.line-head {
 			display: inline-block;
@@ -36,8 +37,7 @@
 </head>
 
 <body>
-
-	<h3>Edicus Editor Demo</h3>
+	<h3>Edicus 편집기 테스트</h3>
 	<div class="section">	
 		<!-- 로그인 및 로그아웃 관련 UI -->
 		<span class='line-head'>로그인 : </span>
@@ -85,8 +85,9 @@
 		<input type='button' id='btn_create_one'   value='create 명함'>
 	</div>
 
-	<div id='edicus_container' class='editor-frame' style='display: none;'></div>
-
+	<hr>
+	<!-- 편집기 컨테이너 영역 -->
+	<div id='edicus_container' class='editor-frame'></div>
 </body>
 
 </html>
