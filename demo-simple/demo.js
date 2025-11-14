@@ -243,7 +243,7 @@ async function on_cancel_order_project() {
 function create_product(obj) {
 	// 프로젝트가 이미 열려있으면 먼저 닫기
 	if (client_env.isProjectOpen) {
-		client_env.editor.destroy({
+		client_env.editor.close({
 			parent_element: client_env.parent_element
 		})
 		client_env.isProjectOpen = false;

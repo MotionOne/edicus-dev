@@ -39,7 +39,7 @@ export function on_open_project(client_env, project_id) {
 		console.log('callback data: ', data)
 
 		if (data.action == 'close' || data.action == 'goto-cart') {
-			editor.destroy({
+			editor.close({
 				parent_element: client_env.parent_element
 			})
 			client_env.isProjectOpen = false;

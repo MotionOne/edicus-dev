@@ -96,6 +96,15 @@ window.edicusSDK.init = function(config) {
 		}
 	}
 
+    // 편집기만 종료할 경우 사용
+    ctx.close = function(params) {
+        if (ctx.iframe_el) {
+            params.parent_element.removeChild(ctx.iframe_el);
+            ctx.iframe_el = null;
+        }
+    }
+
+    // ctx.init()에 대응하는 함수. 에디쿠스 초기화 자체를 종료함.
     ctx.destroy = function(params) {
         console.log('edicus destroy');
     
