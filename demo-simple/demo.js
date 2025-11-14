@@ -21,7 +21,6 @@
 
 
 import * as server from './server.js';
-import { client_env_vars } from '../client-env.js';
 import * as orderModule from './order.js';
 import * as projectModule from './project.js';
 import { update_project_data_table } from './table-ui.js';
@@ -37,7 +36,7 @@ import { edicusTemplates } from './edicus-templates.js';
 	- uid는 에디쿠스 서버에서 별도의 생성 절차가 없습니다. 해당 uid가 사용한 적이 없으면 내부적으로 계정을 생성하며, 있으면 기존 계정을 사용합니다.
 */
 let client_env = {
-	partner: client_env_vars.partner,
+	partner: "sandbox", // 에디쿠스 데모용으로만 사용하는 partner 코드
 	uid: "test-uid-of-sandbox",    
 	user_token: null,
 	parent_element: document.getElementById("edicus_container"),
@@ -46,13 +45,6 @@ let client_env = {
 }
 let project_arr = [];
 let project_data = null;
-
-
-
-// isProjectOpen 상태에 따라 에디터 컨테이너 표시/숨김 업데이트
-function updateEditorContainerVisibility() {
-	client_env.parent_element.style.display = client_env.isProjectOpen ? 'block' : 'none';
-}
 
 
 // 이 소스파일 끝에서 init()을 호출함.
@@ -85,6 +77,12 @@ function bind_button_events() {
 	$('#btn_cancel_order_project').click(on_cancel_order_project);
 	
 	$('#btn_create_one').click(on_btn_create_one);
+}
+
+
+// isProjectOpen 상태에 따라 에디터 컨테이너 표시/숨김 업데이트
+function updateEditorContainerVisibility() {
+	client_env.parent_element.style.display = client_env.isProjectOpen ? 'block' : 'none';
 }
 
 
