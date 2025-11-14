@@ -74,7 +74,6 @@ function bind_button_events() {
 	$('#btn_open_project').click(on_open_project);
 	$('#btn_clone_project').click(on_clone_project);
 	$('#btn_delete_project').click(on_delete_project);
-	$('#btn_show_preview_tn').click(on_get_preview_tn);
 	
 	$('#btn_tentative_order_project').click(on_tentative_order_project);
 	$('#btn_tentative_order_vdp').click(on_tentative_order_with_vdp);
