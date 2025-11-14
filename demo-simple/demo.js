@@ -119,7 +119,6 @@ async function on_user_login(event) {
 	try {
 		const data = await server.get_custom_token(client_env.uid);
 		client_env.user_token = data.token;
-		$('#action-log').text('user token received.')
 		update_login_ui(true);
 
 		// 로그인 직후 프로젝트 목록 조회
@@ -136,7 +135,6 @@ function on_user_logout(event) {
 	// client_env.uid = null;
 	client_env.user_token = null;
 	$('#input_user_id').val(client_env.uid);
-	$('#action-log').text('logged out.');
 	update_login_ui(false);
 }
 
@@ -145,7 +143,6 @@ async function on_get_project_list(event, callback) {
 		const data = await server.get_project_list(client_env.uid);
 		console.log('project list: ', data.projects)
 		project_arr = data.projects;
-		$('#action-log').text('received project list. (브라우저 console창에서 확인하세요)')
 
 		$('#select-project-id').empty();
 		data.projects.reverse().forEach(function(project) {
@@ -199,29 +196,29 @@ async function on_delete_project() {
 	await on_get_project_list(null);
 }
 
-function on_get_preview_tn() {
+async function on_get_preview_tn() {
 	var project_id = get_project_id()
-	projectModule.on_get_preview_tn(project_id);
+	await projectModule.on_get_preview_tn(project_id);
 }
 
-function on_tentative_order_project() {
+async function on_tentative_order_project() {
 	var project_id = get_project_id()
-	orderModule.on_tentative_order_project(client_env, project_id)
+	await orderModule.on_tentative_order_project(client_env, project_id)
 }
 
-function on_tentative_order_with_vdp() {
+async function on_tentative_order_with_vdp() {
 	var project_id = get_project_id()
-	orderModule.on_tentative_order_with_vdp(client_env, project_id)
+	await orderModule.on_tentative_order_with_vdp(client_env, project_id)
 }
 
-function on_definitive_order_project() {
+async function on_definitive_order_project() {
 	var project_id = get_project_id()
-	orderModule.on_definitive_order_project(client_env, project_id)
+	await orderModule.on_definitive_order_project(client_env, project_id)
 }
 
-function on_cancel_order_project() {
+async function on_cancel_order_project() {
 	var project_id = get_project_id()
-	orderModule.on_cancel_order_project(client_env, project_arr, project_id)
+	await orderModule.on_cancel_order_project(client_env, project_arr, project_id)
 }	
 
 function create_product(obj) {
@@ -261,7 +258,6 @@ function create_product(obj) {
 			// Edicus로 부터 user token요청을 받으면 "send-user-token" action으로 대응한다.
 			server.get_custom_token(client_env.uid).then(data => {
 				client_env.user_token = data.token;
-				$('#action-log').text('user token received.')
 
 				let info = {
 					token: data.token
