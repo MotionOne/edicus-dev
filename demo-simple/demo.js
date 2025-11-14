@@ -96,7 +96,7 @@ function update_login_ui(is_logged_in) {
 	}
 }
 
-function on_user_login(event) {
+async function on_user_login(event) {
 	/*  
 		고객사 자체 login이 성공하면 uid를 확보하도록 하고, 
 		이 uid를 이용해 edicus server로 부터 token을 받으면 edicus 사용 준비가 완료됩니다.
@@ -116,17 +116,20 @@ function on_user_login(event) {
 	}
 	client_env.uid = uid;
 
-	server.get_custom_token(client_env.uid, function(err, data) {
+	try {
+		const data = await server.get_custom_token(client_env.uid);
 		client_env.user_token = data.token;
 		$('#action-log').text('user token received.')
 		update_login_ui(true);
 
 		// 로그인 직후 프로젝트 목록 조회
-		on_get_project_list(null, () => {
-			$('#select-project-id').val(project_arr[0].project_id);
-			on_select_project_id();
-		});
-	})
+		await on_get_project_list(null);
+		$('#select-project-id').val(project_arr[0].project_id); // 첫 번째 프로젝트 선택
+		await on_select_project_id();
+	} catch (err) {
+		console.error('Login failed:', err);
+		alert('로그인에 실패했습니다.');
+	}
 }
 
 function on_user_logout(event) {
@@ -137,8 +140,9 @@ function on_user_logout(event) {
 	update_login_ui(false);
 }
 
-function on_get_project_list(event, callback) {
-	server.get_project_list(client_env.uid, function(err, data) {
+async function on_get_project_list(event, callback) {
+	try {
+		const data = await server.get_project_list(client_env.uid);
 		console.log('project list: ', data.projects)
 		project_arr = data.projects;
 		$('#action-log').text('received project list. (브라우저 console창에서 확인하세요)')
@@ -152,17 +156,23 @@ function on_get_project_list(event, callback) {
 		})
 
 		callback && callback();
-	})
+	} catch (err) {
+		console.error('Failed to get project list:', err);
+		alert('프로젝트 목록을 가져오는데 실패했습니다.');
+	}
 }
 
-function on_select_project_id() {
+async function on_select_project_id() {
 	var project_id = get_project_id()
 
-	server.get_project_data(client_env.uid, project_id, function(err, data) {
+	try {
+		const data = await server.get_project_data(client_env.uid, project_id);
 		console.log('project data: ', data)
 		project_data = data;
 		update_project_data_table(project_data);
-	})
+	} catch (err) {
+		console.error('Failed to get project data:', err);
+	}
 
 	on_get_preview_tn();
 }
@@ -177,16 +187,17 @@ function on_open_project() {
 	updateEditorContainerVisibility();
 }
 
-function on_clone_project() {
+async function on_clone_project() {
 	var project_id = get_project_id()
-	projectModule.on_clone_project(client_env, project_id);
+	await projectModule.on_clone_project(client_env, project_id);
+	await on_get_project_list(null);
 }
 
-function on_delete_project() {
+async function on_delete_project() {
 	var project_id = get_project_id()
-	projectModule.on_delete_project(client_env, project_id);
+	await projectModule.on_delete_project(client_env, project_id);
+	await on_get_project_list(null);
 }
-
 
 function on_get_preview_tn() {
 	var project_id = get_project_id()
@@ -248,7 +259,7 @@ function create_product(obj) {
 		}
 		else if (data.action == 'request-user-token') {
 			// Edicus로 부터 user token요청을 받으면 "send-user-token" action으로 대응한다.
-			get_custom_token(client_env.uid, function(err, data) {
+			server.get_custom_token(client_env.uid).then(data => {
 				client_env.user_token = data.token;
 				$('#action-log').text('user token received.')
 
@@ -256,7 +267,8 @@ function create_product(obj) {
 					token: data.token
 				}
 				client_env.editor.post_to_editor("send-user-token", info)
-	
+			}).catch(err => {
+				console.error('Failed to get custom token:', err);
 			})
 		}
 	})

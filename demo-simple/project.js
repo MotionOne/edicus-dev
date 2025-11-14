@@ -67,7 +67,7 @@ export function on_open_project(client_env, project_id) {
 			/* 참고
 				https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#heading=h.ctloxkjukfm
 			*/
-			server.get_custom_token(client_env.uid, function(err, data) {
+			server.get_custom_token(client_env.uid).then(data => {
 				client_env.user_token = data.token;
 				$('#action-log').text('user token received.')
 
@@ -75,7 +75,8 @@ export function on_open_project(client_env, project_id) {
 					token: data.token
 				}
 				editor.post_to_editor("send-user-token", info)
-	
+			}).catch(err => {
+				console.error('Failed to get custom token:', err);
 			})
 		}
 	})
@@ -89,21 +90,25 @@ export function on_open_project(client_env, project_id) {
  * @param {Object} client_env - 클라이언트 환경 객체
  * @param {string} project_id - 프로젝트 ID
  */
-export function on_clone_project(client_env, project_id) {
+export async function on_clone_project(client_env, project_id) {
 	console.log(project_id)
 
 	if (window.confirm('프로젝트를 복제하시겠습니까?') != true)
 		return;
 
-	server.clone_project(client_env.uid, project_id, function(result) {
+	try {
+		const result = await server.clone_project(client_env.uid, project_id);
 		if (result) {
 			alert("cloned project: " + result.project_id)
 		}
 		else {
-			console.log('fail to clone: ', err);
-			alert("project " + project_id + " cloning failed. " + err.message)
+			console.log('fail to clone');
+			alert("project " + project_id + " cloning failed.")
 		}
-	}) 		
+	} catch (err) {
+		console.log('fail to clone: ', err);
+		alert("project " + project_id + " cloning failed. " + err.message)
+	}
 }
 
 /**
@@ -111,13 +116,14 @@ export function on_clone_project(client_env, project_id) {
  * @param {Object} client_env - 클라이언트 환경 객체
  * @param {string} project_id - 프로젝트 ID
  */
-export function on_delete_project(client_env, project_id) {
+export async function on_delete_project(client_env, project_id) {
 	console.log(project_id)
 
 	if (window.confirm('프로젝트를 삭제하시겠습니까?') != true)
 		return;
 
-	server.delete_project(client_env.uid, project_id, function(err) {
+	try {
+		const err = await server.delete_project(client_env.uid, project_id);
 		if (err == null) {
 			alert('project ' + project_id + ' is deleted.')
 		}
@@ -125,8 +131,10 @@ export function on_delete_project(client_env, project_id) {
 			console.log('delete failed: ', err);
 			alert("project " + project_id + " delete failed. " + err.message)
 		}
-		
-	})    
+	} catch (error) {
+		console.error('Failed to delete project:', error);
+		alert("project " + project_id + " delete failed. " + error.message)
+	}
 }
 
 
@@ -134,10 +142,10 @@ export function on_delete_project(client_env, project_id) {
  * 썸네일 가져오기
  * @param {Object} project_id - 프로젝트 ID
  */
-export function on_get_preview_tn(project_id) {
-	server.get_preview_urls(project_id, function(err, ret) {
-		if (err == null) {
-			console.log(ret)
+export async function on_get_preview_tn(project_id) {
+	try {
+		const ret = await server.get_preview_urls(project_id);
+		console.log(ret)
 		$('#preview_tn_container').empty();
 		if (ret.urls && ret.urls.length > 0) {
 			ret.urls.forEach(function(url) {
@@ -147,11 +155,8 @@ export function on_get_preview_tn(project_id) {
 		} else {
 			$('#preview_tn_container').append('<p style="color: #666;">썸네일이 없습니다.</p>');
 		}
-		}
-		else {
-			console.log('get preview thumbnail url list failed: ', err);
-			alert("get preview thumbnail url list failed: " + err.message)
-		}
-		
-	})    
+	} catch (err) {
+		console.log('get preview thumbnail url list failed: ', err);
+		alert("get preview thumbnail url list failed: " + err.message)
+	}
 }
