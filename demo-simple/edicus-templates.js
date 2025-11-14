@@ -1,8 +1,3 @@
-/**
- * Edicus 템플릿 목록
- * @type {Array}
- */
-
 /*
     Edicus 템플릿 목록
 
