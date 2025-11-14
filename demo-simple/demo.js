@@ -137,7 +137,7 @@ function on_user_logout(event) {
 	update_login_ui(false);
 }
 
-async function on_get_project_list(event, callback) {
+async function on_get_project_list(event) {
 	try {
 		const data = await server.get_project_list(client_env.uid);
 		console.log('project list: ', data.projects)
@@ -150,8 +150,6 @@ async function on_get_project_list(event, callback) {
 			$option.attr('value', project.project_id)
 			$('#select-project-id').append($option);
 		})
-
-		callback && callback();
 	} catch (err) {
 		console.error('Failed to get project list:', err);
 		alert('프로젝트 목록을 가져오는데 실패했습니다.');
@@ -193,6 +191,12 @@ async function on_delete_project() {
 	var project_id = get_project_id()
 	await projectModule.on_delete_project(client_env, project_id);
 	await on_get_project_list(null);
+
+	project_id = project_arr[0].project_id;
+	$('#select-project-id').val(project_arr[0].project_id); // 첫 번째 프로젝트 선택
+
+	// todo: 기존에 열여 있던 edicus 편집기를 종료해야 됨.
+	updateEditorContainerVisibility();
 }
 
 async function on_get_preview_tn() {
