@@ -175,6 +175,15 @@ function get_project_id() {
 	return $('#select-project-id option:selected').val()
 }
 
+function close_editor() {
+	client_env.editor.destroy({
+		parent_element: client_env.parent_element
+	})
+	client_env.isProjectOpen = false;
+	updateEditorContainerVisibility();
+}
+
+
 function on_open_project() {
 	var project_id = get_project_id()
 	projectModule.on_open_project(client_env, project_id);
@@ -188,15 +197,18 @@ async function on_clone_project() {
 }
 
 async function on_delete_project() {
+	if (client_env.isProjectOpen) {
+		close_editor();
+	}
+
 	var project_id = get_project_id()
-	await projectModule.on_delete_project(client_env, project_id);
+	// 프로젝트 삭제
+	await projectModule.on_delete_project(client_env, project_id); 
+	// 프로젝트 목록 갱신
 	await on_get_project_list(null);
-
+	// 첫 번째 프로젝트 선택
 	project_id = project_arr[0].project_id;
-	$('#select-project-id').val(project_arr[0].project_id); // 첫 번째 프로젝트 선택
-
-	// todo: 기존에 열여 있던 edicus 편집기를 종료해야 됨.
-	updateEditorContainerVisibility();
+	on_select_project_id();
 }
 
 async function on_get_preview_tn() {
@@ -277,22 +289,9 @@ function create_product(obj) {
 	updateEditorContainerVisibility();
 }
 
+
 function on_btn_create_one(event) {
-	/*
-		edicus manager 사이트에서 ps_code와 template_uri를 확인하고 입력해야 합니다.
-		사이트 : https://edicus-man.firebaseapp.com/#/manager/resource/
-		1. 사이트에 로그인 합니다.
-		2. 좌측 메뉴에서 "Resource"을 클릭합니다.
-		3. "Resoruce"페이지 상단의 "Search" 버튼을 클릭하여 등록된 템플릿을 불러옵니다.
-		4. 템플릿 상세 페이지(화면 오른쪽)에서 "ps-codes"와 "resUri"을 확인합니다.
-		5. ps-codes와 resUri를 복사해서 아래 obj에 붙여넣습니다.
-	*/
-	var obj = {
-		ps_code: '90x50@NC',
-		template_uri: 'gcs://template/partners/sandbox/res/template/2704164.json',
-		title: '명함 샘플',
-	}
-	create_product(obj);
+	create_product(edicusTemplates[0]);
 }
 
 
