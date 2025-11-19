@@ -21,5 +21,10 @@ export let edicusTemplates = [
 		ps_code: '90x50@NC',
 		template_uri: 'gcs://template/partners/sandbox/res/template/2704145.json',
 		title: '명함 샘플 2',
-	}		
+	},
+	{
+		ps_code: '148x210@NAME-STICKER',
+		template_uri: 'gcs://template/partners/sandbox/res/template/3112918.json',
+		title: '네임스티커 샘플',
+	}
 ]
