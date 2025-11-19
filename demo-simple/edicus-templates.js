@@ -9,6 +9,8 @@
     4. 템플릿 상세 페이지(화면 오른쪽)에서 "ps-codes"와 "resUri"을 확인합니다.
     5. ps-codes와 resUri를 복사해서 아래 edicusTemplates에 추가합니다.
 */
+
+// 아래 목록은 sandbox 파트너계정에서 사용할 수 있는 템플릿 목록입니다.
 export let edicusTemplates = [
 	{
 		ps_code: '90x50@NC',
