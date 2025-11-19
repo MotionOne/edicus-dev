@@ -6,6 +6,9 @@ import * as server from './server.js';
 
 /**
  * 잠정 주문 처리
+ * - 잠정주문 상태가 되면 취소 가능한 주문상태가 됩니다. 
+ * - 사용자는 편집기를 열더라도 편집 내용을 저장할 수 없습니다. 
+ * - 잠정주문 상태가 되면 주문상태가 "ordering" 으로 변경됨.
  */
 export async function on_tentative_order_project(client_env, project_id) {
 	console.log(project_id)
@@ -75,6 +78,9 @@ export async function on_tentative_order_with_vdp(client_env, project_id) {
 
 /**
  * 확정 주문 처리
+ * - 확정주문 상태가 되면 취소 불가능한 주문상태가 됩니다. 
+ * - 생산파일(pdf나 jpg등) 렌더링을 하게 되며 렌더링이 완료되믄 생산파일을 다운로드 할 수 있습니다.
+ * - 확정주문 상태가 되면 주문상태가 "ordered" 으로 변경됨.
  */
 export async function on_definitive_order_project(client_env, project_id) {
     /*
