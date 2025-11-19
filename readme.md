@@ -6,11 +6,11 @@
 - 이해를 돕기위해 jQuery 이외의 라이브러리는 사용하지 않고 제작되었습니다.
 - 4300 port로 test.html을 웹서버로 서비스 해야 합니다.
 - 실제 데모를 운용해 보기 위해서는 모션원으로부터 apiKey를 발급받아야 합니다.
-    
-## http-server로 띄우기
-- 설치 : npm install --global http-server (github: https://github.com/indexzero/http-server)
-- 실행 : http-server -c-1 -p 4300    (local file cache가 되는 것을 막기 위해 argument순서 지킬 것.)
-- 참고: 이 프로젝트의 루트 폴더를 웹으로 서비스할 수 있는 방법이면 어떤 방법이든 상관없습니다.
+
+## 테스트용 Edicus Api 발급
+- 테스트용 Edicus Server API key를 모션원에 요청하여 발급 받아야 합니다.
+- 테스트용 계정 id는 "sandbox" 입니다.
+
 
 ## 사전 작업
 - 프로젝트의 root 폴더에 .env.js 파일을 생성해야 합니다.
@@ -22,6 +22,11 @@ export let server_env = {
 ```
 - 이 파일은 .gitignore에서 버전관리 되지 않도록 제외되어 있습니다. 
 - apiKey가 노출되지 않도록 각별히 주의해야 합니다.
+
+## http-server로 띄우기
+- 설치 : npm install --global http-server (github: https://github.com/indexzero/http-server)
+- 실행 : http-server -c-1 -p 4300    (local file cache가 되는 것을 막기 위해 argument순서 지킬 것.)
+- 참고: 이 프로젝트의 루트 폴더를 웹으로 서비스할 수 있는 방법이면 어떤 방법이든 상관없습니다.
 
 
 ## 테스트 사이트 접속
