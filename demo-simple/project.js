@@ -45,13 +45,15 @@ export function on_open_project(client_env, project_id) {
 			client_env.isProjectOpen = false;
 			client_env.parent_element.style.display = 'none';
 		}
-		else if (data.action == 'save-doc-report') {
+		else if (data.action == 'save-doc-report' && data.info.status === 'end') {
 			// 저장직후 여러 결과물을 확인 가능. 
 			/*
 				참고
 					저장직전 : https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#heading=h.t5ibodidcrng
 					저장직후 : https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#heading=h.etcff8vztldb
 			*/
+
+			console.log('[save-doc-report] data.info.docInfo:', data.info.docInfo)
 		}
 		else if (data.action == 'request-help-message') {
 			// mobile모드에서 사진탭의 도움말 버튼을 클릭한 경우 이벤트 발생 (자체 도움 메시지 출력용)
