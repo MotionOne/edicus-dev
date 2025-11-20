@@ -188,7 +188,8 @@ function close_editor() {
 
 function on_open_project() {
 	var project_id = get_project_id()
-	projectModule.on_open_project(client_env, project_id);
+	var mobile = document.querySelector('#checkbox_mobile').checked;
+	projectModule.on_open_project(client_env, project_id, mobile);
 	updateEditorContainerVisibility();
 }
 

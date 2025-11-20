@@ -5,12 +5,57 @@
 
 import * as server from './server.js';
 
+
+export function on_open_tnview(client_env, ps_code, project_id, callbackForTnView) {
+    let { editor } = client_env;
+
+	// 프로젝트가 이미 열려있으면 먼저 닫기
+	if (client_env.isProjectOpen) {
+		console.log('기존 편집기를 닫고 새로운 프로젝트를 엽니다...')
+		editor.destroy({
+			parent_element: client_env.parent_element
+		})
+		client_env.isProjectOpen = false;
+	}
+
+	let params = {
+		parent_element: client_env.parent_element,
+		token: client_env.user_token,
+		ps_code: ps_code,
+		prjid: project_id,
+		npage: 1,
+		flow: 'horizontal',
+		//data_row: initial_row,
+		zoom: {
+			method: 'panzoom',
+			maxScale: 5
+		},
+		options: {
+			more_setting: {
+			   gap: 8,
+			   padding: 0,
+			   page_fx: 'none',
+			   experiment: true,
+			   show_loading_init: true,
+			   show_loading_set: false,
+			   background_color: 'transparent'				   
+			}
+		}		
+	}
+
+	editor.open_tnview(params, callbackForTnView)
+}
+
+
+
+
+
 /**
  * 프로젝트 열기
  * @param {Object} client_env - 클라이언트 환경 객체
  * @param {string} project_id - 프로젝트 ID
  */
-export function on_open_project(client_env, project_id, mobile = false) {
+export function on_open_project(client_env, project_id) {
     let { editor } = client_env;
 	
 	// 프로젝트가 이미 열려있으면 먼저 닫기
@@ -85,31 +130,6 @@ export function on_open_project(client_env, project_id, mobile = false) {
     client_env.parent_element.style.display = 'block';
 }
 
-/**
- * 프로젝트 복제
- * @param {Object} client_env - 클라이언트 환경 객체
- * @param {string} project_id - 프로젝트 ID
- */
-export async function on_clone_project(client_env, project_id) {
-	console.log(project_id)
-
-	if (window.confirm('프로젝트를 복제하시겠습니까?') != true)
-		return;
-
-	try {
-		const result = await server.clone_project(client_env.uid, project_id);
-		if (result) {
-			alert("cloned project: " + result.project_id)
-		}
-		else {
-			console.log('fail to clone');
-			alert("project " + project_id + " cloning failed.")
-		}
-	} catch (err) {
-		console.log('fail to clone: ', err);
-		alert("project " + project_id + " cloning failed. " + err.message)
-	}
-}
 
 /**
  * 프로젝트 삭제

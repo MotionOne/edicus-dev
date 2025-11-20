@@ -10,36 +10,26 @@
 	<script src='https://code.jquery.com/jquery-1.12.4.min.js'></script>
 	<!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
 	<style type='text/css'>
-		body {
-			background-color: white;  
-		}
-
-		.editor-frame {
-			display: none;
-			position:absolute;
-			top: 24px;
-			left: 24px;
-			right: 24px;
-			bottom: 24px;
-			box-shadow: 0 4px 24px 4px rgba(0,0,0,0.60);
-
-			background-color: #f0f0f0;
-			border: 1px solid #ddd;
-		}   
 		.line-head {
 			display: inline-block;
 			width: 110px;
 		} 
 
-		.section {
-			margin: 20px 0px;
-		}
+		.editor-frame {
+			display: none;
+			position: relative;
+			width: 800px;
+			height: 600px;
+			background-color: #f0f0f0;
+			border: 1px solid #ddd;
+		}   
+
 	</style>
 
 	<!-- Edicus SDK 스크립트 -->
 	<script src='../edicus-sdk-v2.js'></script>	
 	<!-- 데모 코드 스크립트 -->
-	<script type="module" src='demo.js'></script>	
+	<script type="module" src='index.js'></script>	
 </head>
 
 <body class="p-4">
@@ -53,38 +43,22 @@
 		</span>
 		<span id='login_form'>
 			<input type='text' id='input_user_id' value='' placeholder='User ID' style='width: 200px; margin-right: 10px;'>
-			<input type='button' id='btn_user_login' value='Login'>
+			<input type='button' id='btn_user_login' class="bg-sky-500 hover:bg-sky-700 p-2 rounded-md text-white" value='Login'>
 		</span>
 	</div>
-	<hr>
-	<div class="section">	
-		<span class='line-head'>옵션 :</span>
-	  <label><input id='checkbox_mobile' type='checkbox'>mobile</label>
-	</div>
-	<div class="section">	
+
+	<div class="my-5">	
 		<span class='line-head'>프로젝트 :</span>
 		<select id='select-project-id' style='height:26px'>
 			<option >select project id here</option>
 		</select>
-		<input type='button' id='btn_get_project_list' value='프로젝트 리스트 얻기'>
 		<input type='button' id='btn_open_project' value='열기'>
-		<input type='button' id='btn_clone_project' value='복제'>
 		<input type='button' id='btn_delete_project' value='삭제'>
 		<span> (프로젝트 선택후 order 또는 delete 가능)</span>
 		<div id="project_data_table_container" style="margin-top: 10px; margin-left: 110px;">
 		</div>
-	</div>		
-	<div class="section">	
-		<span class='line-head'>썸네일  : </span>
-		<div id='preview_tn_container' style="margin-top: 10px; margin-left: 110px;"></div>
-	</div>
-	<div class="section">	
-		<span class='line-head'>주문 : </span>
-		<input type='button' id='btn_tentative_order_project' value='잠정 주문'>
-		<input type='button' id='btn_tentative_order_vdp' value='잠정 주문 (vdp-dataset 포함)'>
-		<input type='button' id='btn_definitive_order_project' value='확정 주문'>
-		<input type='button' id='btn_cancel_order_project' value='주문 취소'>
-	</div>		
+	</div>	
+
 	<hr>
 	<div class="section">
 		<span class='line-head'>상품 생성 : </span>
@@ -94,9 +68,9 @@
 		<input type='button' id='btn_create_one' value='생성'>
 	</div>
 
-	<hr>
-	<!-- 편집기 컨테이너 영역 -->
+
 	<div id='edicus_container' class='editor-frame'></div>
+
 </body>
 
 </html>
