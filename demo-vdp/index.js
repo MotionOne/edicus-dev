@@ -2,8 +2,10 @@ import * as server from './server.js';
 import { update_project_data_table } from './table-ui.js';
 import { edicusTemplates } from './edicus-templates.js';
 import * as projectModule from './project.js';
-import { getVariableInfo, handle_vdp_catalog } from './vdp-catalog.js';
+import { handle_vdp_catalog, getDataRowForUpdatingTnView, getVariableInfo } from './vdp-catalog.js';
 import { getInnerBoxWithRatio } from './util.js';
+import { createTnViewCallback, openTnViewProject } from './open-tnview.js';
+import { createProduct, createCreateTnViewCallback } from './create-tnview.js';
 
 /*
 	uid 설명
@@ -24,17 +26,48 @@ let client_env = {
 }
 let project_arr = [];
 let project_data = null;
-let projectInfo; 
+let projectInfo = {
+    "vdpdata": "{\"has_vdp_photo\":false,\"text_item_cols\":[[{\"segment\":true,\"var_id\":\"f_name\",\"var_title\":\"이름\",\"text\":\"홍길동\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_jobtitle1\",\"var_title\":\"직위1\",\"text\":\"대표이사\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_jobtitle2\",\"var_title\":\"직위2\",\"text\":\"CEO\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_company\",\"var_title\":\"회사명\",\"text\":\"주식회사 모션원\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_addr\",\"var_title\":\"주소\",\"text\":\"08380 서울시 구로구 디지털로 33길 27, 707호\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_tel\",\"var_title\":\"전화번호\",\"text\":\"(02) 9999-1004\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_fax\",\"var_title\":\"팩스\",\"text\":\"(02) 9999-1005\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_mobile\",\"var_title\":\"모바일\",\"text\":\"010-9999-1006\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_email\",\"var_title\":\"이메일\",\"text\":\"gdhong@motion1.co.kr\",\"letter_space\":0}],[{\"segment\":true,\"var_id\":\"b_name\",\"var_title\":\"이름\",\"text\":\"Gil-Dong Hong\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_jobtitle1\",\"var_title\":\"직위1\",\"text\":\"President\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_jobtitle2\",\"var_title\":\"직위2\",\"text\":\"CEO\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_company\",\"var_title\":\"회사명\",\"text\":\"MotionOne Inc.\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_addr\",\"var_title\":\"주소\",\"text\":\"#08380, Suite 707, Digital-ro 33-gil 27, Guro-gu, Seoul, Korea\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_tel\",\"var_title\":\"전화번호\",\"text\":\"(02) 9999-1004\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_fax\",\"var_title\":\"팩스\",\"text\":\"(02) 9999-1005\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_mobile\",\"var_title\":\"모바일\",\"text\":\"010-9999-1006\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_email\",\"var_title\":\"이메일\",\"text\":\"gdhong@motion1.co.kr\",\"letter_space\":0}]],\"photo_item_cols\":[]}",
+    "tnUrl": "https://storage.googleapis.com/edicusbase.appspot.com/partners/sandbox/users/sandbox-vdp-tester-uid-of-sandbox/projects/-OeZ4_EXPKT_eKcsXSpU/preivew/preview_0.jpg?ts=1763689521828"    
+}; 
+
+
+
+/*
+    type TextItem = {
+        segment: boolean;
+        var_id: string;
+        var_title: string;
+        text: string;
+        letter_space: number;
+    }
+        
+    type TnViewCatalog = {
+        has_vdp_photo: boolean;
+        text_item_cols: TextItem[][];
+        photo_item_cols: PhotoItem[] | boolean;
+    }
+*/
+let tnViewCatalog = null;
+
+/*
+    type VarItem: {
+        id: string;
+        segment: boolean;
+        text: string;
+        title: string;
+    }
+*/
+let varItems = []; // VarItem[]
+
 
 /*
 	type PageItem = {
 		size_mm : {width:number, height:number},
 	}
 */
-
-let readyToShowTnView = false;
-let tnViewCatalog = null;
 let pageItems = []; // PageItem[]
+
 let referenceEditorBox = {width:400, height:400};
 let editorBoxSize = {width:400, height:400}
 
@@ -44,6 +77,7 @@ async function onMount() {
     
     
     bind_button_events();
+    bind_form_fields();
     await doUserLogin();
 
 	// 템플릿 목록을 드롭다운에 채우기
@@ -52,10 +86,31 @@ async function onMount() {
 
 function bind_button_events() {
 	$('#select-project-id').change(on_select_project_id);
-	$('#btn_open_project').click(on_open_project);
+	$('#btn_open_tnview').click(on_open_tnview);
 	$('#btn_delete_project').click(on_delete_project);
-	$('#btn_create_one').click(on_btn_create_one);
+	$('#btn_create_tnview').click(on_create_tnview);
+    $('#btn_save_vdp').click(on_save_vdp);
+}
 
+function bind_form_fields() {
+    $('#f_name').val('전우치');
+    $('#f_name').change(function() {
+        console.log('f_name changed: ', $(this).val())
+
+        let pageIndex = 0
+        let item = tnViewCatalog.text_item_cols[pageIndex].find(item => item.var_id === 'f_name');
+        if (item) {
+            item.text = $(this).val();
+        }
+
+        let memberData = {};
+        tnViewCatalog.text_item_cols[pageIndex].forEach(item => {
+            memberData[item.var_id] = item.text;
+        })
+
+        let dataRow = getDataRowForUpdatingTnView(memberData, varItems);
+        client_env.editor.post_to_tnview('set-data-row', dataRow);        
+    });
 }
 
 // isProjectOpen 상태에 따라 에디터 컨테이너 표시/숨김 업데이트
@@ -130,69 +185,38 @@ function close_editor() {
 	updateEditorContainerVisibility();
 }
 
-function on_open_project() {
-	var project_id = get_project_id()
-	projectModule.on_open_tnview(client_env, "90x50@NC", project_id, callbackForTnView);
-	updateEditorContainerVisibility();
+function on_create_tnview(event) {
+	const selectedIndex = $('#select-template').val();
+	if (selectedIndex === '') {
+		alert('템플릿을 선택해주세요.');
+		return;
+	}
+	
+    const callback = createCreateTnViewCallback({
+        client_env,
+        updateEditorContainerVisibility,
+        setupPageSizes,
+        setTnViewCatalog: (catalog) => { tnViewCatalog = catalog; },
+        getTnViewCatalog: () => tnViewCatalog
+    });
+
+	createProduct(client_env, edicusTemplates[selectedIndex], updateEditorContainerVisibility, callback);
 }
 
-async function callbackForTnView(err, data) {
-	if (data.action == 'ready-to-listen') {
-		console.log('ready-to-listen')
-	}
-	else if (data.action == 'doc-changed') {			
-		let vdp_catalog = data.info.vdp_catalog;
-		if (vdp_catalog) {
-			if (projectInfo &&projectInfo.vdpdata)
-				tnViewCatalog = JSON.parse(projectInfo.vdpdata)
-			else					
-				tnViewCatalog = handle_vdp_catalog(vdp_catalog);				
-			// dispatch('tnview-catalog', tnViewCatalog)
-
-            console.log('tnViewCatalog: ', tnViewCatalog)
-		}
-
-		setupPageSizes(data);
-	}
-	else if (data.action === 'open-report' && data.info.status === 'end') {
-		// edicus의 로딩프로그레스가 끝나면 tnview를 보여준다. 대략 1초 기다림.
-		setTimeout(() => {
-			readyToShowTnView = true;
-		}, 1000)
-	}
-	else if (data.action === 'save-doc-report' && data.info.status === 'end') {
-		// let projectUpdateInfo:CartUpdate = {
-		// 	vdpdata: JSON.stringify(tnViewCatalog)
-		// }
-		// if (data.info.docInfo.tnUrlList && data.info.docInfo.tnUrlList.length > 0) {
-		// 	projectUpdateInfo.tnUrl = data.info.docInfo.tnUrlList[0]				
-		// }				
-
-		// await cloudIf.supa.updateCartItem(
-		// 	projectInfo.id,
-		// 	projectUpdateInfo)
-
-		// dispatch('saved');
-	}
-    else if (data.action == 'request-user-token') {
-        // Edicus로 부터 user token요청을 받으면 "send-token" action으로 대응한다.
-        /* 참고
-            https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#heading=h.ctloxkjukfm
-        */
-        server.get_custom_token(client_env.uid).then(data => {
-            client_env.user_token = data.token;
-            $('#action-log').text('user token received.')
-
-            let info = {
-                token: data.token
-            }
-            editor.post_to_editor("send-user-token", info)
-        }).catch(err => {
-            console.error('Failed to get custom token:', err);
-        })
-    }    
-
-	console.log("=====>", data.action, data.info)
+function on_open_tnview() {
+	var project_id = get_project_id()
+	
+	// TnView 콜백 생성
+	const callback = createTnViewCallback({
+		client_env,
+		projectInfo,
+		setVarItems: (items) => { varItems = items; },
+		setTnViewCatalog: (catalog) => { tnViewCatalog = catalog; },
+		setupPageSizes
+	});
+	
+	// TnView 프로젝트 열기
+	openTnViewProject(client_env, "90x50@NC", project_id, callback, updateEditorContainerVisibility);
 }
 
 async function on_delete_project() {
@@ -210,127 +234,6 @@ async function on_delete_project() {
 	on_select_project_id();
 }
 
-
-function on_btn_create_one(event) {
-	const selectedIndex = $('#select-template').val();
-	if (selectedIndex === '') {
-		alert('템플릿을 선택해주세요.');
-		return;
-	}
-	create_product(edicusTemplates[selectedIndex]);
-}
-
-function create_product(obj) {
-	// 프로젝트가 이미 열려있으면 먼저 닫기
-	if (client_env.isProjectOpen) {
-		client_env.editor.close({
-			parent_element: client_env.parent_element
-		})
-		client_env.isProjectOpen = false;
-		updateEditorContainerVisibility();
-	}
-
-	var params = {
-		parent_element: client_env.parent_element,
-		partner: client_env.partner,
-		mobile: false,		
-		ps_code: obj.ps_code,
-		template_uri: obj.template_uri,
-		title: obj.title,
-		token: client_env.user_token,
-		npage: 1,
-        flow: 'horizontal',
-        zoom: {
-            method: 'panzoom',
-            maxScale: 5
-        },
-        options: {
-            more_setting: {
-                gap: 8,
-                padding: 0,
-                page_fx: 'none',
-                experiment: true,
-                show_loading_init: true,
-                show_loading_set: false,
-                background_color: 'transparent'
-            }
-        }
-	}
-	client_env.editor.create_tnview(params, callbackForCreateTnView)
-	
-	// 프로젝트 열림 상태로 설정
-	client_env.isProjectOpen = true;
-	updateEditorContainerVisibility();
-}
-
-function callbackForCreateTnView(err, data) {
-    // 이벤트가 오는 순서대로임
-    if (data.action === 'create-report' && data.info.status === 'start') {
-    }
-    else if (data.action == 'doc-changed') {			
-        let vdp_catalog = data.info.vdp_catalog;
-        console.log("vdp_catalog", vdp_catalog)
-        if (vdp_catalog) {
-            tnViewCatalog = handle_vdp_catalog(vdp_catalog);				
-            // dispatch('tnview-catalog', tnViewCatalog)
-        }
-
-        setupPageSizes(data);
-    }  
-    else if (data.action == 'project-id-created') {
-        console.log('project-id-created: ', data.info.project_id)
-        // 고객사 DB에 필요한 정보 저장
-    }
-    else if (data.action === 'create-report' && data.info.status === 'end') {
-        readyToShowTnView = true;
-    }
-    else if (data.action === 'save-doc-report' && data.info.status === 'end') {
-        // vdp data를 저장해야 함.
-        console.log('tnViewCatalog: ', tnViewCatalog)
-        
-        /*
-        let projectUpdateInfo:CartUpdate = {
-            vdp: JSON.stringify(tnViewCatalog)
-        }			
-        if (data.info.docInfo.tnUrlList && data.info.docInfo.tnUrlList.length > 0) {
-            projectUpdateInfo.tnUrl = data.info.docInfo.tnUrlList[0]				
-        }			
-
-        await cloudIf.supa.updateCartItem(
-            cartItem.id,
-            projectUpdateInfo)
-        dispatch('saved');
-        */
-    }
-    else if (data.action == 'close' || data.action == 'goto-cart') {
-        client_env.editor.destroy({
-            parent_element: client_env.parent_element,        
-        })
-        client_env.isProjectOpen = false; 
-        updateEditorContainerVisibility();
-    }
-    else if (data.action == 'request-user-token') {
-        // Edicus로 부터 user token요청을 받으면 "send-user-token" action으로 대응한다.
-        server.get_custom_token(client_env.uid).then(data => {
-            client_env.user_token = data.token;
-
-            let info = {
-                token: data.token
-            }
-            client_env.editor.post_to_editor("send-user-token", info)
-        }).catch(err => {
-            console.error('Failed to get custom token:', err);
-        })
-    }
-    else if (data.action == 'close' || data.action == 'goto-cart') {
-        client_env.editor.destroy({
-            parent_element: client_env.parent_element,        
-        })
-        client_env.isProjectOpen = false; 
-        updateEditorContainerVisibility();
-    }
-}
-
 function setupPageSizes(data) {
     // data.info.page_infos[index]에 있는 가로, 세로 사이즈 정보를 pageItems에 저장한다.
 
@@ -346,7 +249,7 @@ function setupPageSizes(data) {
     let {width, height} = pageItems[0].size_mm;
     editorBoxSize = getInnerBoxWithRatio(referenceEditorBox, [width, height])
 
-    client_env.parent_element.style.width = editorBoxSize.width + 'px';
+    client_env.parent_element.style.width = (2*editorBoxSize.width + 8) + 'px';
     client_env.parent_element.style.height = editorBoxSize.height + 'px';
 }	
 
@@ -359,6 +262,11 @@ function populate_template_dropdown() {
 		$option.attr('value', index);
 		$select.append($option);
 	});
+}
+
+function on_save_vdp() {
+	console.log('on_save_vdp')
+    client_env.editor.post_to_tnview('save');
 }
 
 onMount();

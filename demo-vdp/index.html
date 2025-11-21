@@ -52,7 +52,7 @@
 		<select id='select-project-id' style='height:26px'>
 			<option >select project id here</option>
 		</select>
-		<input type='button' id='btn_open_project' value='열기'>
+		<input type='button' id='btn_open_tnview' value='열기'>
 		<input type='button' id='btn_delete_project' value='삭제'>
 		<span> (프로젝트 선택후 order 또는 delete 가능)</span>
 		<div id="project_data_table_container" style="margin-top: 10px; margin-left: 110px;">
@@ -63,14 +63,19 @@
 	<div class="section">
 		<span class='line-head'>상품 생성 : </span>
 		<select id='select-template' style='height:26px; min-width: 200px;'>
-			<option value="">템플릿 선택</option>
 		</select>
-		<input type='button' id='btn_create_one' value='생성'>
+		<input type='button' id='btn_create_' value='생성'>
+		<input type='button' id='btn_save_vdp' value='저장하기'>
 	</div>
 
 
-	<div id='edicus_container' class='editor-frame'></div>
+	<div style="background-color: #f0f0f0; padding: 10px;">
+		<div id='edicus_container' class='editor-frame'></div>
+	</div>
 
+	<div>
+		f_name: <input type='text' id='f_name' value='전우치'>
+	</div>
 </body>
 
 </html>

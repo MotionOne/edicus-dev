@@ -1,3 +1,15 @@
+
+/*
+    type VarItem: {
+        id: string;
+        segment: boolean;
+        text: string;
+        title: string;
+    }
+
+    Return:
+        VarItem[]
+*/
 export function getVariableInfo(vdp_catalog) {
     let variables = [];
     console.log("vdp_catalog", vdp_catalog);
@@ -113,30 +125,5 @@ export function getDataRowForUpdatingTnView(memberData, varItems) {
             // pindex: --> 값 넣지 말것.
         });
     });
-    // text_item_cols.forEach((col, pindex)=> {
-    //  col.forEach((item, iindex)=> {
-    //      dataRow.cols.push({
-    //          pindex: pindex,
-    //          id: item.var_id,
-    //          segment: item.segment,
-    //          shrink: true,
-    //          value: {
-    //              text: item.text,
-    //              letter_space: item.letter_space
-    //          }
-    //      })
-    //  })
-    // })
-    // photo_item_cols.forEach((col, pindex)=> {
-    //  col.forEach((item, iindex)=> {
-    //      if (item.value) {
-    //          dataRow.cols.push({
-    //              pindex: pindex,
-    //              id: item.var_id,
-    //              value: item.value,
-    //          })  
-    //      }
-    //  })
-    // })
     return dataRow;
 }
