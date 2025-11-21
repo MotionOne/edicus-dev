@@ -77,7 +77,6 @@ async function onMount() {
     
     
     bind_button_events();
-    bind_form_fields();
     await doUserLogin();
 
 	// 템플릿 목록을 드롭다운에 채우기
@@ -92,26 +91,6 @@ function bind_button_events() {
     $('#btn_save_vdp').click(on_save_vdp);
 }
 
-function bind_form_fields() {
-    $('#f_name').val('전우치');
-    $('#f_name').change(function() {
-        console.log('f_name changed: ', $(this).val())
-
-        let pageIndex = 0
-        let item = tnViewCatalog.text_item_cols[pageIndex].find(item => item.var_id === 'f_name');
-        if (item) {
-            item.text = $(this).val();
-        }
-
-        let memberData = {};
-        tnViewCatalog.text_item_cols[pageIndex].forEach(item => {
-            memberData[item.var_id] = item.text;
-        })
-
-        let dataRow = getDataRowForUpdatingTnView(memberData, varItems);
-        client_env.editor.post_to_tnview('set-data-row', dataRow);        
-    });
-}
 
 // isProjectOpen 상태에 따라 에디터 컨테이너 표시/숨김 업데이트
 function updateEditorContainerVisibility() {

@@ -1,0 +1,339 @@
+[
+    {
+        "item_type": "textbox",
+        "path": {
+            "page_index": 0
+        },
+        "variable": {
+            "type": "replace",
+            "id": "field1",
+            "segments": [
+                {
+                    "id": "f_name",
+                    "text": "홍길동",
+                    "range": {
+                        "index": 0,
+                        "length": 3
+                    },
+                    "title": "이름"
+                },
+                {
+                    "id": "f_jobtitle1",
+                    "text": "대표이사",
+                    "range": {
+                        "index": 5,
+                        "length": 4
+                    },
+                    "title": "직위1"
+                },
+                {
+                    "id": "f_jobtitle2",
+                    "text": "CEO",
+                    "range": {
+                        "index": 12,
+                        "length": 3
+                    },
+                    "cover_range": {
+                        "index": 10,
+                        "length": 5,
+                        "text": "/ CEO"
+                    },
+                    "title": "직위2"
+                }
+            ],
+            "lines": [
+                {
+                    "index": 3,
+                    "segment_ids": [
+                        "f_name"
+                    ]
+                },
+                {
+                    "index": 15,
+                    "segment_ids": [
+                        "f_jobtitle1",
+                        "f_jobtitle2"
+                    ]
+                }
+            ]
+        },
+        "data": {
+            "text": "홍길동\n 대표이사 / CEO\n\n"
+        }
+    },
+    {
+        "item_type": "textbox",
+        "path": {
+            "page_index": 0
+        },
+        "variable": {
+            "type": "replace",
+            "id": "field2",
+            "segments": [
+                {
+                    "id": "f_company",
+                    "text": "주식회사 모션원",
+                    "range": {
+                        "index": 0,
+                        "length": 8
+                    },
+                    "title": "회사명"
+                },
+                {
+                    "id": "f_addr",
+                    "text": "08380 서울시 구로구 디지털로 33길 27, 707호",
+                    "range": {
+                        "index": 9,
+                        "length": 31
+                    },
+                    "title": "주소"
+                },
+                {
+                    "id": "f_tel",
+                    "text": "(02) 9999-1004",
+                    "range": {
+                        "index": 46,
+                        "length": 14
+                    },
+                    "cover_range": {
+                        "index": 41,
+                        "length": 21,
+                        "text": "Tel. (02) 9999-1004  "
+                    },
+                    "title": "전화번호"
+                },
+                {
+                    "id": "f_fax",
+                    "text": "(02) 9999-1005",
+                    "range": {
+                        "index": 67,
+                        "length": 14
+                    },
+                    "cover_range": {
+                        "index": 62,
+                        "length": 19,
+                        "text": "Fax. (02) 9999-1005"
+                    },
+                    "title": "팩스"
+                },
+                {
+                    "id": "f_mobile",
+                    "text": "010-9999-1006",
+                    "range": {
+                        "index": 90,
+                        "length": 13
+                    },
+                    "cover_range": {
+                        "index": 82,
+                        "length": 24,
+                        "text": "Mobile. 010-9999-1006   "
+                    },
+                    "title": "모바일"
+                },
+                {
+                    "id": "f_email",
+                    "text": "gdhong@motion1.co.kr",
+                    "range": {
+                        "index": 114,
+                        "length": 20
+                    },
+                    "cover_range": {
+                        "index": 106,
+                        "length": 28,
+                        "text": "E-mail. gdhong@motion1.co.kr"
+                    },
+                    "title": "이메일"
+                }
+            ],
+            "lines": [
+                {
+                    "index": 8,
+                    "segment_ids": [
+                        "f_company"
+                    ]
+                },
+                {
+                    "index": 40,
+                    "segment_ids": [
+                        "f_addr"
+                    ]
+                },
+                {
+                    "index": 81,
+                    "segment_ids": [
+                        "f_tel",
+                        "f_fax"
+                    ]
+                }
+            ]
+        },
+        "data": {
+            "text": "주식회사 모션원\n08380 서울시 구로구 디지털로 33길 27, 707호\nTel. (02) 9999-1004  Fax. (02) 9999-1005\nMobile. 010-9999-1006   E-mail. gdhong@motion1.co.kr\n"
+        }
+    },
+    {
+        "item_type": "textbox",
+        "path": {
+            "page_index": 1
+        },
+        "variable": {
+            "type": "replace",
+            "id": "field1",
+            "segments": [
+                {
+                    "id": "b_name",
+                    "text": "Gil-Dong Hong",
+                    "range": {
+                        "index": 0,
+                        "length": 13
+                    },
+                    "title": "이름"
+                },
+                {
+                    "id": "b_jobtitle1",
+                    "text": "President",
+                    "range": {
+                        "index": 16,
+                        "length": 9
+                    },
+                    "title": "직위1"
+                },
+                {
+                    "id": "b_jobtitle2",
+                    "text": "CEO",
+                    "range": {
+                        "index": 28,
+                        "length": 3
+                    },
+                    "cover_range": {
+                        "index": 26,
+                        "length": 5,
+                        "text": "/ CEO"
+                    },
+                    "title": "직위2"
+                }
+            ],
+            "lines": [
+                {
+                    "index": 14,
+                    "segment_ids": [
+                        "b_name"
+                    ]
+                }
+            ]
+        },
+        "data": {
+            "text": "Gil-Dong Hong \n President / CEO\n"
+        }
+    },
+    {
+        "item_type": "textbox",
+        "path": {
+            "page_index": 1
+        },
+        "variable": {
+            "type": "replace",
+            "id": "field2",
+            "segments": [
+                {
+                    "id": "b_company",
+                    "text": "MotionOne Inc.",
+                    "range": {
+                        "index": 0,
+                        "length": 14
+                    },
+                    "title": "회사명"
+                },
+                {
+                    "id": "b_addr",
+                    "text": "#08380, Suite 707, Digital-ro 33-gil 27, Guro-gu, Seoul, Korea",
+                    "range": {
+                        "index": 15,
+                        "length": 62
+                    },
+                    "title": "주소"
+                },
+                {
+                    "id": "b_tel",
+                    "text": "(02) 9999-1004",
+                    "range": {
+                        "index": 83,
+                        "length": 14
+                    },
+                    "cover_range": {
+                        "index": 78,
+                        "length": 23,
+                        "text": "Tel. (02) 9999-1004    "
+                    },
+                    "title": "전화번호"
+                },
+                {
+                    "id": "b_fax",
+                    "text": "(02) 9999-1005",
+                    "range": {
+                        "index": 106,
+                        "length": 14
+                    },
+                    "cover_range": {
+                        "index": 101,
+                        "length": 19,
+                        "text": "Fax. (02) 9999-1005"
+                    },
+                    "title": "팩스"
+                },
+                {
+                    "id": "b_mobile",
+                    "text": "010-9999-1006",
+                    "range": {
+                        "index": 129,
+                        "length": 13
+                    },
+                    "cover_range": {
+                        "index": 121,
+                        "length": 25,
+                        "text": "Mobile. 010-9999-1006    "
+                    },
+                    "title": "모바일"
+                },
+                {
+                    "id": "b_email",
+                    "text": "gdhong@motion1.co.kr",
+                    "range": {
+                        "index": 154,
+                        "length": 20
+                    },
+                    "cover_range": {
+                        "index": 146,
+                        "length": 28,
+                        "text": "E-mail. gdhong@motion1.co.kr"
+                    },
+                    "title": "이메일"
+                }
+            ],
+            "lines": [
+                {
+                    "index": 14,
+                    "segment_ids": [
+                        "b_company"
+                    ]
+                },
+                {
+                    "index": 77,
+                    "segment_ids": [
+                        "b_addr"
+                    ]
+                },
+                {
+                    "index": 120,
+                    "segment_ids": [
+                        "b_tel",
+                        "b_fax"
+                    ]
+                }
+            ]
+        },
+        "data": {
+            "text": "MotionOne Inc.\n#08380, Suite 707, Digital-ro 33-gil 27, Guro-gu, Seoul, Korea\nTel. (02) 9999-1004    Fax. (02) 9999-1005\nMobile. 010-9999-1006    E-mail. gdhong@motion1.co.kr\n"
+        }
+    }
+]
