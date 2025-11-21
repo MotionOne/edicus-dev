@@ -78,7 +78,7 @@ function open_tnview(client_env, ps_code, project_id, callbackForTnView) {
  * @param {Function} dependencies.setupPageSizes - 페이지 사이즈 설정 함수
  */
 export function createTnViewCallback(dependencies) {
-    const { client_env, projectInfo, setVarItems, setTnViewCatalog, setupPageSizes } = dependencies;
+    const { client_env, projectInfo, setVarItems, setTnViewCatalog, setupPageSizes, buildFormFields } = dependencies;
 
     return async function callbackForTnView(err, data) {
         if (data.action == 'ready-to-listen') {
@@ -91,13 +91,10 @@ export function createTnViewCallback(dependencies) {
                 console.log('varItems: ', varItems)
                 setVarItems(varItems);
 
-                let tnViewCatalog;
-                if (projectInfo && projectInfo.vdpdata) 
-                    tnViewCatalog = JSON.parse(projectInfo.vdpdata)
-                else					
-                    tnViewCatalog = handle_vdp_catalog(vdp_catalog);				
+                let tnViewCatalog = handle_vdp_catalog(vdp_catalog);				
                 console.log('tnViewCatalog: ', tnViewCatalog)
                 setTnViewCatalog(tnViewCatalog);
+                buildFormFields(tnViewCatalog);
             }
 
             setupPageSizes(data);

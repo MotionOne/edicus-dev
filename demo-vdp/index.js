@@ -212,7 +212,8 @@ function on_open_tnview() {
 		projectInfo,
 		setVarItems: (items) => { varItems = items; },
 		setTnViewCatalog: (catalog) => { tnViewCatalog = catalog; },
-		setupPageSizes
+		setupPageSizes,
+        buildFormFields: (catalog) => { build_form_fields(catalog); }
 	});
 	
 	// TnView 프로젝트 열기
@@ -269,4 +270,64 @@ function on_save_vdp() {
     client_env.editor.post_to_tnview('save');
 }
 
+function build_form_fields(tnViewCatalog) {
+    let pages = tnViewCatalog.text_item_cols;
+
+    pages.forEach((textItems, pageIndex) => {
+        /*
+            type TextItem = {
+                segment: boolean;
+                var_id: string;
+                var_title: string;
+                text: string;
+                letter_space: number;
+            } 
+        */       
+
+        textItems.forEach((textItem, index) => {
+            let $container = $('<div></div>');
+            $container.text(textItem.var_title + ' : ');
+
+            let $input = $('<input></input>');
+            $input.attr('type', 'text');
+            $input.attr('id', textItem.var_id);
+            $input.attr('value', textItem.text);
+            
+            $input.on('keypress', function(e) {
+                if (e.which == 13) {
+                    onUpdateField($(this).val(), textItem, tnViewCatalog);
+                }
+            });
+
+            $container.append($input);
+            if (pageIndex == 0) {
+                $('#front-page').append($container);
+            } else {
+                $('#back-page').append($container);
+            }
+        })
+    })
+}
+
+function onUpdateField(val, textItem, catalog) {
+    console.log('Input updated:', val, textItem);
+    textItem.text = val;
+
+    let pageIndex = -1;
+    catalog.text_item_cols.forEach((items, idx) => {
+        if (items.includes(textItem)) {
+            pageIndex = idx;
+        }
+    });
+
+    if (pageIndex >= 0) {
+        let memberData = {};
+        catalog.text_item_cols[pageIndex].forEach(item => {
+            memberData[item.var_id] = item.text;
+        })
+
+        let dataRow = getDataRowForUpdatingTnView(memberData, varItems);
+        client_env.editor.post_to_tnview('set-data-row', dataRow);  
+    }      
+}
 onMount();
