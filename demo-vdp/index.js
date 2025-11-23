@@ -22,7 +22,6 @@ let client_env = {
 	user_token: null,
 	parent_element: document.getElementById("edicus_container"),
 	editor: null,
-	isProjectOpen: false,
 }
 
 
@@ -64,6 +63,7 @@ let project_data = null;
 class Context {
 	constructor() {
 		this.projectId = null;
+		this.isProjectOpen = false; // 프로젝트 열려있는지 여부
 		this.tnViewCatalog = null;
 		this.varItems = [];
 		this.pageItems = [];
@@ -92,6 +92,7 @@ class Context {
 
 	build_form_fields() {
 		let pages = this.tnViewCatalog.text_item_cols;
+		let _this = this;
 	
 		pages.forEach((textItems, pageIndex) => {
 			/*
@@ -115,7 +116,7 @@ class Context {
 				
 				$input.on('keypress', function(e) {
 					if (e.which == 13) {
-						this.onUpdateField($(this).val(), textItem);
+						_this.onUpdateField($(this).val(), textItem);
 					}
 				});
 	
@@ -150,6 +151,12 @@ class Context {
 			client_env.editor.post_to_tnview('set-data-row', dataRow);  
 		}      
 	}
+
+	// isProjectOpen 상태에 따라 에디터 컨테이너 표시/숨김 업데이트
+	updateEditorContainerVisibility(parentElement) {
+		parentElement.style.display = this.isProjectOpen ? 'block' : 'none';
+	}
+
 }
 
 let context = new Context();
@@ -184,12 +191,6 @@ function bind_button_events() {
 	$('#btn_delete_project').click(on_delete_project);
 	$('#btn_create_tnview').click(on_create_tnview);
     $('#btn_save_vdp').click(on_save_vdp);
-}
-
-
-// isProjectOpen 상태에 따라 에디터 컨테이너 표시/숨김 업데이트
-function updateEditorContainerVisibility() {
-	client_env.parent_element.style.display = client_env.isProjectOpen ? 'block' : 'none';
 }
 
 
@@ -255,7 +256,7 @@ function close_editor() {
 	client_env.editor.destroy({
 		parent_element: client_env.parent_element
 	})
-	client_env.isProjectOpen = false;
+	context.isProjectOpen = false;
 	updateEditorContainerVisibility();
 }
 
@@ -272,17 +273,13 @@ function on_create_tnview(event) {
 }
 
 function on_open_tnview() {
-	var project_id = get_project_id()
-	
-	// TnView 콜백 생성
-	const callback = createTnViewCallback(client_env, context, project_id);
-	
+	context.projectId = get_project_id();
 	// TnView 프로젝트 열기
-	openTnViewProject(client_env, "90x50@NC", project_id, callback, updateEditorContainerVisibility);
+	openTnViewProject(client_env, context, "90x50@NC");
 }
 
 async function on_delete_project() {
-	if (client_env.isProjectOpen) {
+	if (context.isProjectOpen) {
 		close_editor();
 	}
 

@@ -12,12 +12,12 @@ import { handle_vdp_catalog, getVariableInfo } from './vdp-catalog.js';
  * @param {string} ps_code - 제품 코드
  * @param {string} project_id - 프로젝트 ID
  * @param {Function} callback - 콜백 함수
- * @param {Function} updateVisibility - 컨테이너 표시 업데이트 함수
  */
-export function openTnViewProject(client_env, ps_code, project_id, callback, updateVisibility) {
-    open_tnview(client_env, ps_code, project_id, callback);
-    client_env.isProjectOpen = true;
-    updateVisibility();
+export function openTnViewProject(client_env, context, ps_code) {
+	const callback = createTnViewCallback(client_env, context);
+    open_tnview(client_env, ps_code, context.projectId, callback);
+    context.isProjectOpen = true;
+    context.updateEditorContainerVisibility(client_env.parent_element);
 }
 
 
@@ -74,7 +74,7 @@ function open_tnview(client_env, ps_code, project_id, callbackForTnView) {
  * @param {Object} context - Context 객체 (varItems, tnViewCatalog, setupPageSizes, build_form_fields 등 포함)
  * @param {string} projectId - 프로젝트 ID
  */
-export function createTnViewCallback(client_env, context, projectId) {
+export function createTnViewCallback(client_env, context) {
     return async function callbackForTnView(err, data) {
         if (data.action == 'ready-to-listen') {
             console.log('ready-to-listen')
@@ -108,7 +108,7 @@ export function createTnViewCallback(client_env, context, projectId) {
             // }				
 
             // await cloudIf.supa.updateCartItem(
-            // 	projectId,
+            // 	context.projectId,
             // 	projectUpdateInfo)
 
             // dispatch('saved');

@@ -10,11 +10,11 @@ import { handle_vdp_catalog } from './vdp-catalog.js';
  */
 export function createProduct(client_env, obj, updateEditorContainerVisibility, callbackForCreateTnView) {
 	// 프로젝트가 이미 열려있으면 먼저 닫기
-	if (client_env.isProjectOpen) {
+	if (context.isProjectOpen) {
 		client_env.editor.close({
 			parent_element: client_env.parent_element
 		})
-		client_env.isProjectOpen = false;
+		context.isProjectOpen = false;
 		updateEditorContainerVisibility();
 	}
 
@@ -46,7 +46,7 @@ export function createProduct(client_env, obj, updateEditorContainerVisibility, 
 	client_env.editor.create_tnview(params, callbackForCreateTnView)
 	
 	// 프로젝트 열림 상태로 설정
-	client_env.isProjectOpen = true;
+	context.isProjectOpen = true;
 	updateEditorContainerVisibility();
 }
 
@@ -101,7 +101,7 @@ export function createCreateTnViewCallback(client_env, context, updateEditorCont
             client_env.editor.destroy({
                 parent_element: client_env.parent_element,        
             })
-            client_env.isProjectOpen = false; 
+            context.isProjectOpen = false; 
             updateEditorContainerVisibility();
         }
         else if (data.action == 'request-user-token') {
@@ -121,7 +121,7 @@ export function createCreateTnViewCallback(client_env, context, updateEditorCont
             client_env.editor.destroy({
                 parent_element: client_env.parent_element,        
             })
-            client_env.isProjectOpen = false; 
+            context.isProjectOpen = false; 
             updateEditorContainerVisibility();
         }
     }
