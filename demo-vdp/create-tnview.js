@@ -51,17 +51,12 @@ export function createProduct(client_env, obj, updateEditorContainerVisibility, 
 }
 
 /**
- * create_tnview 콜백 생성 팩토리 함수
- * @param {Object} dependencies - 의존성 객체
- * @param {Object} dependencies.client_env - 클라이언트 환경 객체
- * @param {Function} dependencies.updateEditorContainerVisibility - 에디터 컨테이너 표시 업데이트 함수
- * @param {Function} dependencies.setupPageSizes - 페이지 사이즈 설정 함수
- * @param {Function} dependencies.setTnViewCatalog - tnViewCatalog 설정 함수
- * @param {Function} dependencies.getTnViewCatalog - tnViewCatalog 조회 함수
+ * create_tnview 콜백 생성 함수
+ * @param {Object} client_env - 클라이언트 환경 객체
+ * @param {Object} context - Context 객체 (tnViewCatalog, setupPageSizes 등 포함)
+ * @param {Function} updateEditorContainerVisibility - 에디터 컨테이너 표시 업데이트 함수
  */
-export function createCreateTnViewCallback(dependencies) {
-    const { client_env, updateEditorContainerVisibility, setupPageSizes, setTnViewCatalog, getTnViewCatalog } = dependencies;
-
+export function createCreateTnViewCallback(client_env, context, updateEditorContainerVisibility) {
     return function callbackForCreateTnView(err, data) {
         // 이벤트가 오는 순서대로임
         if (data.action === 'create-report' && data.info.status === 'start') {
@@ -71,11 +66,11 @@ export function createCreateTnViewCallback(dependencies) {
             console.log("vdp_catalog", vdp_catalog)
             if (vdp_catalog) {
                 let newCatalog = handle_vdp_catalog(vdp_catalog);
-                setTnViewCatalog(newCatalog);
+                context.tnViewCatalog = newCatalog;
                 // dispatch('tnview-catalog', tnViewCatalog)
             }
     
-            setupPageSizes(data);
+            context.setupPageSizes(data, client_env.parent_element);
         }  
         else if (data.action == 'project-id-created') {
             console.log('project-id-created: ', data.info.project_id)
@@ -85,11 +80,10 @@ export function createCreateTnViewCallback(dependencies) {
         }
         else if (data.action === 'save-doc-report' && data.info.status === 'end') {
             // vdp data를 저장해야 함.
-            let tnViewCatalog = getTnViewCatalog();
-            console.log('tnViewCatalog: ', tnViewCatalog)
+            console.log('tnViewCatalog: ', context.tnViewCatalog)
             
             let projectUpdateInfo = {
-                vdp: JSON.stringify(tnViewCatalog)
+                vdp: JSON.stringify(context.tnViewCatalog)
             }			
             if (data.info.docInfo.tnUrlList && data.info.docInfo.tnUrlList.length > 0) {
                 projectUpdateInfo.tnUrl = data.info.docInfo.tnUrlList[0]				

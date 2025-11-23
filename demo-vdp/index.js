@@ -266,13 +266,7 @@ function on_create_tnview(event) {
 		return;
 	}
 	
-    const callback = createCreateTnViewCallback({
-        client_env,
-        updateEditorContainerVisibility,
-        setupPageSizes: (data) => context.setupPageSizes(data, client_env.parent_element),
-        setTnViewCatalog: (catalog) => { context.tnViewCatalog = catalog; },
-        getTnViewCatalog: () => context.tnViewCatalog
-    });
+    const callback = createCreateTnViewCallback(client_env, context, updateEditorContainerVisibility);
 
 	createProduct(client_env, edicusTemplates[selectedIndex], updateEditorContainerVisibility, callback);
 }
@@ -281,14 +275,7 @@ function on_open_tnview() {
 	var project_id = get_project_id()
 	
 	// TnView 콜백 생성
-	const callback = createTnViewCallback({
-		client_env,
-		project_id,
-		setVarItems: (items) => { context.varItems = items; },
-		setTnViewCatalog: (catalog) => { context.tnViewCatalog = catalog; },
-		setupPageSizes: (data) => context.setupPageSizes(data, client_env.parent_element),
-        buildFormFields: (catalog) => { context.build_form_fields(catalog); }
-	});
+	const callback = createTnViewCallback(client_env, context, project_id);
 	
 	// TnView 프로젝트 열기
 	openTnViewProject(client_env, "90x50@NC", project_id, callback, updateEditorContainerVisibility);

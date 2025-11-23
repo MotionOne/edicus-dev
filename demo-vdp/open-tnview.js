@@ -69,17 +69,12 @@ function open_tnview(client_env, ps_code, project_id, callbackForTnView) {
 
 
 /**
- * TnView 콜백 생성 팩토리 함수
- * @param {Object} dependencies - 콜백에서 사용할 의존성 객체
- * @param {Object} dependencies.client_env - 클라이언트 환경
+ * TnView 콜백 생성 함수
+ * @param {Object} client_env - 클라이언트 환경
+ * @param {Object} context - Context 객체 (varItems, tnViewCatalog, setupPageSizes, build_form_fields 등 포함)
  * @param {string} projectId - 프로젝트 ID
- * @param {Function} dependencies.setVarItems - varItems 설정 함수
- * @param {Function} dependencies.setTnViewCatalog - tnViewCatalog 설정 함수
- * @param {Function} dependencies.setupPageSizes - 페이지 사이즈 설정 함수
  */
-export function createTnViewCallback(dependencies) {
-    const { client_env, projectId, setVarItems, setTnViewCatalog, setupPageSizes, buildFormFields } = dependencies;
-
+export function createTnViewCallback(client_env, context, projectId) {
     return async function callbackForTnView(err, data) {
         if (data.action == 'ready-to-listen') {
             console.log('ready-to-listen')
@@ -89,15 +84,15 @@ export function createTnViewCallback(dependencies) {
             if (vdp_catalog) {
                 const varItems = getVariableInfo(vdp_catalog)
                 console.log('varItems: ', varItems)
-                setVarItems(varItems);
+                context.varItems = varItems;
 
                 let tnViewCatalog = handle_vdp_catalog(vdp_catalog);				
                 console.log('tnViewCatalog: ', tnViewCatalog)
-                setTnViewCatalog(tnViewCatalog);
-                buildFormFields(tnViewCatalog);
+                context.tnViewCatalog = tnViewCatalog;
+                context.build_form_fields(tnViewCatalog);
             }
 
-            setupPageSizes(data);
+            context.setupPageSizes(data, client_env.parent_element);
         }
         else if (data.action === 'open-report' && data.info.status === 'end') { 
             // edicus의 로딩프로그레스가 끝나면 tnview를 보여준다. 대략 1초 기다림.
@@ -106,7 +101,7 @@ export function createTnViewCallback(dependencies) {
         }
         else if (data.action === 'save-doc-report' && data.info.status === 'end') {
             // let projectUpdateInfo:CartUpdate = {
-            // 	vdpdata: JSON.stringify(tnViewCatalog)
+            // 	vdpdata: JSON.stringify(context.tnViewCatalog)
             // }
             // if (data.info.docInfo.tnUrlList && data.info.docInfo.tnUrlList.length > 0) {
             // 	projectUpdateInfo.tnUrl = data.info.docInfo.tnUrlList[0]				
