@@ -5,7 +5,7 @@ import * as projectModule from './project.js';
 import { handle_vdp_catalog, getDataRowForUpdatingTnView, getVariableInfo } from './vdp-catalog.js';
 import { getInnerBoxWithRatio } from './util.js';
 import { createTnViewCallback, openTnViewProject } from './open-tnview.js';
-import { createProduct, createCreateTnViewCallback } from './create-tnview.js';
+import { createTnViewProject, createCreateTnViewCallback } from './create-tnview.js';
 
 /*
 	uid 설명
@@ -57,7 +57,7 @@ let project_data = null;
     
     type PageItem = {
         size_mm : {width:number, height:number},
-    }
+    }	
 */
 
 class Context {
@@ -162,16 +162,6 @@ class Context {
 let context = new Context();
 
 
-/*
-	type PageItem = {
-		size_mm : {width:number, height:number},
-	}
-*/
-let pageItems = []; // PageItem[]
-
-let referenceEditorBox = {width:400, height:400};
-let editorBoxSize = {width:400, height:400}
-
 
 // 이 소스파일 끝에서 onMount()을 호출함.
 async function onMount() {
@@ -257,7 +247,7 @@ function close_editor() {
 		parent_element: client_env.parent_element
 	})
 	context.isProjectOpen = false;
-	updateEditorContainerVisibility();
+	context.updateEditorContainerVisibility(client_env.parent_element);
 }
 
 function on_create_tnview(event) {
@@ -267,9 +257,7 @@ function on_create_tnview(event) {
 		return;
 	}
 	
-    const callback = createCreateTnViewCallback(client_env, context, updateEditorContainerVisibility);
-
-	createProduct(client_env, edicusTemplates[selectedIndex], updateEditorContainerVisibility, callback);
+	createTnViewProject(client_env, context, edicusTemplates[selectedIndex]);
 }
 
 function on_open_tnview() {

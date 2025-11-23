@@ -8,14 +8,14 @@ import { handle_vdp_catalog } from './vdp-catalog.js';
  * @param {Function} updateEditorContainerVisibility - 에디터 컨테이너 표시 업데이트 함수
  * @param {Function} callbackForCreateTnView - create_tnview 콜백 함수
  */
-export function createProduct(client_env, obj, updateEditorContainerVisibility, callbackForCreateTnView) {
+export function createTnViewProject(client_env, context, obj) {
 	// 프로젝트가 이미 열려있으면 먼저 닫기
 	if (context.isProjectOpen) {
 		client_env.editor.close({
 			parent_element: client_env.parent_element
 		})
 		context.isProjectOpen = false;
-		updateEditorContainerVisibility();
+		context.updateEditorContainerVisibility(client_env.parent_element);
 	}
 
 	var params = {
@@ -43,11 +43,12 @@ export function createProduct(client_env, obj, updateEditorContainerVisibility, 
             }
         }
 	}
-	client_env.editor.create_tnview(params, callbackForCreateTnView)
+	const callback = createCreateTnViewCallback(client_env, context);
+	client_env.editor.create_tnview(params, callback)
 	
 	// 프로젝트 열림 상태로 설정
 	context.isProjectOpen = true;
-	updateEditorContainerVisibility();
+	context.updateEditorContainerVisibility(client_env.parent_element);
 }
 
 /**
@@ -56,7 +57,7 @@ export function createProduct(client_env, obj, updateEditorContainerVisibility, 
  * @param {Object} context - Context 객체 (tnViewCatalog, setupPageSizes 등 포함)
  * @param {Function} updateEditorContainerVisibility - 에디터 컨테이너 표시 업데이트 함수
  */
-export function createCreateTnViewCallback(client_env, context, updateEditorContainerVisibility) {
+export function createCreateTnViewCallback(client_env, context) {
     return function callbackForCreateTnView(err, data) {
         // 이벤트가 오는 순서대로임
         if (data.action === 'create-report' && data.info.status === 'start') {
@@ -67,6 +68,7 @@ export function createCreateTnViewCallback(client_env, context, updateEditorCont
             if (vdp_catalog) {
                 let newCatalog = handle_vdp_catalog(vdp_catalog);
                 context.tnViewCatalog = newCatalog;
+                context.build_form_fields(newCatalog);
                 // dispatch('tnview-catalog', tnViewCatalog)
             }
     
@@ -74,6 +76,7 @@ export function createCreateTnViewCallback(client_env, context, updateEditorCont
         }  
         else if (data.action == 'project-id-created') {
             console.log('project-id-created: ', data.info.project_id)
+            context.projectId = data.info.project_id;
             // 고객사 DB에 필요한 정보 저장
         }
         else if (data.action === 'create-report' && data.info.status === 'end') {
@@ -102,7 +105,7 @@ export function createCreateTnViewCallback(client_env, context, updateEditorCont
                 parent_element: client_env.parent_element,        
             })
             context.isProjectOpen = false; 
-            updateEditorContainerVisibility();
+            context.updateEditorContainerVisibility(client_env.parent_element);
         }
         else if (data.action == 'request-user-token') {
             // Edicus로 부터 user token요청을 받으면 "send-user-token" action으로 대응한다.
@@ -122,7 +125,7 @@ export function createCreateTnViewCallback(client_env, context, updateEditorCont
                 parent_element: client_env.parent_element,        
             })
             context.isProjectOpen = false; 
-            updateEditorContainerVisibility();
+            context.updateEditorContainerVisibility(client_env.parent_element);
         }
     }
 }
