@@ -48,18 +48,111 @@ let project_data = null;
         text_item_cols: TextItem[][];
         photo_item_cols: PhotoItem[] | boolean;
     }
-*/
-let tnViewCatalog = null;
-
-/*
+    
     type VarItem: {
         id: string;
         segment: boolean;
         text: string;
         title: string;
     }
+    
+    type PageItem = {
+        size_mm : {width:number, height:number},
+    }
 */
-let varItems = []; // VarItem[]
+
+class Context {
+	constructor() {
+		this.projectId = null;
+		this.tnViewCatalog = null;
+		this.varItems = [];
+		this.pageItems = [];
+		this.referenceEditorBox = {width:400, height:400};
+		this.editorBoxSize = {width:400, height:400};
+	}
+
+	setupPageSizes(data, parentElement) {
+		// data.info.page_infos[index]에 있는 가로, 세로 사이즈 정보를 pageItems에 저장한다.
+
+		data.info.page_infos.forEach((page, index) => {
+			this.pageItems.push({
+				size_mm: {
+					width: page.size_mm.width,
+					height: page.size_mm.height
+				}
+			})
+		})
+
+		let {width, height} = this.pageItems[0].size_mm;
+		this.editorBoxSize = getInnerBoxWithRatio(this.referenceEditorBox, [width, height])
+
+		parentElement.style.width = (2*this.editorBoxSize.width + 8) + 'px';
+		parentElement.style.height = this.editorBoxSize.height + 'px';
+	}
+
+	build_form_fields() {
+		let pages = this.tnViewCatalog.text_item_cols;
+	
+		pages.forEach((textItems, pageIndex) => {
+			/*
+				type TextItem = {
+					segment: boolean;
+					var_id: string;
+					var_title: string;
+					text: string;
+					letter_space: number;
+				} 
+			*/       
+	
+			textItems.forEach((textItem, index) => {
+				let $container = $('<div></div>');
+				$container.text(textItem.var_title + ' : ');
+	
+				let $input = $('<input></input>');
+				$input.attr('type', 'text');
+				$input.attr('id', textItem.var_id);
+				$input.attr('value', textItem.text);
+				
+				$input.on('keypress', function(e) {
+					if (e.which == 13) {
+						this.onUpdateField($(this).val(), textItem);
+					}
+				});
+	
+				$container.append($input);
+				if (pageIndex == 0) {
+					$('#front-page').append($container);
+				} else {
+					$('#back-page').append($container);
+				}
+			})
+		})
+	}	
+
+	onUpdateField(val, textItem) {
+		console.log('Input updated:', val, textItem);
+		textItem.text = val;
+	
+		let pageIndex = -1;
+		this.tnViewCatalog.text_item_cols.forEach((items, idx) => {
+			if (items.includes(textItem)) {
+				pageIndex = idx;
+			}
+		});
+	
+		if (pageIndex >= 0) {
+			let memberData = {};
+			this.tnViewCatalog.text_item_cols[pageIndex].forEach(item => {
+				memberData[item.var_id] = item.text;
+			})
+	
+			let dataRow = getDataRowForUpdatingTnView(memberData, this.varItems);
+			client_env.editor.post_to_tnview('set-data-row', dataRow);  
+		}      
+	}
+}
+
+let context = new Context();
 
 
 /*
@@ -176,9 +269,9 @@ function on_create_tnview(event) {
     const callback = createCreateTnViewCallback({
         client_env,
         updateEditorContainerVisibility,
-        setupPageSizes,
-        setTnViewCatalog: (catalog) => { tnViewCatalog = catalog; },
-        getTnViewCatalog: () => tnViewCatalog
+        setupPageSizes: (data) => context.setupPageSizes(data, client_env.parent_element),
+        setTnViewCatalog: (catalog) => { context.tnViewCatalog = catalog; },
+        getTnViewCatalog: () => context.tnViewCatalog
     });
 
 	createProduct(client_env, edicusTemplates[selectedIndex], updateEditorContainerVisibility, callback);
@@ -191,10 +284,10 @@ function on_open_tnview() {
 	const callback = createTnViewCallback({
 		client_env,
 		project_id,
-		setVarItems: (items) => { varItems = items; },
-		setTnViewCatalog: (catalog) => { tnViewCatalog = catalog; },
-		setupPageSizes,
-        buildFormFields: (catalog) => { build_form_fields(catalog); }
+		setVarItems: (items) => { context.varItems = items; },
+		setTnViewCatalog: (catalog) => { context.tnViewCatalog = catalog; },
+		setupPageSizes: (data) => context.setupPageSizes(data, client_env.parent_element),
+        buildFormFields: (catalog) => { context.build_form_fields(catalog); }
 	});
 	
 	// TnView 프로젝트 열기
@@ -216,26 +309,6 @@ async function on_delete_project() {
 	on_select_project_id();
 }
 
-function setupPageSizes(data) {
-    // data.info.page_infos[index]에 있는 가로, 세로 사이즈 정보를 pageItems에 저장한다.
-
-    data.info.page_infos.forEach((page, index) => {
-        pageItems.push({
-            size_mm: {
-                width: page.size_mm.width,
-                height: page.size_mm.height
-            }
-        })
-    })
-
-    let {width, height} = pageItems[0].size_mm;
-    editorBoxSize = getInnerBoxWithRatio(referenceEditorBox, [width, height])
-
-    client_env.parent_element.style.width = (2*editorBoxSize.width + 8) + 'px';
-    client_env.parent_element.style.height = editorBoxSize.height + 'px';
-}	
-
-
 function populate_template_dropdown() {
 	const $select = $('#select-template');
 	edicusTemplates.forEach((template, index) => {
@@ -251,64 +324,5 @@ function on_save_vdp() {
     client_env.editor.post_to_tnview('save');
 }
 
-function build_form_fields(tnViewCatalog) {
-    let pages = tnViewCatalog.text_item_cols;
 
-    pages.forEach((textItems, pageIndex) => {
-        /*
-            type TextItem = {
-                segment: boolean;
-                var_id: string;
-                var_title: string;
-                text: string;
-                letter_space: number;
-            } 
-        */       
-
-        textItems.forEach((textItem, index) => {
-            let $container = $('<div></div>');
-            $container.text(textItem.var_title + ' : ');
-
-            let $input = $('<input></input>');
-            $input.attr('type', 'text');
-            $input.attr('id', textItem.var_id);
-            $input.attr('value', textItem.text);
-            
-            $input.on('keypress', function(e) {
-                if (e.which == 13) {
-                    onUpdateField($(this).val(), textItem, tnViewCatalog);
-                }
-            });
-
-            $container.append($input);
-            if (pageIndex == 0) {
-                $('#front-page').append($container);
-            } else {
-                $('#back-page').append($container);
-            }
-        })
-    })
-}
-
-function onUpdateField(val, textItem, catalog) {
-    console.log('Input updated:', val, textItem);
-    textItem.text = val;
-
-    let pageIndex = -1;
-    catalog.text_item_cols.forEach((items, idx) => {
-        if (items.includes(textItem)) {
-            pageIndex = idx;
-        }
-    });
-
-    if (pageIndex >= 0) {
-        let memberData = {};
-        catalog.text_item_cols[pageIndex].forEach(item => {
-            memberData[item.var_id] = item.text;
-        })
-
-        let dataRow = getDataRowForUpdatingTnView(memberData, varItems);
-        client_env.editor.post_to_tnview('set-data-row', dataRow);  
-    }      
-}
 onMount();
