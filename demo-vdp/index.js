@@ -23,7 +23,7 @@ let client_env = {
 	editor: null,
 }
 
-let context = new Context();
+let context = new Context(client_env);
 
 
 let project_arr = [];

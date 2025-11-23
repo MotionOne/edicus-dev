@@ -9,8 +9,8 @@ import { handle_vdp_catalog, getVariableInfo } from './vdp-catalog.js';
 /**
  * TnView 프로젝트 열기
  * @param {Object} client_env - 클라이언트 환경
+ * @param {Object} context - Context 객체 (varItems, tnViewCatalog, setupPageSizes, build_form_fields 등 포함)
  * @param {string} ps_code - 제품 코드
- * @param {string} project_id - 프로젝트 ID
  */
 export function openTnViewProject(client_env, context, ps_code) {
 	const callback = createCallback(client_env, context);
@@ -23,8 +23,8 @@ export function openTnViewProject(client_env, context, ps_code) {
 /**
  * TnView를 엽니다.
  * @param {Object} client_env - 클라이언트 환경 객체 (editor, user_token 등 포함)
+ * @param {Object} context - Context 객체 (varItems, tnViewCatalog, setupPageSizes, build_form_fields 등 포함)
  * @param {string} ps_code - 제품 사양 코드 (Product Spec Code)
- * @param {string} project_id - 프로젝트 식별자
  * @param {Function} callback - TnView 이벤트 처리를 위한 콜백 함수
  */
 function open_tnview(client_env, context, ps_code, callback) {

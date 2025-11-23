@@ -29,13 +29,17 @@ import { getInnerBoxWithRatio } from './util.js';
 */
 
 export class Context {
-	constructor() {
+	constructor(client_env) {
+		this.client_env = client_env;
 		this.projectId = null;
 		this.isProjectOpen = false;
 		this.tnViewCatalog = null; // TnViewCatalog
 		this.varItems = []; // VarItem[]
 	}
 
+	/*
+		프로젝트의 페이지 사이즈의 비율에 맞추어 표시 영역의 크기를 설정한다.
+	*/
 	setupPageSizes(data, parentElement) {
 		// 첫 번째 페이지의 가로, 세로 사이즈를 가져온다.
 		let pageWidth = data.info.page_infos[0].size_mm.width;
@@ -47,6 +51,9 @@ export class Context {
 		parentElement.style.height = editorBoxSize.height + 'px';
 	}
 
+	/*
+		프로젝트가 제공하는 필드 정보를 이용해 텍스트 필드를 생성한다.
+	*/
 	build_form_fields() {
 		let pages = this.tnViewCatalog.text_item_cols;
 		let _this = this;
@@ -62,7 +69,7 @@ export class Context {
 				} 
 			*/       
 	
-			textItems.forEach((textItem, index) => {
+			textItems.forEach((textItem) => {
 				let $container = $('<div></div>');
 				$container.text(textItem.var_title + ' : ');
 	
@@ -72,8 +79,9 @@ export class Context {
 				$input.attr('value', textItem.text);
 				
 				$input.on('keypress', function(e) {
-					if (e.which == 13) {
-						_this.onUpdateField($(this).val(), textItem);
+					if (e.which == 13) { // Enter key
+						// 입력된 값을 업데이트한다.
+						_this.onUpdateField($(this).val(), textItem); 
 					}
 				});
 	
@@ -86,32 +94,31 @@ export class Context {
 			})
 		})
 	}	
-	
-	removeAllFormFields() {
-		$('#front-page').empty();
-		$('#back-page').empty();
-	}
 
 	onUpdateField(val, textItem) {
 		console.log('Input updated:', val, textItem);
 		textItem.text = val;
 	
-		let pageIndex = -1;
-		this.tnViewCatalog.text_item_cols.forEach((items, idx) => {
-			if (items.includes(textItem)) {
-				pageIndex = idx;
-			}
+		let itemInddex = -1;
+		let pageIndex = this.tnViewCatalog.text_item_cols.findIndex(items => {
+			itemInddex = items.findIndex(item => item.var_id == textItem.var_id);
+			return itemInddex >= 0;
 		});
 	
 		if (pageIndex >= 0) {
 			let memberData = {};
-			this.tnViewCatalog.text_item_cols[pageIndex].forEach(item => {
-				memberData[item.var_id] = item.text;
-			})
+			// pageIndex 번째 페이지의 모든 텍스트 필드를 순회하며 memberData에 추가한다.
+			this.tnViewCatalog.text_item_cols[pageIndex][itemInddex].text = val;
+			memberData[textItem.var_id] = val;
 	
 			let dataRow = getDataRowForUpdatingTnView(memberData, this.varItems);
-			client_env.editor.post_to_tnview('set-data-row', dataRow);  
+			this.client_env.editor.post_to_tnview('set-data-row', dataRow);  
 		}      
+	}
+		
+	removeAllFormFields() {
+		$('#front-page').empty();
+		$('#back-page').empty();
 	}
 
 	// isProjectOpen 상태에 따라 에디터 컨테이너 표시/숨김 업데이트

@@ -173,32 +173,5 @@ export function getDataRowForUpdatingTnView(memberData:any, varItems:VarItem[]) 
 		})
 	})
 
-	// text_item_cols.forEach((col, pindex)=> {
-	// 	col.forEach((item, iindex)=> {
-	// 		dataRow.cols.push({
-	// 			pindex: pindex,
-	// 			id: item.var_id,
-	// 			segment: item.segment,
-	// 			shrink: true,
-	// 			value: {
-	// 				text: item.text,
-	// 				letter_space: item.letter_space
-	// 			}
-	// 		})
-	// 	})
-	// })
-
-	// photo_item_cols.forEach((col, pindex)=> {
-	// 	col.forEach((item, iindex)=> {
-	// 		if (item.value) {
-	// 			dataRow.cols.push({
-	// 				pindex: pindex,
-	// 				id: item.var_id,
-	// 				value: item.value,
-	// 			})	
-	// 		}
-	// 	})
-	// })
-
 	return dataRow;
 }
