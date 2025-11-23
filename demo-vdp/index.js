@@ -24,6 +24,8 @@ let client_env = {
 }
 
 let context = new Context();
+
+
 let project_arr = [];
 
 // 이 소스파일 끝에서 onMount()을 호출함.
@@ -66,6 +68,50 @@ async function doUserLogin() {
 	}
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+// TnView 프로젝트 생성 및 열기
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+function on_create_tnview(event) {
+	const selectedIndex = $('#select-template').val();
+	createTnViewProject(client_env, context, edicusTemplates[selectedIndex]); // TnView 프로젝트 생성
+}
+
+function on_open_tnview() {
+	context.projectId = get_project_id();
+	openTnViewProject(client_env, context, "90x50@NC"); // TnView 프로젝트 열기
+}
+
+async function on_delete_project() {
+	if (context.isProjectOpen) {
+		context.closeEditor(client_env);
+	}
+
+	var project_id = get_project_id()
+	// 프로젝트 삭제
+	await projectModule.on_delete_project(client_env, project_id); 
+	// 프로젝트 목록 갱신
+	await on_get_project_list(null);
+	// 첫 번째 프로젝트 선택
+	project_id = project_arr[0].project_id;
+	on_select_project_id();
+}
+
+function on_save_vdp() {
+	console.log('on_save_vdp')
+    client_env.editor.post_to_tnview('save');
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 프로젝트 리스트 조회 및 선택
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function get_project_id() {
+	return $('#select-project-id option:selected').val()
+}
+
 async function on_get_project_list(event) {
 	try {
 		const data = await server.get_project_list(client_env.uid);
@@ -100,41 +146,6 @@ async function on_select_project_id() {
 	// on_get_preview_tn();
 }
 
-function get_project_id() {
-	return $('#select-project-id option:selected').val()
-}
-
-function on_create_tnview(event) {
-	const selectedIndex = $('#select-template').val();
-	if (selectedIndex === '') {
-		alert('템플릿을 선택해주세요.');
-		return;
-	}
-	
-	createTnViewProject(client_env, context, edicusTemplates[selectedIndex]);
-}
-
-function on_open_tnview() {
-	context.projectId = get_project_id();
-	// TnView 프로젝트 열기
-	openTnViewProject(client_env, context, "90x50@NC");
-}
-
-async function on_delete_project() {
-	if (context.isProjectOpen) {
-		context.closeEditor(client_env);
-	}
-
-	var project_id = get_project_id()
-	// 프로젝트 삭제
-	await projectModule.on_delete_project(client_env, project_id); 
-	// 프로젝트 목록 갱신
-	await on_get_project_list(null);
-	// 첫 번째 프로젝트 선택
-	project_id = project_arr[0].project_id;
-	on_select_project_id();
-}
-
 function populate_template_dropdown() {
 	const $select = $('#select-template');
 	edicusTemplates.forEach((template, index) => {
@@ -145,10 +156,9 @@ function populate_template_dropdown() {
 	});
 }
 
-function on_save_vdp() {
-	console.log('on_save_vdp')
-    client_env.editor.post_to_tnview('save');
-}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 onMount();

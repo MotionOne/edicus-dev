@@ -7,18 +7,7 @@
 */
 
 export function getInnerBoxWithRatio(parentBox, ratio) {
-	// check parentBox type is number
-	let width;
-	let height;
-
-	if (typeof parentBox === 'number') {
-		width = parentBox;
-		height = parentBox;
-	}
-	else {
-		width = parentBox.width;
-		height = parentBox.height;
-	}
+	let {width, height} = parentBox;
 
 	if (width / height > ratio[0] / ratio[1]) {
 		width = height * (ratio[0] / ratio[1]);

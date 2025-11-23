@@ -1,3 +1,7 @@
+/*
+	Context 객체는 프로젝트 생성 및 열기 과정에서 사용되는 데이터를 관리합니다.
+*/
+
 import { getDataRowForUpdatingTnView } from './vdp-catalog.js';
 import { getInnerBoxWithRatio } from './util.js';
 
@@ -22,10 +26,6 @@ import { getInnerBoxWithRatio } from './util.js';
         text: string;
         title: string;
     }
-    
-    type PageItem = {
-        size_mm : {width:number, height:number},
-    }	
 */
 
 export class Context {
@@ -34,28 +34,17 @@ export class Context {
 		this.isProjectOpen = false;
 		this.tnViewCatalog = null; // TnViewCatalog
 		this.varItems = []; // VarItem[]
-		this.pageItems = []; // PageItem[]
-		this.referenceEditorBox = {width:400, height:400};
-		this.editorBoxSize = {width:400, height:400};
 	}
 
 	setupPageSizes(data, parentElement) {
-		// data.info.page_infos[index]에 있는 가로, 세로 사이즈 정보를 pageItems에 저장한다.
+		// 첫 번째 페이지의 가로, 세로 사이즈를 가져온다.
+		let pageWidth = data.info.page_infos[0].size_mm.width;
+		let pageHeight = data.info.page_infos[0].size_mm.height;
+		let containerSize = {width:400, height:400};
+		let editorBoxSize = getInnerBoxWithRatio(containerSize, [pageWidth, pageHeight])
 
-		data.info.page_infos.forEach((page, index) => {
-			this.pageItems.push({
-				size_mm: {
-					width: page.size_mm.width,
-					height: page.size_mm.height
-				}
-			})
-		})
-
-		let {width, height} = this.pageItems[0].size_mm;
-		this.editorBoxSize = getInnerBoxWithRatio(this.referenceEditorBox, [width, height])
-
-		parentElement.style.width = (2*this.editorBoxSize.width + 8) + 'px'; // 2개 페이지를 나란히 표시
-		parentElement.style.height = this.editorBoxSize.height + 'px';
+		parentElement.style.width = (2*editorBoxSize.width + 8) + 'px'; // 2개 페이지를 나란히 표시할 때의 너비
+		parentElement.style.height = editorBoxSize.height + 'px';
 	}
 
 	build_form_fields() {
