@@ -15,7 +15,7 @@ import { handle_vdp_catalog, getVariableInfo } from './vdp-catalog.js';
  */
 export function openTnViewProject(client_env, context, ps_code) {
 	const callback = createTnViewCallback(client_env, context);
-    open_tnview(client_env, ps_code, context.projectId, callback);
+    open_tnview(client_env, context, ps_code, callback);
     context.isProjectOpen = true;
     context.updateEditorContainerVisibility(client_env.parent_element);
 }
@@ -28,23 +28,25 @@ export function openTnViewProject(client_env, context, ps_code) {
  * @param {string} project_id - 프로젝트 식별자
  * @param {Function} callbackForTnView - TnView 이벤트 처리를 위한 콜백 함수
  */
-function open_tnview(client_env, ps_code, project_id, callbackForTnView) {
+function open_tnview(client_env, context, ps_code, callbackForTnView) {
     let { editor } = client_env;
 
 	// 프로젝트가 이미 열려있으면 먼저 닫기
-	if (client_env.isProjectOpen) {
+	if (context.isProjectOpen) {
 		console.log('기존 편집기를 닫고 새로운 프로젝트를 엽니다...')
 		editor.close({
 			parent_element: client_env.parent_element
 		})
-		client_env.isProjectOpen = false;
+		context.isProjectOpen = false;
+		context.updateEditorContainerVisibility(client_env.parent_element);
+		context.removeAllFormFields();
 	}
 
 	let params = {
 		parent_element: client_env.parent_element,
 		token: client_env.user_token,
 		ps_code: ps_code,
-		prjid: project_id,
+		prjid: context.projectId,
 		npage: 2,
 		flow: 'horizontal',
 		//data_row: initial_row,

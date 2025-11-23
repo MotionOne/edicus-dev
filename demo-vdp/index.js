@@ -2,10 +2,9 @@ import * as server from './server.js';
 import { update_project_data_table } from './table-ui.js';
 import { edicusTemplates } from './edicus-templates.js';
 import * as projectModule from './project.js';
-import { handle_vdp_catalog, getDataRowForUpdatingTnView, getVariableInfo } from './vdp-catalog.js';
-import { getInnerBoxWithRatio } from './util.js';
-import { createTnViewCallback, openTnViewProject } from './open-tnview.js';
-import { createTnViewProject, createCreateTnViewCallback } from './create-tnview.js';
+import { openTnViewProject } from './open-tnview.js';
+import { createTnViewProject } from './create-tnview.js';
+import { Context } from './context.js';
 
 /*
 	uid 설명
@@ -24,144 +23,8 @@ let client_env = {
 	editor: null,
 }
 
-
-let project_arr = [];
-let project_data = null;
-// let projectInfo = {
-//     "vdpdata": "{\"has_vdp_photo\":false,\"text_item_cols\":[[{\"segment\":true,\"var_id\":\"f_name\",\"var_title\":\"이름\",\"text\":\"홍길동\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_jobtitle1\",\"var_title\":\"직위1\",\"text\":\"대표이사\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_jobtitle2\",\"var_title\":\"직위2\",\"text\":\"CEO\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_company\",\"var_title\":\"회사명\",\"text\":\"주식회사 모션원\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_addr\",\"var_title\":\"주소\",\"text\":\"08380 서울시 구로구 디지털로 33길 27, 707호\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_tel\",\"var_title\":\"전화번호\",\"text\":\"(02) 9999-1004\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_fax\",\"var_title\":\"팩스\",\"text\":\"(02) 9999-1005\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_mobile\",\"var_title\":\"모바일\",\"text\":\"010-9999-1006\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_email\",\"var_title\":\"이메일\",\"text\":\"gdhong@motion1.co.kr\",\"letter_space\":0}],[{\"segment\":true,\"var_id\":\"b_name\",\"var_title\":\"이름\",\"text\":\"Gil-Dong Hong\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_jobtitle1\",\"var_title\":\"직위1\",\"text\":\"President\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_jobtitle2\",\"var_title\":\"직위2\",\"text\":\"CEO\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_company\",\"var_title\":\"회사명\",\"text\":\"MotionOne Inc.\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_addr\",\"var_title\":\"주소\",\"text\":\"#08380, Suite 707, Digital-ro 33-gil 27, Guro-gu, Seoul, Korea\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_tel\",\"var_title\":\"전화번호\",\"text\":\"(02) 9999-1004\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_fax\",\"var_title\":\"팩스\",\"text\":\"(02) 9999-1005\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_mobile\",\"var_title\":\"모바일\",\"text\":\"010-9999-1006\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_email\",\"var_title\":\"이메일\",\"text\":\"gdhong@motion1.co.kr\",\"letter_space\":0}]],\"photo_item_cols\":[]}",
-//     "tnUrl": "https://storage.googleapis.com/edicusbase.appspot.com/partners/sandbox/users/sandbox-vdp-tester-uid-of-sandbox/projects/-OeZ4_EXPKT_eKcsXSpU/preivew/preview_0.jpg?ts=1763689521828"    
-// }; 
-
-
-/*
-    type TextItem = {
-        segment: boolean;
-        var_id: string;
-        var_title: string;
-        text: string;
-        letter_space: number;
-    }
-        
-    type TnViewCatalog = {
-        has_vdp_photo: boolean;
-        text_item_cols: TextItem[][];
-        photo_item_cols: PhotoItem[] | boolean;
-    }
-    
-    type VarItem: {
-        id: string;
-        segment: boolean;
-        text: string;
-        title: string;
-    }
-    
-    type PageItem = {
-        size_mm : {width:number, height:number},
-    }	
-*/
-
-class Context {
-	constructor() {
-		this.projectId = null;
-		this.isProjectOpen = false; // 프로젝트 열려있는지 여부
-		this.tnViewCatalog = null;
-		this.varItems = [];
-		this.pageItems = [];
-		this.referenceEditorBox = {width:400, height:400};
-		this.editorBoxSize = {width:400, height:400};
-	}
-
-	setupPageSizes(data, parentElement) {
-		// data.info.page_infos[index]에 있는 가로, 세로 사이즈 정보를 pageItems에 저장한다.
-
-		data.info.page_infos.forEach((page, index) => {
-			this.pageItems.push({
-				size_mm: {
-					width: page.size_mm.width,
-					height: page.size_mm.height
-				}
-			})
-		})
-
-		let {width, height} = this.pageItems[0].size_mm;
-		this.editorBoxSize = getInnerBoxWithRatio(this.referenceEditorBox, [width, height])
-
-		parentElement.style.width = (2*this.editorBoxSize.width + 8) + 'px';
-		parentElement.style.height = this.editorBoxSize.height + 'px';
-	}
-
-	build_form_fields() {
-		let pages = this.tnViewCatalog.text_item_cols;
-		let _this = this;
-	
-		pages.forEach((textItems, pageIndex) => {
-			/*
-				type TextItem = {
-					segment: boolean;
-					var_id: string;
-					var_title: string;
-					text: string;
-					letter_space: number;
-				} 
-			*/       
-	
-			textItems.forEach((textItem, index) => {
-				let $container = $('<div></div>');
-				$container.text(textItem.var_title + ' : ');
-	
-				let $input = $('<input></input>');
-				$input.attr('type', 'text');
-				$input.attr('id', textItem.var_id);
-				$input.attr('value', textItem.text);
-				
-				$input.on('keypress', function(e) {
-					if (e.which == 13) {
-						_this.onUpdateField($(this).val(), textItem);
-					}
-				});
-	
-				$container.append($input);
-				if (pageIndex == 0) {
-					$('#front-page').append($container);
-				} else {
-					$('#back-page').append($container);
-				}
-			})
-		})
-	}	
-
-	onUpdateField(val, textItem) {
-		console.log('Input updated:', val, textItem);
-		textItem.text = val;
-	
-		let pageIndex = -1;
-		this.tnViewCatalog.text_item_cols.forEach((items, idx) => {
-			if (items.includes(textItem)) {
-				pageIndex = idx;
-			}
-		});
-	
-		if (pageIndex >= 0) {
-			let memberData = {};
-			this.tnViewCatalog.text_item_cols[pageIndex].forEach(item => {
-				memberData[item.var_id] = item.text;
-			})
-	
-			let dataRow = getDataRowForUpdatingTnView(memberData, this.varItems);
-			client_env.editor.post_to_tnview('set-data-row', dataRow);  
-		}      
-	}
-
-	// isProjectOpen 상태에 따라 에디터 컨테이너 표시/숨김 업데이트
-	updateEditorContainerVisibility(parentElement) {
-		parentElement.style.display = this.isProjectOpen ? 'block' : 'none';
-	}
-
-}
-
 let context = new Context();
-
-
+let project_arr = [];
 
 // 이 소스파일 끝에서 onMount()을 호출함.
 async function onMount() {
@@ -228,7 +91,7 @@ async function on_select_project_id() {
 	try {
 		const data = await server.get_project_data(client_env.uid, project_id);
 		console.log('project data: ', data)
-		project_data = data;
+		let project_data = data;
 		update_project_data_table(project_data);
 	} catch (err) {
 		console.error('Failed to get project data:', err);
@@ -242,13 +105,6 @@ function get_project_id() {
 }
 
 
-function close_editor() {
-	client_env.editor.destroy({
-		parent_element: client_env.parent_element
-	})
-	context.isProjectOpen = false;
-	context.updateEditorContainerVisibility(client_env.parent_element);
-}
 
 function on_create_tnview(event) {
 	const selectedIndex = $('#select-template').val();
@@ -268,7 +124,7 @@ function on_open_tnview() {
 
 async function on_delete_project() {
 	if (context.isProjectOpen) {
-		close_editor();
+		context.closeEditor(client_env);
 	}
 
 	var project_id = get_project_id()
