@@ -72,13 +72,13 @@ function open_tnview(client_env, ps_code, project_id, callbackForTnView) {
  * TnView 콜백 생성 팩토리 함수
  * @param {Object} dependencies - 콜백에서 사용할 의존성 객체
  * @param {Object} dependencies.client_env - 클라이언트 환경
- * @param {Object} dependencies.projectInfo - 프로젝트 정보
+ * @param {string} projectId - 프로젝트 ID
  * @param {Function} dependencies.setVarItems - varItems 설정 함수
  * @param {Function} dependencies.setTnViewCatalog - tnViewCatalog 설정 함수
  * @param {Function} dependencies.setupPageSizes - 페이지 사이즈 설정 함수
  */
 export function createTnViewCallback(dependencies) {
-    const { client_env, projectInfo, setVarItems, setTnViewCatalog, setupPageSizes, buildFormFields } = dependencies;
+    const { client_env, projectId, setVarItems, setTnViewCatalog, setupPageSizes, buildFormFields } = dependencies;
 
     return async function callbackForTnView(err, data) {
         if (data.action == 'ready-to-listen') {
@@ -113,7 +113,7 @@ export function createTnViewCallback(dependencies) {
             // }				
 
             // await cloudIf.supa.updateCartItem(
-            // 	projectInfo.id,
+            // 	projectId,
             // 	projectUpdateInfo)
 
             // dispatch('saved');

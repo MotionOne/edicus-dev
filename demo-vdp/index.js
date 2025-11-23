@@ -24,13 +24,14 @@ let client_env = {
 	editor: null,
 	isProjectOpen: false,
 }
+
+
 let project_arr = [];
 let project_data = null;
-let projectInfo = {
-    "vdpdata": "{\"has_vdp_photo\":false,\"text_item_cols\":[[{\"segment\":true,\"var_id\":\"f_name\",\"var_title\":\"이름\",\"text\":\"홍길동\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_jobtitle1\",\"var_title\":\"직위1\",\"text\":\"대표이사\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_jobtitle2\",\"var_title\":\"직위2\",\"text\":\"CEO\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_company\",\"var_title\":\"회사명\",\"text\":\"주식회사 모션원\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_addr\",\"var_title\":\"주소\",\"text\":\"08380 서울시 구로구 디지털로 33길 27, 707호\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_tel\",\"var_title\":\"전화번호\",\"text\":\"(02) 9999-1004\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_fax\",\"var_title\":\"팩스\",\"text\":\"(02) 9999-1005\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_mobile\",\"var_title\":\"모바일\",\"text\":\"010-9999-1006\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_email\",\"var_title\":\"이메일\",\"text\":\"gdhong@motion1.co.kr\",\"letter_space\":0}],[{\"segment\":true,\"var_id\":\"b_name\",\"var_title\":\"이름\",\"text\":\"Gil-Dong Hong\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_jobtitle1\",\"var_title\":\"직위1\",\"text\":\"President\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_jobtitle2\",\"var_title\":\"직위2\",\"text\":\"CEO\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_company\",\"var_title\":\"회사명\",\"text\":\"MotionOne Inc.\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_addr\",\"var_title\":\"주소\",\"text\":\"#08380, Suite 707, Digital-ro 33-gil 27, Guro-gu, Seoul, Korea\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_tel\",\"var_title\":\"전화번호\",\"text\":\"(02) 9999-1004\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_fax\",\"var_title\":\"팩스\",\"text\":\"(02) 9999-1005\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_mobile\",\"var_title\":\"모바일\",\"text\":\"010-9999-1006\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_email\",\"var_title\":\"이메일\",\"text\":\"gdhong@motion1.co.kr\",\"letter_space\":0}]],\"photo_item_cols\":[]}",
-    "tnUrl": "https://storage.googleapis.com/edicusbase.appspot.com/partners/sandbox/users/sandbox-vdp-tester-uid-of-sandbox/projects/-OeZ4_EXPKT_eKcsXSpU/preivew/preview_0.jpg?ts=1763689521828"    
-}; 
-
+// let projectInfo = {
+//     "vdpdata": "{\"has_vdp_photo\":false,\"text_item_cols\":[[{\"segment\":true,\"var_id\":\"f_name\",\"var_title\":\"이름\",\"text\":\"홍길동\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_jobtitle1\",\"var_title\":\"직위1\",\"text\":\"대표이사\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_jobtitle2\",\"var_title\":\"직위2\",\"text\":\"CEO\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_company\",\"var_title\":\"회사명\",\"text\":\"주식회사 모션원\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_addr\",\"var_title\":\"주소\",\"text\":\"08380 서울시 구로구 디지털로 33길 27, 707호\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_tel\",\"var_title\":\"전화번호\",\"text\":\"(02) 9999-1004\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_fax\",\"var_title\":\"팩스\",\"text\":\"(02) 9999-1005\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_mobile\",\"var_title\":\"모바일\",\"text\":\"010-9999-1006\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"f_email\",\"var_title\":\"이메일\",\"text\":\"gdhong@motion1.co.kr\",\"letter_space\":0}],[{\"segment\":true,\"var_id\":\"b_name\",\"var_title\":\"이름\",\"text\":\"Gil-Dong Hong\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_jobtitle1\",\"var_title\":\"직위1\",\"text\":\"President\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_jobtitle2\",\"var_title\":\"직위2\",\"text\":\"CEO\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_company\",\"var_title\":\"회사명\",\"text\":\"MotionOne Inc.\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_addr\",\"var_title\":\"주소\",\"text\":\"#08380, Suite 707, Digital-ro 33-gil 27, Guro-gu, Seoul, Korea\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_tel\",\"var_title\":\"전화번호\",\"text\":\"(02) 9999-1004\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_fax\",\"var_title\":\"팩스\",\"text\":\"(02) 9999-1005\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_mobile\",\"var_title\":\"모바일\",\"text\":\"010-9999-1006\",\"letter_space\":0},{\"segment\":true,\"var_id\":\"b_email\",\"var_title\":\"이메일\",\"text\":\"gdhong@motion1.co.kr\",\"letter_space\":0}]],\"photo_item_cols\":[]}",
+//     "tnUrl": "https://storage.googleapis.com/edicusbase.appspot.com/partners/sandbox/users/sandbox-vdp-tester-uid-of-sandbox/projects/-OeZ4_EXPKT_eKcsXSpU/preivew/preview_0.jpg?ts=1763689521828"    
+// }; 
 
 
 /*
@@ -70,6 +71,7 @@ let pageItems = []; // PageItem[]
 
 let referenceEditorBox = {width:400, height:400};
 let editorBoxSize = {width:400, height:400}
+
 
 // 이 소스파일 끝에서 onMount()을 호출함.
 async function onMount() {
@@ -188,7 +190,7 @@ function on_open_tnview() {
 	// TnView 콜백 생성
 	const callback = createTnViewCallback({
 		client_env,
-		projectInfo,
+		project_id,
 		setVarItems: (items) => { varItems = items; },
 		setTnViewCatalog: (catalog) => { tnViewCatalog = catalog; },
 		setupPageSizes,
