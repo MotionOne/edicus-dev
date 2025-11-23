@@ -4,9 +4,8 @@ import { handle_vdp_catalog } from './vdp-catalog.js';
 /**
  * 제품 생성 함수
  * @param {Object} client_env - 클라이언트 환경 객체
+ * @param {Object} context - Context 객체 (tnViewCatalog, setupPageSizes, build_form_fields 등 포함)
  * @param {Object} obj - 템플릿 객체 (ps_code, template_uri, title 포함)
- * @param {Function} updateEditorContainerVisibility - 에디터 컨테이너 표시 업데이트 함수
- * @param {Function} callbackForCreateTnView - create_tnview 콜백 함수
  */
 export function createTnViewProject(client_env, context, obj) {
 	// 프로젝트가 이미 열려있으면 먼저 닫기
@@ -43,7 +42,7 @@ export function createTnViewProject(client_env, context, obj) {
             }
         }
 	}
-	const callback = createCreateTnViewCallback(client_env, context);
+	const callback = createCallback(client_env, context);
 	client_env.editor.create_tnview(params, callback)
 	
 	// 프로젝트 열림 상태로 설정
@@ -57,7 +56,7 @@ export function createTnViewProject(client_env, context, obj) {
  * @param {Object} context - Context 객체 (tnViewCatalog, setupPageSizes 등 포함)
  * @param {Function} updateEditorContainerVisibility - 에디터 컨테이너 표시 업데이트 함수
  */
-export function createCreateTnViewCallback(client_env, context) {
+export function createCallback(client_env, context) {
     return function callbackForCreateTnView(err, data) {
         // 이벤트가 오는 순서대로임
         if (data.action === 'create-report' && data.info.status === 'start') {

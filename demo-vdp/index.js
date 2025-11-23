@@ -104,8 +104,6 @@ function get_project_id() {
 	return $('#select-project-id option:selected').val()
 }
 
-
-
 function on_create_tnview(event) {
 	const selectedIndex = $('#select-template').val();
 	if (selectedIndex === '') {

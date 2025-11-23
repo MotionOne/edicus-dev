@@ -54,7 +54,7 @@ export class Context {
 		let {width, height} = this.pageItems[0].size_mm;
 		this.editorBoxSize = getInnerBoxWithRatio(this.referenceEditorBox, [width, height])
 
-		parentElement.style.width = (2*this.editorBoxSize.width + 8) + 'px';
+		parentElement.style.width = (2*this.editorBoxSize.width + 8) + 'px'; // 2개 페이지를 나란히 표시
 		parentElement.style.height = this.editorBoxSize.height + 'px';
 	}
 
