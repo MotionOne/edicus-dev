@@ -7,40 +7,38 @@ import * as server from './server.js';
 
 /**
  * TnView 프로젝트 열기
- * @param {Object} client_env - 클라이언트 환경
  * @param {Object} context - Context 객체 (varItems, tnViewCatalog, setupPageSizes, build_form_fields 등 포함)
  * @param {string} ps_code - 제품 코드
  */
-export function openTnViewProject(client_env, context, ps_code) {
-	const callback = createCallback(client_env, context);
-    open_tnview(client_env, context, ps_code, callback);
+export function openTnViewProject(context, ps_code) {
+	const callback = createCallback(context);
+    open_tnview(context, ps_code, callback);
     context.showEditor();
 }
 
 
 /**
  * TnView를 엽니다.
- * @param {Object} client_env - 클라이언트 환경 객체 (editor, user_token 등 포함)
  * @param {Object} context - Context 객체 (varItems, tnViewCatalog, setupPageSizes, build_form_fields 등 포함)
  * @param {string} ps_code - 제품 사양 코드 (Product Spec Code)
  * @param {Function} callback - TnView 이벤트 처리를 위한 콜백 함수
  */
-function open_tnview(client_env, context, ps_code, callback) {
-    let { editor } = client_env;
+function open_tnview(context, ps_code, callback) {
+    let { editor } = context.client_env;
 
 	// 프로젝트가 이미 열려있으면 먼저 닫기
 	if (context.isProjectOpen) {
 		console.log('기존 편집기를 닫고 새로운 프로젝트를 엽니다...')
 		editor.close({
-			parent_element: client_env.parent_element
+			parent_element: context.client_env.parent_element
 		})
 		context.hideEditor();
 		context.removeAllFormFields();
 	}
 
 	let params = {
-		parent_element: client_env.parent_element,
-		token: client_env.user_token,
+		parent_element: context.client_env.parent_element,
+		token: context.client_env.user_token,
 		ps_code: ps_code,
 		prjid: context.projectId,
 		npage: 2,
@@ -68,11 +66,10 @@ function open_tnview(client_env, context, ps_code, callback) {
 
 /**
  * TnView 콜백 생성 함수
- * @param {Object} client_env - 클라이언트 환경
  * @param {Object} context - Context 객체 (varItems, tnViewCatalog, setupPageSizes, build_form_fields 등 포함)
  * @param {string} projectId - 프로젝트 ID
  */
-function createCallback(client_env, context) {
+function createCallback(context) {
     return async function callbackForTnView(err, data) {
         if (data.action == 'ready-to-listen') {
             console.log('ready-to-listen')
@@ -111,14 +108,14 @@ function createCallback(client_env, context) {
             /* 참고
                 https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#heading=h.ctloxkjukfm
             */
-            server.get_custom_token(client_env.uid).then(data => {
-                client_env.user_token = data.token;
+            server.get_custom_token(context.client_env.uid).then(data => {
+                context.client_env.user_token = data.token;
                 $('#action-log').text('user token received.')
 
                 let info = {
                     token: data.token
                 }
-                client_env.editor.post_to_editor("send-user-token", info)
+                context.client_env.editor.post_to_editor("send-user-token", info)
             }).catch(err => {
                 console.error('Failed to get custom token:', err);
             })

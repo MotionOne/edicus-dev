@@ -2,27 +2,26 @@ import * as server from './server.js';
 
 /**
  * 제품 생성 함수
- * @param {Object} client_env - 클라이언트 환경 객체
  * @param {Object} context - Context 객체 (vdpUtil, setupPageSizes, build_form_fields 등 포함)
  * @param {Object} obj - 템플릿 객체 (ps_code, template_uri, title 포함)
  */
-export function createTnViewProject(client_env, context, obj) {
+export function createTnViewProject(context, obj) {
 	// 프로젝트가 이미 열려있으면 먼저 닫기
 	if (context.isProjectOpen) {
-		client_env.editor.close({
-			parent_element: client_env.parent_element
+		context.client_env.editor.close({
+			parent_element: context.client_env.parent_element
 		})
 		context.hideEditor();
 	}
 
 	var params = {
-		parent_element: client_env.parent_element,
-		partner: client_env.partner,
+		parent_element: context.client_env.parent_element,
+		partner: context.client_env.partner,
 		mobile: false,		
 		ps_code: obj.ps_code,
 		template_uri: obj.template_uri,
 		title: obj.title,
-		token: client_env.user_token,
+		token: context.client_env.user_token,
 		npage: 2,
         flow: 'horizontal',
         zoom: {
@@ -40,8 +39,8 @@ export function createTnViewProject(client_env, context, obj) {
             }
         }
 	}
-	const callback = createCallback(client_env, context);
-	client_env.editor.create_tnview(params, callback)
+	const callback = createCallback(context);
+	context.client_env.editor.create_tnview(params, callback)
 	
 	// 프로젝트 열림 상태로 설정
 	context.showEditor();
@@ -49,11 +48,10 @@ export function createTnViewProject(client_env, context, obj) {
 
 /**
  * create_tnview 콜백 생성 함수
- * @param {Object} client_env - 클라이언트 환경 객체
  * @param {Object} context - Context 객체 (vdpUtil, setupPageSizes 등 포함)
  * @param {Function} updateEditorContainerVisibility - 에디터 컨테이너 표시 업데이트 함수
  */
-export function createCallback(client_env, context) {
+export function createCallback(context) {
     return function callbackForCreateTnView(err, data) {
         // 이벤트가 오는 순서대로임
         if (data.action === 'create-report' && data.info.status === 'start') {
@@ -66,7 +64,7 @@ export function createCallback(client_env, context) {
                 context.build_form_fields();
             }
     
-            context.setupPageSizes(data, client_env.parent_element);
+            context.setupPageSizes(data, context.client_env.parent_element);
         }  
         else if (data.action == 'project-id-created') {
             console.log('project-id-created: ', data.info.project_id)
@@ -95,27 +93,27 @@ export function createCallback(client_env, context) {
             */
         }
         else if (data.action == 'close' || data.action == 'goto-cart') {
-            client_env.editor.destroy({
-                parent_element: client_env.parent_element,        
+            context.client_env.editor.destroy({
+                parent_element: context.client_env.parent_element,        
             })
             context.hideEditor();
         }
         else if (data.action == 'request-user-token') {
             // Edicus로 부터 user token요청을 받으면 "send-user-token" action으로 대응한다.
-            server.get_custom_token(client_env.uid).then(data => {
-                client_env.user_token = data.token;
+            server.get_custom_token(context.client_env.uid).then(data => {
+                context.client_env.user_token = data.token;
     
                 let info = {
                     token: data.token
                 }
-                client_env.editor.post_to_editor("send-user-token", info)
+                context.client_env.editor.post_to_editor("send-user-token", info)
             }).catch(err => {
                 console.error('Failed to get custom token:', err);
             })
         }
         else if (data.action == 'close' || data.action == 'goto-cart') {
-            client_env.editor.destroy({
-                parent_element: client_env.parent_element,        
+            context.client_env.editor.destroy({
+                parent_element: context.client_env.parent_element,        
             })
             context.hideEditor();
         }

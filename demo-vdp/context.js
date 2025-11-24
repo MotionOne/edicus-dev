@@ -81,7 +81,7 @@ export class Context {
 		textItem.text = val;
 	
 		let dataRow = this.vdpUtil.getDataRowForUpdatingTnView();
-		this.client_env.editor.post_to_tnview('set-data-row', dataRow);  
+		this.client_env.editor.post_to_tnview('set-data-row', dataRow);  // edicus tnview에 데이터를 업데이트한다.
 	}
 		
 	removeAllFormFields() {

@@ -74,12 +74,12 @@ async function doUserLogin() {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 function on_create_tnview(event) {
 	const selectedIndex = $('#select-template').val();
-	createTnViewProject(client_env, context, edicusTemplates[selectedIndex]); // TnView 프로젝트 생성
+	createTnViewProject(context, edicusTemplates[selectedIndex]); // TnView 프로젝트 생성
 }
 
 function on_open_tnview() {
 	context.projectId = get_project_id();
-	openTnViewProject(client_env, context, "90x50@NC"); // TnView 프로젝트 열기
+	openTnViewProject(context, "90x50@NC"); // TnView 프로젝트 열기
 }
 
 async function on_delete_project() {
