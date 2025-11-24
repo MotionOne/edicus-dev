@@ -57,14 +57,15 @@ export function createCallback(context) {
         if (data.action === 'create-report' && data.info.status === 'start') {
         }
         else if (data.action == 'doc-changed') {			
+            context.setupPageSizes(data, context.client_env.parent_element);
+
             let vdp_catalog = data.info.vdp_catalog;
-            console.log("vdp_catalog", vdp_catalog)
+            // console.log("vdp_catalog", vdp_catalog)
             if (vdp_catalog) {
                 context.vdpUtil.setVdpCatalog(vdp_catalog);
                 context.build_form_fields();
             }
     
-            context.setupPageSizes(data, context.client_env.parent_element);
         }  
         else if (data.action == 'project-id-created') {
             console.log('project-id-created: ', data.info.project_id)
@@ -119,4 +120,3 @@ export function createCallback(context) {
         }
     }
 }
-

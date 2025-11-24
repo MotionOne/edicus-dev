@@ -80,8 +80,8 @@ export class Context {
 		// 입력된 값을 텍스트 필드에 업데이트한다.
 		textItem.text = val;
 	
-		let dataRow = this.vdpUtil.getDataRowForUpdatingTnView();
-		this.client_env.editor.post_to_tnview('set-data-row', dataRow);  // edicus tnview에 데이터를 업데이트한다.
+		let dataRows = this.vdpUtil.getDataRows();
+		this.client_env.editor.post_to_tnview('set-data-row', dataRows);  // edicus tnview에 데이터를 업데이트한다.
 	}
 		
 	removeAllFormFields() {
@@ -103,12 +103,12 @@ export class Context {
 		this.client_env.parent_element.style.display = 'none';
 	}
 
-	closeEditor(client_env) {
-		client_env.editor.close({
-			parent_element: client_env.parent_element
+	closeEditor() {
+		this.client_env.editor.close({
+			parent_element: this.client_env.parent_element
 		})
 		this.isProjectOpen = false;
-		this.updateEditorContainerVisibility(client_env.parent_element);
+		this.updateEditorContainerVisibility(this.client_env.parent_element);
 	}
 
 	/*

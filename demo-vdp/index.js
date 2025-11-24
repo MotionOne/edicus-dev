@@ -84,7 +84,8 @@ function on_open_tnview() {
 
 async function on_delete_project() {
 	if (context.isProjectOpen) {
-		context.closeEditor(client_env);
+		context.closeEditor();
+        context.removeAllFormFields();
 	}
 
 	var project_id = get_project_id()

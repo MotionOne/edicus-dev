@@ -162,7 +162,7 @@ export class VdpUtil {
         };
     }
 
-    getDataRowForUpdatingTnView() {
+    getDataRows() {
 		// edicus vdp 편집기에서는 일부 텍스트 필드만 업데이트하는 것이 아니라, 모든 텍스트 필드의 값을 업데이트한다.
 		let memberData = {};
 		this.tnViewCatalog.text_item_cols.flat().forEach(item => memberData[item.var_id] = item.text);
