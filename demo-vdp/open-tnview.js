@@ -3,7 +3,6 @@
  */
 
 import * as server from './server.js';
-import { handle_vdp_catalog, getVariableInfo } from './vdp-catalog.js';
 
 
 /**
@@ -83,14 +82,8 @@ function createCallback(client_env, context) {
 
             let vdp_catalog = data.info.vdp_catalog;
             if (vdp_catalog) {
-                const varItems = getVariableInfo(vdp_catalog)
-                console.log('varItems: ', varItems)
-                context.varItems = varItems;
-
-                let tnViewCatalog = handle_vdp_catalog(vdp_catalog);				
-                console.log('tnViewCatalog: ', tnViewCatalog)
-                context.tnViewCatalog = tnViewCatalog;
-                context.build_form_fields(tnViewCatalog);
+                context.vdpUtil.setVdpCatalog(vdp_catalog);
+                context.build_form_fields();
             }
 
         }

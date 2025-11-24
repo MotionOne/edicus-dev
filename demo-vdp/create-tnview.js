@@ -1,10 +1,9 @@
 import * as server from './server.js';
-import { handle_vdp_catalog } from './vdp-catalog.js';
 
 /**
  * 제품 생성 함수
  * @param {Object} client_env - 클라이언트 환경 객체
- * @param {Object} context - Context 객체 (tnViewCatalog, setupPageSizes, build_form_fields 등 포함)
+ * @param {Object} context - Context 객체 (vdpUtil, setupPageSizes, build_form_fields 등 포함)
  * @param {Object} obj - 템플릿 객체 (ps_code, template_uri, title 포함)
  */
 export function createTnViewProject(client_env, context, obj) {
@@ -51,7 +50,7 @@ export function createTnViewProject(client_env, context, obj) {
 /**
  * create_tnview 콜백 생성 함수
  * @param {Object} client_env - 클라이언트 환경 객체
- * @param {Object} context - Context 객체 (tnViewCatalog, setupPageSizes 등 포함)
+ * @param {Object} context - Context 객체 (vdpUtil, setupPageSizes 등 포함)
  * @param {Function} updateEditorContainerVisibility - 에디터 컨테이너 표시 업데이트 함수
  */
 export function createCallback(client_env, context) {
@@ -63,10 +62,8 @@ export function createCallback(client_env, context) {
             let vdp_catalog = data.info.vdp_catalog;
             console.log("vdp_catalog", vdp_catalog)
             if (vdp_catalog) {
-                let newCatalog = handle_vdp_catalog(vdp_catalog);
-                context.tnViewCatalog = newCatalog;
-                context.build_form_fields(newCatalog);
-                // dispatch('tnview-catalog', tnViewCatalog)
+                context.vdpUtil.setVdpCatalog(vdp_catalog);
+                context.build_form_fields();
             }
     
             context.setupPageSizes(data, client_env.parent_element);
@@ -80,10 +77,10 @@ export function createCallback(client_env, context) {
         }
         else if (data.action === 'save-doc-report' && data.info.status === 'end') {
             // vdp data를 저장해야 함.
-            console.log('tnViewCatalog: ', context.tnViewCatalog)
+            console.log('vdpUtil.tnViewCatalog: ', context.vdpUtil.tnViewCatalog)
             
             let projectUpdateInfo = {
-                vdp: JSON.stringify(context.tnViewCatalog)
+                vdp: JSON.stringify(context.vdpUtil.tnViewCatalog)
             }			
             if (data.info.docInfo.tnUrlList && data.info.docInfo.tnUrlList.length > 0) {
                 projectUpdateInfo.tnUrl = data.info.docInfo.tnUrlList[0]				

@@ -2,39 +2,14 @@
 	Context 객체는 프로젝트 생성 및 열기 과정에서 사용되는 데이터를 관리합니다.
 */
 
-import { getDataRowForUpdatingTnView } from './vdp-catalog.js';
-import { getInnerBoxWithRatio } from './util.js';
-
-/*
-    type TextItem = {
-        segment: boolean;
-        var_id: string;
-        var_title: string;
-        text: string;
-        letter_space: number;
-    }
-        
-    type TnViewCatalog = {
-        has_vdp_photo: boolean;
-        text_item_cols: TextItem[][];
-        photo_item_cols: PhotoItem[] | boolean;
-    }
-    
-    type VarItem: {
-        id: string;
-        segment: boolean;
-        text: string;
-        title: string;
-    }
-*/
+import { VdpUtil } from './vdp-util.js';
 
 export class Context {
 	constructor(client_env) {
 		this.client_env = client_env;
 		this.projectId = null;
 		this.isProjectOpen = false;
-		this.tnViewCatalog = null; // TnViewCatalog
-		this.varItems = []; // VarItem[]
+		this.vdpUtil = new VdpUtil();
 		this.editorBoxSize = {};
 	}
 
@@ -46,7 +21,7 @@ export class Context {
 		let pageWidth = data.info.page_infos[0].size_mm.width;
 		let pageHeight = data.info.page_infos[0].size_mm.height;
 		let containerSize = {width:400, height:400};
-		this.editorBoxSize = getInnerBoxWithRatio(containerSize, [pageWidth, pageHeight])
+		this.editorBoxSize = this.getInnerBoxWithRatio(containerSize, [pageWidth, pageHeight])
 
 		this.client_env.parent_element.style.width = (2*this.editorBoxSize.width + 8) + 'px'; // 2개 페이지를 나란히 표시할 때의 너비
 		this.client_env.parent_element.style.height = this.editorBoxSize.height + 'px';
@@ -56,7 +31,7 @@ export class Context {
 		프로젝트가 제공하는 필드 정보를 이용해 텍스트 필드를 생성한다.
 	*/
 	build_form_fields() {
-		let pages = this.tnViewCatalog.text_item_cols;
+		let pages = this.vdpUtil.tnViewCatalog.text_item_cols;
 		let _this = this;
 	
 		pages.forEach((textItems, pageIndex) => {
@@ -105,10 +80,7 @@ export class Context {
 		// 입력된 값을 텍스트 필드에 업데이트한다.
 		textItem.text = val;
 	
-		// edicus vdp 편집기에서는 일부 텍스트 필드만 업데이트하는 것이 아니라, 모든 텍스트 필드의 값을 업데이트한다.
-		let memberData = {};
-		this.tnViewCatalog.text_item_cols.flat().forEach(item => memberData[item.var_id] = item.text);
-		let dataRow = getDataRowForUpdatingTnView(memberData, this.varItems);
+		let dataRow = this.vdpUtil.getDataRowForUpdatingTnView();
 		this.client_env.editor.post_to_tnview('set-data-row', dataRow);  
 	}
 		
@@ -121,6 +93,7 @@ export class Context {
 	updateEditorContainerVisibility(parentElement) {
 		parentElement.style.display = this.isProjectOpen ? 'block' : 'none';
 	}
+
 	showEditor() {
 		this.isProjectOpen = true;
 		this.client_env.parent_element.style.display = 'block';
@@ -136,6 +109,27 @@ export class Context {
 		})
 		this.isProjectOpen = false;
 		this.updateEditorContainerVisibility(client_env.parent_element);
+	}
+
+	/*
+		parentBox: 내접할 부모 박스
+		- type: {width:number, height:number}
+
+		ratio: 내접할 자식 박스의 가로 세로 비율을 나타내는 정수 쌍(tuple)
+		- type: [number, number]
+	*/
+	getInnerBoxWithRatio(parentBox, ratio) {
+		let {width, height} = parentBox;
+
+		if (width / height > ratio[0] / ratio[1]) {
+			width = height * (ratio[0] / ratio[1]);
+		} else {
+			height = width * (ratio[1] / ratio[0]);
+		}
+		return { 
+			width: Math.floor(width), 
+			height: Math.floor(height)
+		};
 	}
 
 }
