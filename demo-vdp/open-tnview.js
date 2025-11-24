@@ -71,56 +71,80 @@ function open_tnview(context, ps_code, callback) {
  */
 function createCallback(context) {
     return async function callbackForTnView(err, data) {
-        if (data.action == 'ready-to-listen') {
-            console.log('ready-to-listen')
+        const action = data.action;
+
+        if (action == 'ready-to-listen') {
+            handleReadyToListen();
         }
-        else if (data.action == 'doc-changed') {			
-            context.setupPageSizes(data);
-
-            let vdp_catalog = data.info.vdp_catalog;
-            if (vdp_catalog) {
-                context.vdpUtil.setVdpCatalog(vdp_catalog);
-                context.build_form_fields();
-            }
-
+        else if (action == 'doc-changed') {			
+            handleDocChanged(data, context);
         }
-        else if (data.action === 'open-report' && data.info.status === 'end') { 
-            // edicus의 로딩프로그레스가 끝나면 tnview를 보여준다. 대략 1초 기다림.
-            // setTimeout(() => {
-            // }, 1000)
+        else if (action === 'open-report' && data.info.status === 'end') { 
+            handleOpenReport(data);
         }
-        else if (data.action === 'save-doc-report' && data.info.status === 'end') {
-            // let projectUpdateInfo:CartUpdate = {
-            // 	vdpdata: JSON.stringify(context.tnViewCatalog)
-            // }
-            // if (data.info.docInfo.tnUrlList && data.info.docInfo.tnUrlList.length > 0) {
-            // 	projectUpdateInfo.tnUrl = data.info.docInfo.tnUrlList[0]				
-            // }				
-
-            // await cloudIf.supa.updateCartItem(
-            // 	context.projectId,
-            // 	projectUpdateInfo)
-
-            // dispatch('saved');
+        else if (action === 'save-doc-report' && data.info.status === 'end') {
+            await handleSaveDocReport(data, context);
         }
-        else if (data.action == 'request-user-token') {
-            // Edicus로 부터 user token요청을 받으면 "send-token" action으로 대응한다.
-            /* 참고
-                https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#heading=h.ctloxkjukfm
-            */
-            server.get_custom_token(context.client_env.uid).then(data => {
-                context.client_env.user_token = data.token;
-                $('#action-log').text('user token received.')
-
-                let info = {
-                    token: data.token
-                }
-                context.client_env.editor.post_to_editor("send-user-token", info)
-            }).catch(err => {
-                console.error('Failed to get custom token:', err);
-            })
+        else if (action == 'request-user-token') {
+            handleRequestUserToken(context);
         }    
 
         console.log("=====>", data.action, data.info)
     }
+}
+
+// =============================================================================
+// Action Handler Functions
+// =============================================================================
+
+function handleReadyToListen() {
+    console.log('ready-to-listen');
+}
+
+function handleDocChanged(data, context) {
+    context.setupPageSizes(data);
+
+    let vdp_catalog = data.info.vdp_catalog;
+    if (vdp_catalog) {
+        context.vdpUtil.setVdpCatalog(vdp_catalog);
+        context.build_form_fields();
+    }
+}
+
+function handleOpenReport(data) {
+    // 편집기가 열리면 호촐됨
+}
+
+async function handleSaveDocReport(data, context) {
+    // save하거나 편집기를 닫으면 호출됨 
+
+
+    // let projectUpdateInfo:CartUpdate = {
+    // 	vdpdata: JSON.stringify(context.tnViewCatalog)
+    // }
+    // if (data.info.docInfo.tnUrlList && data.info.docInfo.tnUrlList.length > 0) {
+    // 	projectUpdateInfo.tnUrl = data.info.docInfo.tnUrlList[0]				
+    // }				
+
+    // await cloudIf.supa.updateCartItem(
+    // 	context.projectId,
+    // 	projectUpdateInfo)
+}
+
+function handleRequestUserToken(context) {
+    // Edicus로 부터 user token요청을 받으면 "send-token" action으로 대응한다.
+    /* 참고
+        https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#heading=h.ctloxkjukfm
+    */
+    server.get_custom_token(context.client_env.uid).then(data => {
+        context.client_env.user_token = data.token;
+        $('#action-log').text('user token received.')
+
+        let info = {
+            token: data.token
+        }
+        context.client_env.editor.post_to_editor("send-user-token", info)
+    }).catch(err => {
+        console.error('Failed to get custom token:', err);
+    })
 }
