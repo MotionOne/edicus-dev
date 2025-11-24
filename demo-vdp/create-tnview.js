@@ -49,7 +49,6 @@ export function createTnViewProject(context, obj) {
 /**
  * create_tnview 콜백 생성 함수
  * @param {Object} context - Context 객체 (vdpUtil, setupPageSizes 등 포함)
- * @param {Function} updateEditorContainerVisibility - 에디터 컨테이너 표시 업데이트 함수
  */
 export function createCallback(context) {
     return function callbackForCreateTnView(err, data) {

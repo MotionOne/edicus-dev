@@ -16,7 +16,6 @@ export function openTnViewProject(context, ps_code) {
     context.showEditor();
 }
 
-
 /**
  * TnView를 엽니다.
  * @param {Object} context - Context 객체 (varItems, tnViewCatalog, setupPageSizes, build_form_fields 등 포함)
@@ -43,7 +42,7 @@ function open_tnview(context, ps_code, callback) {
 		prjid: context.projectId,
 		npage: 2,
 		flow: 'horizontal',
-		//data_row: initial_row,
+		// data_row: initial_row, // VdpUil.getDataRows()로 얻은 값과 동일 포맷을 사용함.
 		zoom: {
 			method: 'panzoom',
 			maxScale: 5

@@ -90,25 +90,30 @@ export class Context {
 	}
 
 	// isProjectOpen 상태에 따라 에디터 컨테이너 표시/숨김 업데이트
-	updateEditorContainerVisibility(parentElement) {
-		parentElement.style.display = this.isProjectOpen ? 'block' : 'none';
+	updateEditorContainerVisibility() {
+		const el = this.client_env.parent_element;
+		el.style.display = this.isProjectOpen ? 'block' : 'none';
+
+		const btnSave = document.getElementById('btn_save_vdp');
+		if (btnSave) {
+			btnSave.style.display = this.isProjectOpen ? 'inline-block' : 'none';
+		}
 	}
 
 	showEditor() {
 		this.isProjectOpen = true;
-		this.client_env.parent_element.style.display = 'block';
+		this.updateEditorContainerVisibility();
 	}
 	hideEditor() {
 		this.isProjectOpen = false;
-		this.client_env.parent_element.style.display = 'none';
+		this.updateEditorContainerVisibility();
 	}
 
 	closeEditor() {
 		this.client_env.editor.close({
 			parent_element: this.client_env.parent_element
 		})
-		this.isProjectOpen = false;
-		this.updateEditorContainerVisibility(this.client_env.parent_element);
+		this.hideEditor();
 	}
 
 	/*
