@@ -10,7 +10,9 @@ import * as server from './server.js';
  * @param {Object} context - Context 객체 (varItems, tnViewCatalog, setupPageSizes, build_form_fields 등 포함)
  * @param {string} ps_code - 제품 코드
  */
-export function openTnViewProject(context, ps_code) {
+export function openTnViewProject(projectId, context, ps_code) {
+    context.loadVdpData(projectId);
+
 	const callback = createCallback(context);
     open_tnview(context, ps_code, callback);
     context.showEditor();
@@ -23,6 +25,7 @@ export function openTnViewProject(context, ps_code) {
  * @param {Function} callback - TnView 이벤트 처리를 위한 콜백 함수
  */
 function open_tnview(context, ps_code, callback) {
+
     let { editor } = context.client_env;
 
 	// 프로젝트가 이미 열려있으면 먼저 닫기
@@ -58,6 +61,11 @@ function open_tnview(context, ps_code, callback) {
 			}
 		}		
 	}
+
+    // 초기 데이터가 있으면 전달한다.
+    if (context.vdpUtil.initialDataRows) {
+        params.data_row = context.vdpUtil.initialDataRows;
+    }
 
 	editor.open_tnview(params, callback)
 }

@@ -3,6 +3,7 @@
 */
 
 import { VdpUtil } from './vdp-util.js';
+import { VdpStorage } from './vdp-storage.js';
 
 export class Context {
 	constructor(client_env) {
@@ -11,8 +12,16 @@ export class Context {
 		this.isProjectOpen = false;
 		this.vdpUtil = new VdpUtil();
 		this.editorBoxSize = {};
+		this.vdpStorage = new VdpStorage();
 	}
 
+
+	loadVdpData(projectId) {
+		this.vdpUtil.reset();
+		this.projectId = projectId;
+		let dataRows = this.vdpStorage.load(this.projectId);
+		this.vdpUtil.loadDataRows(dataRows);
+	}
 	/*
 		프로젝트의 페이지 사이즈의 비율에 맞추어 표시 영역의 크기를 설정한다.
 	*/
@@ -64,6 +73,9 @@ export class Context {
 						_this.onUpdateField($(this).val(), textItem); // 입력된 값을 업데이트한다.
 					}
 				});
+				$input.on('blur', function(e) {
+					_this.onUpdateField($(this).val(), textItem); // 입력된 값을 업데이트한다.
+				});
 	
 				$container.append($input);
 				if (pageIndex == 0) {
@@ -114,6 +126,12 @@ export class Context {
 			parent_element: this.client_env.parent_element
 		})
 		this.hideEditor();
+	}
+
+	saveVdpData() {
+		let vdpData = this.vdpUtil.getDataRows();
+		this.vdpStorage.save(this.projectId, vdpData); // VDP 데이터는 db에 따로 저장한다.
+		this.client_env.editor.post_to_tnview('save');
 	}
 
 	/*

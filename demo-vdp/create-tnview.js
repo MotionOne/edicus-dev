@@ -6,7 +6,9 @@ import * as server from './server.js';
  * @param {Object} obj - 템플릿 객체 (ps_code, template_uri, title 포함)
  */
 export function createTnViewProject(context, obj) {
-	// 프로젝트가 이미 열려있으면 먼저 닫기
+	context.vdpUtil.reset();
+
+    // 프로젝트가 이미 열려있으면 먼저 닫기
 	if (context.isProjectOpen) {
 		context.client_env.editor.close({
 			parent_element: context.client_env.parent_element

@@ -41,17 +41,53 @@
             text: string
         }
     }    
+
+    type DataRows = {
+        cols: {
+            id: string,
+            value: {
+                text: string
+                letter_space: number
+            },
+            segment: boolean,
+            shrink: boolean,
+        }[]
+    }
 */
 
 export class VdpUtil {
     constructor() {
+        this.initialDataRows = null; // DataRows
         this.tnViewCatalog = null;  // TnViewCatalog
         this.varItems = [];         // VarItem[]
+    }
+
+    reset() {
+        this.initialDataRows = null;
+        this.tnViewCatalog = null;
+        this.varItems = [];
+    }
+
+    loadDataRows(dataRows) {
+        this.initialDataRows = dataRows;
     }
 
     setVdpCatalog(vdp_catalog) {
         this.varItems = this.getVariableInfo(vdp_catalog);
         this.tnViewCatalog = this.handle_vdp_catalog(vdp_catalog);				
+
+        // initialDataRows의 text값을 this.tnViewCatalog.text_item_cols에 주입한다. 
+        if (this.initialDataRows) {
+            let pages = this.tnViewCatalog.text_item_cols;
+            pages.forEach(page => {
+                page.forEach(textItem => {
+                    let col = this.initialDataRows.cols.find(col => col.id === textItem.var_id);
+                    if (col) {
+                        textItem.text = col.value.text;
+                    }
+                });
+            });
+        }
     }
 
     /*
@@ -167,13 +203,13 @@ export class VdpUtil {
 		let memberData = {};
 		this.tnViewCatalog.text_item_cols.flat().forEach(item => memberData[item.var_id] = item.text);
 
-        let dataRow = {
+        let dataRows = {
             cols: []
         };
         let keys = Object.keys(memberData);
         keys.forEach(key => {
             let varItem = this.varItems.find(v => v.id == key);
-            dataRow.cols.push({
+            dataRows.cols.push({
                 id: key,
                 value: {
                     text: memberData[key],
@@ -184,6 +220,6 @@ export class VdpUtil {
                 // pindex: --> 값 넣지 말것.
             });
         });
-        return dataRow;
+        return dataRows; // DataRows
     }
 }
