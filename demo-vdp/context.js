@@ -35,20 +35,21 @@ export class Context {
 		this.isProjectOpen = false;
 		this.tnViewCatalog = null; // TnViewCatalog
 		this.varItems = []; // VarItem[]
+		this.editorBoxSize = {};
 	}
 
 	/*
 		프로젝트의 페이지 사이즈의 비율에 맞추어 표시 영역의 크기를 설정한다.
 	*/
-	setupPageSizes(data, parentElement) {
+	setupPageSizes(data) {
 		// 첫 번째 페이지의 가로, 세로 사이즈를 가져온다.
 		let pageWidth = data.info.page_infos[0].size_mm.width;
 		let pageHeight = data.info.page_infos[0].size_mm.height;
 		let containerSize = {width:400, height:400};
-		let editorBoxSize = getInnerBoxWithRatio(containerSize, [pageWidth, pageHeight])
+		this.editorBoxSize = getInnerBoxWithRatio(containerSize, [pageWidth, pageHeight])
 
-		parentElement.style.width = (2*editorBoxSize.width + 8) + 'px'; // 2개 페이지를 나란히 표시할 때의 너비
-		parentElement.style.height = editorBoxSize.height + 'px';
+		this.client_env.parent_element.style.width = (2*this.editorBoxSize.width + 8) + 'px'; // 2개 페이지를 나란히 표시할 때의 너비
+		this.client_env.parent_element.style.height = this.editorBoxSize.height + 'px';
 	}
 
 	/*
@@ -69,19 +70,23 @@ export class Context {
 				} 
 			*/       
 	
+			$('#front-page').css('width', this.editorBoxSize.width + 'px');
+			$('#back-page').css('width', this.editorBoxSize.width + 'px');
 			textItems.forEach((textItem) => {
-				let $container = $('<div></div>');
-				$container.text(textItem.var_title + ' : ');
+				let $container = $(`<div><div style="display:inline-block; width: 80px;">${textItem.var_title} </div></div>`);
 	
 				let $input = $('<input></input>');
 				$input.attr('type', 'text');
 				$input.attr('id', textItem.var_id);
 				$input.attr('value', textItem.text);
+				$input.css('width', (this.editorBoxSize.width - 90) + 'px');
+				$input.css('height', '24px');
+				$input.css('margin', '4px 0px');
+				$input.css('border', '1px solid #ddd');
 				
 				$input.on('keypress', function(e) {
 					if (e.which == 13) { // Enter key
-						// 입력된 값을 업데이트한다.
-						_this.onUpdateField($(this).val(), textItem); 
+						_this.onUpdateField($(this).val(), textItem); // 입력된 값을 업데이트한다.
 					}
 				});
 	

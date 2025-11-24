@@ -10,6 +10,10 @@
 	<script src='https://code.jquery.com/jquery-1.12.4.min.js'></script>
 	<!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
 	<style type='text/css'>
+		.section {
+			margin: 20px 0px;
+		}
+
 		.line-head {
 			display: inline-block;
 			width: 110px;
@@ -26,7 +30,6 @@
 
 		#form_fields_container {
 			margin-top: 10px;
-			margin-left: 110px;
 		}
 
 	</style>
@@ -52,7 +55,7 @@
 		</span>
 	</div>
 
-	<div class="my-5">	
+	<div class="section">	
 		<span class='line-head'>프로젝트 :</span>
 		<select id='select-project-id' style='height:26px'>
 			<option >select project id here</option>
@@ -74,13 +77,15 @@
 	</div>
 
 
-	<div style="background-color: #f0f0f0; padding: 10px;">
-		<div id='edicus_container' class='editor-frame'></div>
-	</div>
-
-	<div id='form_fields_container' style="display: flex; gap: 12px;">
-		<div id="front-page"></div>
-		<div id="back-page"></div>
+	<div style="margin-left: 110px; margin-top: 10px;">
+		<div style="background-color: #f0f0f0; padding: 8px;">
+			<div id='edicus_container' class='editor-frame'></div>
+		</div>
+	
+		<div id='form_fields_container' style="display: flex; gap: 8px; padding:8px">
+			<div id="front-page"></div>
+			<div id="back-page"></div>
+		</div>
 	</div>
 </body>
 

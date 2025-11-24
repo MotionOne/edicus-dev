@@ -79,6 +79,8 @@ function createCallback(client_env, context) {
             console.log('ready-to-listen')
         }
         else if (data.action == 'doc-changed') {			
+            context.setupPageSizes(data);
+
             let vdp_catalog = data.info.vdp_catalog;
             if (vdp_catalog) {
                 const varItems = getVariableInfo(vdp_catalog)
@@ -91,7 +93,6 @@ function createCallback(client_env, context) {
                 context.build_form_fields(tnViewCatalog);
             }
 
-            context.setupPageSizes(data, client_env.parent_element);
         }
         else if (data.action === 'open-report' && data.info.status === 'end') { 
             // edicus의 로딩프로그레스가 끝나면 tnview를 보여준다. 대략 1초 기다림.
