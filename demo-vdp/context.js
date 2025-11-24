@@ -102,23 +102,14 @@ export class Context {
 
 	onUpdateField(val, textItem) {
 		console.log('Input updated:', val, textItem);
+		// 입력된 값을 텍스트 필드에 업데이트한다.
 		textItem.text = val;
 	
-		let itemInddex = -1;
-		let pageIndex = this.tnViewCatalog.text_item_cols.findIndex(items => {
-			itemInddex = items.findIndex(item => item.var_id == textItem.var_id);
-			return itemInddex >= 0;
-		});
-	
-		if (pageIndex >= 0) {
-			let memberData = {};
-			// pageIndex 번째 페이지의 모든 텍스트 필드를 순회하며 memberData에 추가한다.
-			this.tnViewCatalog.text_item_cols[pageIndex][itemInddex].text = val;
-			memberData[textItem.var_id] = val;
-	
-			let dataRow = getDataRowForUpdatingTnView(memberData, this.varItems);
-			this.client_env.editor.post_to_tnview('set-data-row', dataRow);  
-		}      
+		// edicus vdp 편집기에서는 일부 텍스트 필드만 업데이트하는 것이 아니라, 모든 텍스트 필드의 값을 업데이트한다.
+		let memberData = {};
+		this.tnViewCatalog.text_item_cols.flat().forEach(item => memberData[item.var_id] = item.text);
+		let dataRow = getDataRowForUpdatingTnView(memberData, this.varItems);
+		this.client_env.editor.post_to_tnview('set-data-row', dataRow);  
 	}
 		
 	removeAllFormFields() {

@@ -104,9 +104,8 @@ export function handle_vdp_catalog(vdp_catalog) {
         photo_item_cols
     };
 }
-/*
-    아래에서 segment값은 제대로 넣어야 함.
-*/
+
+
 export function getDataRowForUpdatingTnView(memberData, varItems) {
     let dataRow = {
         cols: []
