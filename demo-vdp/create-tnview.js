@@ -13,8 +13,7 @@ export function createTnViewProject(client_env, context, obj) {
 		client_env.editor.close({
 			parent_element: client_env.parent_element
 		})
-		context.isProjectOpen = false;
-		context.updateEditorContainerVisibility(client_env.parent_element);
+		context.hideEditor();
 	}
 
 	var params = {
@@ -46,8 +45,7 @@ export function createTnViewProject(client_env, context, obj) {
 	client_env.editor.create_tnview(params, callback)
 	
 	// 프로젝트 열림 상태로 설정
-	context.isProjectOpen = true;
-	context.updateEditorContainerVisibility(client_env.parent_element);
+	context.showEditor();
 }
 
 /**
@@ -103,8 +101,7 @@ export function createCallback(client_env, context) {
             client_env.editor.destroy({
                 parent_element: client_env.parent_element,        
             })
-            context.isProjectOpen = false; 
-            context.updateEditorContainerVisibility(client_env.parent_element);
+            context.hideEditor();
         }
         else if (data.action == 'request-user-token') {
             // Edicus로 부터 user token요청을 받으면 "send-user-token" action으로 대응한다.
@@ -123,8 +120,7 @@ export function createCallback(client_env, context) {
             client_env.editor.destroy({
                 parent_element: client_env.parent_element,        
             })
-            context.isProjectOpen = false; 
-            context.updateEditorContainerVisibility(client_env.parent_element);
+            context.hideEditor();
         }
     }
 }

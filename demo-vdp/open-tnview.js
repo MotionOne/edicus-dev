@@ -15,8 +15,7 @@ import { handle_vdp_catalog, getVariableInfo } from './vdp-catalog.js';
 export function openTnViewProject(client_env, context, ps_code) {
 	const callback = createCallback(client_env, context);
     open_tnview(client_env, context, ps_code, callback);
-    context.isProjectOpen = true;
-    context.updateEditorContainerVisibility(client_env.parent_element);
+    context.showEditor();
 }
 
 
@@ -36,8 +35,7 @@ function open_tnview(client_env, context, ps_code, callback) {
 		editor.close({
 			parent_element: client_env.parent_element
 		})
-		context.isProjectOpen = false;
-		context.updateEditorContainerVisibility(client_env.parent_element);
+		context.hideEditor();
 		context.removeAllFormFields();
 	}
 

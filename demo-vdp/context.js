@@ -125,6 +125,14 @@ export class Context {
 	updateEditorContainerVisibility(parentElement) {
 		parentElement.style.display = this.isProjectOpen ? 'block' : 'none';
 	}
+	showEditor() {
+		this.isProjectOpen = true;
+		this.client_env.parent_element.style.display = 'block';
+	}
+	hideEditor() {
+		this.isProjectOpen = false;
+		this.client_env.parent_element.style.display = 'none';
+	}
 
 	closeEditor(client_env) {
 		client_env.editor.close({

@@ -26,6 +26,7 @@ let client_env = {
 let context = new Context(client_env);
 
 
+// 프로젝트 리스트 배열
 let project_arr = [];
 
 // 이 소스파일 끝에서 onMount()을 호출함.
