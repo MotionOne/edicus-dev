@@ -8,30 +8,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<script src='https://code.jquery.com/jquery-1.12.4.min.js'></script>
-	<style type='text/css'>
-		.section {
-			margin: 20px 0px;
-		}
-
-		.line-head {
-			display: inline-block;
-			width: 110px;
-		} 
-
-		.editor-frame {
-			display: none;
-			position: relative;
-			width: 800px;
-			height: 600px;
-			background-color: #f0f0f0;
-			border: 1px solid #ddd;
-		}   
-
-		#form_fields_container {
-			margin-top: 10px;
-		}
-
-	</style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
 	<!-- Edicus SDK 스크립트 -->
 	<script src='../edicus-sdk-v2.js'></script>	
@@ -39,59 +16,72 @@
 	<script type="module" src='index.js'></script>	
 </head>
 
-<body class="p-4">
-	<h2 class="text-2xl font-bold">Edicus VDP 편집기 테스트 v1.0.0</h2>
-	<div class="section">	
-		<!-- 로그인 및 로그아웃 관련 UI -->
-		<span class='line-head'>로그인 : </span>
-		<span id='login_status' style='display: none;'>
-			<strong id='logged_user_id'></strong>
-			<input type='button' id='btn_user_logout' value='Logout' style='margin-left: 10px;'>
+<body class="p-8 bg-gray-50 text-gray-800 font-sans">
+	<h2 class="text-3xl font-bold mb-8 text-gray-900 border-b pb-4">Edicus VDP 편집기 테스트 v1.0.0</h2>
+	
+    <!-- 로그인 섹션 -->
+	<div class="mb-6 flex items-center">	
+		<span class='inline-block w-[110px] font-semibold text-gray-700'>로그인 </span>
+		
+        <span id='login_status' style='display: none;' class="flex items-center">
+			<strong id='logged_user_id' class="text-blue-700 mr-4"></strong>
+			<input type='button' id='btn_user_logout' value='Logout' class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm cursor-pointer transition">
 		</span>
-		<span id='login_form'>
-			<input type='text' id='input_user_id' value='' placeholder='User ID' style='width: 200px; margin-right: 10px;'>
-			<input type='button' id='btn_user_login' class="bg-sky-500 hover:bg-sky-700 p-2 rounded-md text-white" value='Login'>
+		
+        <span id='login_form' class="flex items-center">
+			<input type='text' id='input_user_id' value='' placeholder='User ID' class="border border-gray-300 rounded px-3 py-1.5 w-48 mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+			<input type='button' id='btn_user_login' class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded text-sm font-medium cursor-pointer transition" value='Login'>
 		</span>
 	</div>
 
-	<div class="section">	
-		<span class='line-head'>프로젝트 :</span>
-		<select id='select-project-id' style='height:26px'>
-			<option >select project id here</option>
-		</select>
-		<input type='button' id='btn_open_tnview' value='열기'>
-		<input type='button' id='btn_delete_project' value='삭제'>
-		<span> (프로젝트 선택후 order 또는 delete 가능)</span>
-		<div id="project_data_table_container" style="margin-top: 10px; margin-left: 110px;">
+    <!-- 프로젝트 관리 섹션 -->
+	<div class="mb-6">	
+		<div class="flex items-center mb-2">
+            <span class='inline-block w-[110px] font-semibold text-gray-700'>프로젝트</span>
+            <select id='select-project-id' class="border border-gray-300 rounded px-2 py-1.5 bg-white mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm min-w-[200px]">
+                <option>select project id here</option>
+            </select>
+            <div class="space-x-1">
+                <input type='button' id='btn_open_tnview' value='열기' class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded text-sm cursor-pointer transition">
+                <input type='button' id='btn_delete_project' value='삭제' class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded text-sm cursor-pointer transition">
+            </div>
+            <span class="text-gray-500 text-xs ml-3">(프로젝트 선택후 order 또는 delete 가능)</span>
+        </div>
+		
+		<div id="project_data_table_container" class="mt-4 ml-[110px]">
 		</div>
 	</div>	
 
-	<hr>
-	<div class="section">
-		<span class='line-head'>상품 생성 : </span>
-		<select id='select-template' style='height:26px; min-width: 200px;'>
+	<hr class="my-6 border-gray-200">
+
+    <!-- 상품 생성 섹션 -->
+	<div class="mb-6 flex items-center">
+		<span class='inline-block w-[110px] font-semibold text-gray-700'>상품 생성 </span>
+		<select id='select-template' class="border border-gray-300 rounded px-2 py-1.5 bg-white mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm min-w-[200px]">
 		</select>
-		<input type='button' id='btn_create_tnview' value='생성'>
+		<input type='button' id='btn_create_tnview' value='생성' class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded text-sm font-medium cursor-pointer transition">
 	</div>
 
-	<div style="margin: 10px 0 10px 110px;">
-		<div style="background-color: #f0f0f0; padding: 8px;">
-			<div id='edicus_container' class='editor-frame'></div>
+    <!-- 에디터 영역 -->
+	<div class="ml-[110px] my-4">
+		<div class="bg-gray-100 p-2 rounded border border-gray-200 inline-block shadow-inner">
+			<div id='edicus_container' class='hidden relative w-[800px] h-[600px] bg-white border border-gray-300 shadow'></div>
 		</div>
 	</div>
 
-	<hr>
-	<div class="section" style="margin-left: 110px;">
-		<div id='form_fields_container' style="display: flex; gap: 8px; padding:8px;">
-			<div id="front-page"></div>
-			<div id="back-page"></div>
+	<hr class="my-6 border-gray-200">
+
+    <!-- 폼 필드 및 하단 버튼 섹션 -->
+	<div class="ml-[110px] mb-10">
+		<div id='form_fields_container' class="flex gap-4 p-4 bg-gray-50 border border-gray-200 rounded-lg mb-4 min-h-[100px]">
+			<div id="front-page" class="flex-1"></div>
+			<div id="back-page" class="flex-1"></div>
 		</div>
-		<div id="btn_list" style="display: none;">
-			<input type='button' id='btn_save_vdp' value='저장하기'>
-			<input type='button' id='btn_close' value='닫기'>
+		<div id="btn_list" style="display: none;" class="mt-4 space-x-2">
+			<input type='button' id='btn_save_vdp' value='저장하기' class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded font-medium cursor-pointer shadow-sm transition">
+			<input type='button' id='btn_close' value='닫기' class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded font-medium cursor-pointer shadow-sm transition">
 		</div>		
 	</div>
 
 </body>
-
 </html>

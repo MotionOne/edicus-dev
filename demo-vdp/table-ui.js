@@ -11,24 +11,14 @@ export function update_project_data_table(project_data) {
 	}
 	
 	var $table = $('<table></table>');
-	$table.css({
-		'border-collapse': 'collapse',
-		'border': '1px solid #ddd',
-		'width': '100%',
-		'max-width': '800px'
-	});
+	$table.addClass('w-full max-w-[800px] border-collapse border border-gray-300 text-sm shadow-sm');
 	
 	// 테이블 헤더
 	var $thead = $('<thead></thead>');
 	var $headerRow = $('<tr></tr>');
 	['Project ID', 'Order ID', 'Status', 'Title', 'Created Time'].forEach(function(header) {
 		var $th = $('<th></th>').text(header);
-		$th.css({
-			'border': '1px solid #ddd',
-			'padding': '8px',
-			'background-color': '#f2f2f2',
-			'text-align': 'left'
-		});
+		$th.addClass('border border-gray-300 p-2 bg-gray-100 text-left font-semibold text-gray-700');
 		$headerRow.append($th);
 	});
 	$thead.append($headerRow);
@@ -54,10 +44,7 @@ export function update_project_data_table(project_data) {
 		ctimeStr
 	].forEach(function(value) {
 		var $td = $('<td></td>').text(value);
-		$td.css({
-			'border': '1px solid #ddd',
-			'padding': '8px'
-		});
+		$td.addClass('border border-gray-300 p-2 text-gray-600 bg-white');
 		$dataRow.append($td);
 	});
 	
@@ -65,4 +52,3 @@ export function update_project_data_table(project_data) {
 	$table.append($tbody);
 	$container.append($table);
 }
-
