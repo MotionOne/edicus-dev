@@ -14,6 +14,25 @@
 	<script src='../edicus-sdk-v2.js'></script>	
 	<!-- 데모 코드 스크립트 -->
 	<script type="module" src='index.js'></script>	
+
+    <style>
+        .btn-custom {
+            background-color: #4B5563; /* bg-gray-600 */
+            color: white; /* text-white */
+            padding: 0.375rem 1rem; /* px-4 py-1.5 */
+            border-radius: 0.25rem; /* rounded */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            cursor: pointer; /* cursor-pointer */
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms; /* transition */
+            border: none;
+        }
+        .btn-custom:hover {
+            background-color: #374151; /* hover:bg-gray-700 */
+        }
+    </style>
 </head>
 
 <body class="p-8 bg-gray-50 text-gray-800 font-sans">
@@ -25,12 +44,12 @@
 		
         <span id='login_status' style='display: none;' class="flex items-center">
 			<strong id='logged_user_id' class="text-blue-700 mr-4"></strong>
-			<input type='button' id='btn_user_logout' value='Logout' class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm cursor-pointer transition">
+			<input type='button' id='btn_user_logout' value='Logout' class="btn-custom">
 		</span>
 		
         <span id='login_form' class="flex items-center">
 			<input type='text' id='input_user_id' value='' placeholder='User ID' class="border border-gray-300 rounded px-3 py-1.5 w-48 mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-			<input type='button' id='btn_user_login' class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded text-sm font-medium cursor-pointer transition" value='Login'>
+			<input type='button' id='btn_user_login' class="btn-custom" value='Login'>
 		</span>
 	</div>
 
@@ -42,8 +61,8 @@
                 <option>select project id here</option>
             </select>
             <div class="space-x-1">
-                <input type='button' id='btn_open_tnview' value='열기' class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded text-sm cursor-pointer transition">
-                <input type='button' id='btn_delete_project' value='삭제' class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded text-sm cursor-pointer transition">
+                <input type='button' id='btn_open_tnview' value='열기' class="btn-custom">
+                <input type='button' id='btn_delete_project' value='삭제' class="btn-custom">
             </div>
             <span class="text-gray-500 text-xs ml-3">(프로젝트 선택후 order 또는 delete 가능)</span>
         </div>
@@ -59,13 +78,13 @@
 		<span class='inline-block w-[110px] font-semibold text-gray-700'>상품 생성 </span>
 		<select id='select-template' class="border border-gray-300 rounded px-2 py-1.5 bg-white mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm min-w-[200px]">
 		</select>
-		<input type='button' id='btn_create_tnview' value='생성' class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded text-sm font-medium cursor-pointer transition">
+		<input type='button' id='btn_create_tnview' value='생성' class="btn-custom">
 	</div>
 
     <!-- 에디터 영역 -->
 	<div class="ml-[110px] my-4">
 		<div class="bg-gray-100 p-2 rounded border border-gray-200 inline-block shadow-inner">
-			<div id='edicus_container' class='hidden relative w-[800px] h-[600px] bg-white border border-gray-300 shadow'></div>
+			<div id='edicus_container' class='hidden relative w-[800px] h-[600px] bg-white shadow'></div>
 		</div>
 	</div>
 
@@ -78,8 +97,8 @@
 			<div id="back-page" class="flex-1"></div>
 		</div>
 		<div id="btn_list" style="display: none;" class="mt-4 space-x-2">
-			<input type='button' id='btn_save_vdp' value='저장하기' class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded font-medium cursor-pointer shadow-sm transition">
-			<input type='button' id='btn_close' value='닫기' class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded font-medium cursor-pointer shadow-sm transition">
+			<input type='button' id='btn_save_vdp' value='저장하기' class="btn-custom">
+			<input type='button' id='btn_close' value='닫기' class="btn-custom">
 		</div>		
 	</div>
 

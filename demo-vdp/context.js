@@ -44,6 +44,8 @@ export class Context {
 		let pages = this.vdpUtil.tnViewCatalog.text_item_cols;
 		let _this = this;
 	
+		$('#form_fields_container').css('width', (2*this.editorBoxSize.width + 24) + 'px');
+
 		pages.forEach((textItems, pageIndex) => {
 			/*
 				type TextItem = {
@@ -55,8 +57,8 @@ export class Context {
 				} 
 			*/       
 	
-			$('#front-page').css('width', this.editorBoxSize.width + 'px');
-			$('#back-page').css('width', this.editorBoxSize.width + 'px');
+			// $('#front-page').css('width', this.editorBoxSize.width + 'px');
+			// $('#back-page').css('width', this.editorBoxSize.width + 'px');
 			textItems.forEach((textItem) => {
 				let $container = $(`<div><div style="display:inline-block; width: 80px;">${textItem.var_title} </div></div>`);
 	
@@ -64,9 +66,10 @@ export class Context {
 				$input.attr('type', 'text');
 				$input.attr('id', textItem.var_id);
 				$input.attr('value', textItem.text);
-				$input.css('width', (this.editorBoxSize.width - 90) + 'px');
+				$input.css('width', (this.editorBoxSize.width - 110) + 'px');
 				$input.css('height', '24px');
 				$input.css('margin', '4px 0px');
+				$input.css('padding', '16px 8px');
 				$input.css('border', '1px solid #ddd');
 				
 				$input.on('keypress', function(e) {

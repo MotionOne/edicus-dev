@@ -93,7 +93,7 @@ function createCallback(context) {
             handleRequestUserToken(context);
         }    
 
-        console.log("=====>", data.action, data.info)
+        // console.log("=====>", data.action, data.info)
     }
 }
 
