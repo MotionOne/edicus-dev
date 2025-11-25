@@ -23,6 +23,11 @@ export let server_env = {
 - 이 파일은 .gitignore에서 버전관리 되지 않도록 제외되어 있습니다. 
 - apiKey가 노출되지 않도록 각별히 주의해야 합니다.
 
+## 의존성
+기능 파악을 목적으로 하기 때문에 모던 프레임워크 사용을 하지 않고 기본적인 라이브러리만 사용합니다.
+- JQuery
+- [tailwindcss](https://tailwindcss.com/) - 컴팩트한 css 처리를 위해 사용
+
 ## http-server로 띄우기
 - 설치 : npm install --global http-server (github: https://github.com/indexzero/http-server)
 - 실행 : http-server -c-1 -p 4300    (local file cache가 되는 것을 막기 위해 argument순서 지킬 것.)
@@ -30,7 +35,7 @@ export let server_env = {
 
 
 ## 테스트 사이트 접속
-- `http://localhost:4300/test.html`
+- `http://localhost:4300`
 
 ## Edicus 문서
 - [Edicus Javascript SDK](https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit?tab=t.0)  
