@@ -107,6 +107,14 @@ export async function tentative_order_project(user_id, project_id, order) {
 	return data.err;
 }    
 
+export async function tentative_order_project_with_vdp(user_id, project_id, order) {
+	console.log(user_id, project_id, order);
+	const url = server_env.apiHost + '/api/projects/' + project_id + '/order/tentative_with_vdp';
+	const additionalHeaders = { 'edicus-uid': user_id };
+	const data = await callEdicusAPIAsync(url, 'POST', additionalHeaders, order);
+	return data.err;
+}
+
 export async function definitive_order_project(user_id, project_id) {
 	console.log(user_id, project_id);
 	const url = server_env.apiHost + '/api/projects/' + project_id + '/order/definitive';

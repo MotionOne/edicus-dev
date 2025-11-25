@@ -15,8 +15,8 @@ export async function on_tentative_order_project(client_env, project_id) {
 
 	var order = {
 		order_for_test: false,
-		order_count: 1,
-		total_price: 23500,
+		order_count: 1,			// 수수료 정산을 위한 데이터이므로 정확히 입력해 주셔야 합니다.
+		total_price: 23500,		// 수수료 정산을 위한 데이터이므로 정확히 입력해 주셔야 합니다.
 		partner_order_id: 'test',
 		order_name: 'test'
 	}

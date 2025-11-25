@@ -3,6 +3,7 @@ import { update_project_data_table } from './table-ui.js';
 import { edicusTemplates } from './edicus-templates.js';
 import * as projectModule from './project.js';
 import { openTnViewProject } from './open-tnview.js';
+import * as orderModule from './order.js';
 import { createTnViewProject } from './create-tnview.js';
 import { Context } from './context.js';
 
@@ -25,11 +26,11 @@ let client_env = {
 
 let context = new Context(client_env);
 
-
 // 프로젝트 리스트 배열
 let project_arr = [];
 
-// 이 소스파일 끝에서 onMount()을 호출함.
+onMount();
+
 async function onMount() {
 	client_env.editor = window.edicusSDK.init({});
     
@@ -47,6 +48,11 @@ function bind_button_events() {
 	$('#btn_create_tnview').click(on_create_tnview);
     $('#btn_save_vdp').click(on_save_vdp);
     $('#btn_close').click(on_close);
+
+    // for order
+	$('#btn_tentative_order_vdp').click(on_tentative_order_with_vdp);
+	$('#btn_definitive_order_project').click(on_definitive_order_project);
+	$('#btn_cancel_order_project').click(on_cancel_order_project);    
 }
 
 
@@ -166,8 +172,23 @@ function populate_template_dropdown() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 주문 처리
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+async function on_tentative_order_with_vdp() {
+	await orderModule.on_tentative_order_with_vdp(context)
+}
+
+async function on_definitive_order_project() {
+	var project_id = get_project_id()
+	await orderModule.on_definitive_order_project(context)
+}
+
+async function on_cancel_order_project() {
+	var project_id = get_project_id()
+	await orderModule.on_cancel_order_project(context, project_arr)
+}	
 
 
-onMount();
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
