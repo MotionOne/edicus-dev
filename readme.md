@@ -30,7 +30,7 @@ export let server_env = {
 
 
 ## 테스트 사이트 접속
-- http://localhost:4300/test.html
+- `http://localhost:4300/test.html`
 
 ## Edicus 문서
 - [Edicus Javascript SDK](https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit?tab=t.0)  
