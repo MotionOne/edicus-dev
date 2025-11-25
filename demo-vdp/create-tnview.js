@@ -73,7 +73,7 @@ export function createCallback(context) {
             handleCreateReportEnd(data);
         }
         else if (data.action === 'save-doc-report' && data.info.status === 'end') {
-            handleSaveDocReportEnd(context, data);
+            handleSaveDocReport(context, data);
         }
         else if (data.action == 'close' || data.action == 'goto-cart') {
             handleCloseOrGotoCart(context);
@@ -87,10 +87,11 @@ export function createCallback(context) {
 // --- Event Handlers ---
 
 function handleCreateReportStart(data) {
-    // 처리 로직 없음
+    // 편집기 생성 초기 단계
 }
 
 function handleDocChanged(context, data) {
+    // 편집기로 부터 vdp관련 변수정보를 전달받는다.
     context.setupPageSizes(data, context.client_env.parent_element);
 
     let vdp_catalog = data.info.vdp_catalog;
@@ -111,24 +112,13 @@ function handleCreateReportEnd(data) {
     // 처리 로직 없음
 }
 
-function handleSaveDocReportEnd(context, data) {
-    // vdp data를 저장해야 함.
-    console.log('vdpUtil.tnViewCatalog: ', context.vdpUtil.tnViewCatalog)
-    
-    let projectUpdateInfo = {
-        vdp: JSON.stringify(context.vdpUtil.tnViewCatalog)
-    }			
-    if (data.info.docInfo.tnUrlList && data.info.docInfo.tnUrlList.length > 0) {
-        projectUpdateInfo.tnUrl = data.info.docInfo.tnUrlList[0]				
-    }			
+function handleSaveDocReport(context, data) {
+    // 저장되는 프로젝트의 여러 정보(썸네일등)를 data로 전달받는다.
+    console.log('handleSaveDocReport', data);
 
-    console.log('projectUpdateInfo: ', projectUpdateInfo)
-    /*
-    await cloudIf.supa.updateCartItem(
-        cartItem.id,
-        projectUpdateInfo)
-    dispatch('saved');
-    */
+    if (data.info.docInfo.tnUrlList && data.info.docInfo.tnUrlList.length > 0) {
+        console.log("대표 썸네일 Url:", data.info.docInfo.tnUrlList[0]);
+    }
 }
 
 function handleCloseOrGotoCart(context) {

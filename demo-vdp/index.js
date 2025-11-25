@@ -33,7 +33,6 @@ let project_arr = [];
 async function onMount() {
 	client_env.editor = window.edicusSDK.init({});
     
-    
     bind_button_events();
     await doUserLogin();
 
@@ -47,6 +46,7 @@ function bind_button_events() {
 	$('#btn_delete_project').click(on_delete_project);
 	$('#btn_create_tnview').click(on_create_tnview);
     $('#btn_save_vdp').click(on_save_vdp);
+    $('#btn_close').click(on_close);
 }
 
 
@@ -70,17 +70,23 @@ async function doUserLogin() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-// TnView 프로젝트 생성 및 열기
+// TnView 프로젝트 생성
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 function on_create_tnview(event) {
 	const selectedIndex = $('#select-template').val();
 	createTnViewProject(context, edicusTemplates[selectedIndex]); // TnView 프로젝트 생성
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+// TnView 프로젝트 열기
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 function on_open_tnview() {
-	openTnViewProject(get_project_id(), context, "90x50@NC"); // TnView 프로젝트 열기
+	openTnViewProject(get_project_id(), context); // TnView 프로젝트 열기
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+// TnView 프로젝트 삭제
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function on_delete_project() {
 	if (context.isProjectOpen) {
 		context.closeEditor();
@@ -101,7 +107,10 @@ function on_save_vdp() {
 	context.saveVdpData();
 }
 
-
+function on_close() {
+	context.closeEditor();
+    context.removeAllFormFields();
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -22,6 +22,7 @@ export class Context {
 		let dataRows = this.vdpStorage.load(this.projectId);
 		this.vdpUtil.loadDataRows(dataRows);
 	}
+
 	/*
 		프로젝트의 페이지 사이즈의 비율에 맞추어 표시 영역의 크기를 설정한다.
 	*/
@@ -106,9 +107,9 @@ export class Context {
 		const el = this.client_env.parent_element;
 		el.style.display = this.isProjectOpen ? 'block' : 'none';
 
-		const btnSave = document.getElementById('btn_save_vdp');
-		if (btnSave) {
-			btnSave.style.display = this.isProjectOpen ? 'inline-block' : 'none';
+		const btnList = document.getElementById('btn_list');
+		if (btnList) {
+			btnList.style.display = this.isProjectOpen ? 'inline-block' : 'none';
 		}
 	}
 
@@ -131,7 +132,7 @@ export class Context {
 	saveVdpData() {
 		let vdpData = this.vdpUtil.getDataRows();
 		this.vdpStorage.save(this.projectId, vdpData); // VDP 데이터는 db에 따로 저장한다.
-		this.client_env.editor.post_to_tnview('save');
+		this.client_env.editor.post_to_tnview('save'); // 편집기의 "save-doc-report" 이벤트가 발생된다.
 	}
 
 	/*

@@ -120,19 +120,12 @@ function handleOpenReport(data) {
 }
 
 async function handleSaveDocReport(data, context) {
-    // save하거나 편집기를 닫으면 호출됨 
+    // 저장되는 프로젝트의 여러 정보(썸네일등)를 data로 전달받는다.
+    console.log('handleSaveDocReport', data);
 
-
-    // let projectUpdateInfo:CartUpdate = {
-    // 	vdpdata: JSON.stringify(context.tnViewCatalog)
-    // }
-    // if (data.info.docInfo.tnUrlList && data.info.docInfo.tnUrlList.length > 0) {
-    // 	projectUpdateInfo.tnUrl = data.info.docInfo.tnUrlList[0]				
-    // }				
-
-    // await cloudIf.supa.updateCartItem(
-    // 	context.projectId,
-    // 	projectUpdateInfo)
+    if (data.info.docInfo.tnUrlList && data.info.docInfo.tnUrlList.length > 0) {
+        console.log("대표 썸네일 Url:", data.info.docInfo.tnUrlList[0]);
+    }
 }
 
 function handleRequestUserToken(context) {
