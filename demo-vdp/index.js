@@ -78,7 +78,7 @@ function on_create_tnview(event) {
 }
 
 function on_open_tnview() {
-	openTnViewProject(get_project_id(),context, "90x50@NC"); // TnView 프로젝트 열기
+	openTnViewProject(get_project_id(), context, "90x50@NC"); // TnView 프로젝트 열기
 }
 
 async function on_delete_project() {

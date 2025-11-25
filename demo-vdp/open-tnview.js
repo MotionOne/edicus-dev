@@ -8,23 +8,21 @@ import * as server from './server.js';
 /**
  * TnView 프로젝트 열기
  * @param {Object} context - Context 객체 (varItems, tnViewCatalog, setupPageSizes, build_form_fields 등 포함)
- * @param {string} ps_code - 제품 코드
  */
-export function openTnViewProject(projectId, context, ps_code) {
+export function openTnViewProject(projectId, context) {
     context.loadVdpData(projectId);
 
 	const callback = createCallback(context);
-    open_tnview(context, ps_code, callback);
+    open_tnview(context, callback);
     context.showEditor();
 }
 
 /**
  * TnView를 엽니다.
  * @param {Object} context - Context 객체 (varItems, tnViewCatalog, setupPageSizes, build_form_fields 등 포함)
- * @param {string} ps_code - 제품 사양 코드 (Product Spec Code)
  * @param {Function} callback - TnView 이벤트 처리를 위한 콜백 함수
  */
-function open_tnview(context, ps_code, callback) {
+function open_tnview(context, callback) {
 
     let { editor } = context.client_env;
 
@@ -41,7 +39,6 @@ function open_tnview(context, ps_code, callback) {
 	let params = {
 		parent_element: context.client_env.parent_element,
 		token: context.client_env.user_token,
-		ps_code: ps_code,
 		prjid: context.projectId,
 		npage: 2,
 		flow: 'horizontal',
