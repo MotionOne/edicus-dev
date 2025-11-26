@@ -27,7 +27,8 @@ export let server_env = {
 - JQuery
 - [tailwindcss](https://tailwindcss.com/) - 컴팩트한 css 처리를 위해 사용
 
-## http-server로 띄우기
+## http-server로 사이트 서비스
+중요 : 이 데모페이지를 public domain으로 서비스 하지 않도록 해야 합니다. (서버측에서 구현되어야 할 코드가 이해를 돕기위해 브라우저단에서 구현되어 있는 관계로 apiKey가 유출될 수 있습니다.)
 - 설치 : `npm install --global http-server` ([http-server github 페이지](https://github.com/http-party/http-server))
 - 실행 : `http-server -c-1 -p 4300`
 - 참고 : 이 프로젝트의 루트 폴더를 웹으로 서비스할 수 있으면 어떤 방법이든 상관없습니다.
