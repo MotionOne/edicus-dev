@@ -99,13 +99,11 @@ async function on_delete_project() {
         context.removeAllFormFields();
 	}
 
-	var project_id = get_project_id()
+	let projectId = get_project_id()
 	// 프로젝트 삭제
-	await projectModule.on_delete_project(client_env, project_id); 
+	await projectModule.on_delete_project(client_env, projectId); 
 	// 프로젝트 목록 갱신
 	await on_get_project_list(null);
-	// 첫 번째 프로젝트 선택
-	project_id = project_arr[0].project_id;
 	on_select_project_id();
 }
 
@@ -147,19 +145,20 @@ async function on_get_project_list(event) {
 }
 
 async function on_select_project_id() {
-	var project_id = get_project_id()
+	let projectId = get_project_id()
+    await refresh_project_data_table(projectId);
+}
 
+async function refresh_project_data_table(projectId) {
 	try {
-		const data = await server.get_project_data(client_env.uid, project_id);
-		console.log('project data: ', data)
-		let project_data = data;
-		update_project_data_table(project_data);
+		const projectData = await server.get_project_data(client_env.uid, projectId);
+		console.log('project data: ', projectData)
+		update_project_data_table(projectData);
 	} catch (err) {
 		console.error('Failed to get project data:', err);
 	}
 
-	// on_get_preview_tn();
-}
+}    
 
 function populate_template_dropdown() {
 	const $select = $('#select-template');
@@ -177,16 +176,18 @@ function populate_template_dropdown() {
 
 async function on_tentative_order_with_vdp() {
 	await orderModule.on_tentative_order_with_vdp(context)
+    await refresh_project_data_table(context.projectId);
 }
 
 async function on_definitive_order_project() {
-	var project_id = get_project_id()
 	await orderModule.on_definitive_order_project(context)
+    await refresh_project_data_table(context.projectId);
 }
 
 async function on_cancel_order_project() {
-	var project_id = get_project_id()
-	await orderModule.on_cancel_order_project(context, project_arr)
+	var project = project_arr.find(function(project) { return project.project_id == context.projectId })
+	await orderModule.on_cancel_order_project(context, project.order_id)
+    await refresh_project_data_table(context.projectId);
 }	
 
 

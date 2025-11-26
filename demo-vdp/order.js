@@ -30,14 +30,14 @@ export async function on_tentative_order_with_vdp(context) {
 	try {
 		const err = await server.tentative_order_project_with_vdp(client_env.uid, projectId, order);
 		if (err == null)
-			alert(`잠정 주문이 완료되었습니다. (project_id: ${projectId})`)
+			alert(`잠정 주문이 완료되었습니다. (projectId: ${projectId})`)
 		else {
 			console.log('order failed: ', err);
-			alert(`잠정 주문이 실패했습니다. (project_id: ${projectId}) ${err.message}`)
+			alert(`잠정 주문이 실패했습니다. (projectId: ${projectId}) ${err.message}`)
 		}
 	} catch (error) {
 		console.error('Failed to order project:', error);
-		alert(`잠정 주문이 실패했습니다. (project_id: ${projectId}) ${error.message}`)
+		alert(`잠정 주문이 실패했습니다. (projectId: ${projectId}) ${error.message}`)
 	}
 }
 
@@ -54,26 +54,24 @@ export async function on_definitive_order_project(context) {
         주문이 성공하면 주문상태가 "ordered" 으로 변경됨.
     */
 	try {
-		const err = await server.definitive_order_project(client_env.uid, project_id);
+		const err = await server.definitive_order_project(client_env.uid, projectId);
 		if (err == null)
-			alert(`확정 주문이 완료되었습니다. (project_id: ${project_id})`)
+			alert(`확정 주문이 완료되었습니다. (projectId: ${projectId})`)
 		else {
 			console.log('order failed: ', err);
-			alert(`확정 주문에 실패했습니다. (project_id: ${project_id}) ${err.message}`)
+			alert(`확정 주문에 실패했습니다. (projectId: ${projectId}) ${err.message}`)
 		}
 	} catch (error) {
 		console.error('Failed to order project:', error);
-		alert(`확정 주문에 실패했습니다. (project_id: ${project_id}) ${error.message}`)
+		alert(`확정 주문에 실패했습니다. (projectId: ${projectId}) ${error.message}`)
 	}
 }
 
 /**
  * 주문 취소 처리
  */
-export async function on_cancel_order_project(context, project_arr) {
+export async function on_cancel_order_project(context, projectOrderId) {
 	const {projectId, client_env} = context;
-
-	var project = project_arr.find(function(project) { return project.project_id == projectId })
 
     /*
         주문상태(order.status)가 "ordering", 즉 잠정 주문 상태인 경우에만 주문 취소 가능.
@@ -81,7 +79,7 @@ export async function on_cancel_order_project(context, project_arr) {
         참고: 확정 주문은 취소가 불가능합니다.
     */
 	try {
-		const err = await server.cancel_order_project(client_env.uid, project.order_id);
+		const err = await server.cancel_order_project(client_env.uid, projectOrderId);
 		if (err == null)
 			alert(`주문이 취소되었습니다. (projectId: ${projectId})`)
 		else {

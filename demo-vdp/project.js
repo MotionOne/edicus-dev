@@ -9,26 +9,26 @@ import * as server from './server.js';
 /**
  * 프로젝트 삭제
  * @param {Object} client_env - 클라이언트 환경 객체
- * @param {string} project_id - 프로젝트 ID
+ * @param {string} projectId - 프로젝트 ID
  */
-export async function on_delete_project(client_env, project_id) {
-	console.log(project_id)
+export async function on_delete_project(client_env, projectId) {
+	console.log(projectId)
 
 	if (window.confirm('프로젝트를 삭제하시겠습니까?') != true)
 		return;
 
 	try {
-		const err = await server.delete_project(client_env.uid, project_id);
+		const err = await server.delete_project(client_env.uid, projectId);
 		if (err == null) {
-			alert('project ' + project_id + ' is deleted.')
+			alert('project ' + projectId + ' is deleted.')
 		}
 		else {
 			console.log('delete failed: ', err);
-			alert("project " + project_id + " delete failed. " + err.message)
+			alert("project " + projectId + " delete failed. " + err.message)
 		}
 	} catch (error) {
 		console.error('Failed to delete project:', error);
-		alert("project " + project_id + " delete failed. " + error.message)
+		alert("project " + projectId + " delete failed. " + error.message)
 	}
 }
 
