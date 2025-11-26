@@ -1,3 +1,8 @@
+
+// 발급받은 partner 코드 (.env.js 파일의 apiKey는 이 partner 코드로 발급받은 키를 사용해야 합니다.)
+export let partner = "sandbox"; 
+
+
 /*
     Edicus 템플릿 목록
 
@@ -10,12 +15,28 @@
     5. ps-codes와 resUri를 복사해서 아래 edicusTemplates에 추가합니다.
 */
 
-// 아래 목록은 sandbox 파트너계정에서 사용할 수 있는 템플릿 목록입니다.
-export let edicusTemplates = [
+export let edicusBasicTemplates = [
+	{
+		ps_code: '90x50@NC',
+		template_uri: 'gcs://template/partners/sandbox/res/template/2704164.json',
+		title: '명함 샘플 1',
+	},
+	{
+		ps_code: '90x50@NC',
+		template_uri: 'gcs://template/partners/sandbox/res/template/2704145.json',
+		title: '명함 샘플 2',
+	},
+	{
+		ps_code: '148x210@NAME-STICKER',
+		template_uri: 'gcs://template/partners/sandbox/res/template/3112918.json',
+		title: '네임스티커 샘플',
+	}
+]
+
+export let edicusVdpTemplates = [
 	{
 		ps_code: '90x50@NC',
 		template_uri: 'gcs://template/partners/sandbox/res/template/3113133.json',
 		title: 'VDP 명함 샘플 1',
 	},
-
 ]

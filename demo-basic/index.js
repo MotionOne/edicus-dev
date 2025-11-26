@@ -6,11 +6,11 @@
  * 
 */
 
+import * as clientEnvData from '../.client-env.js';
 import * as server from './server.js';
 import * as projectModule from './project.js';
 import * as orderModule from './order.js';
 import { update_project_data_table } from './table-ui.js';
-import { edicusTemplates } from './edicus-templates.js';
 
 /*
 	uid 설명
@@ -22,8 +22,8 @@ import { edicusTemplates } from './edicus-templates.js';
 	- uid는 에디쿠스 서버에서 별도의 생성 절차가 없습니다. 해당 uid가 사용한 적이 없으면 내부적으로 계정을 생성하며, 있으면 기존 계정을 사용합니다.
 */
 let client_env = {
-	partner: "sandbox", // 발급받은 partner 코드 (.env.js 파일의 apiKey는 이 partner 코드로 발급받은 키를 사용해야 합니다.)
-	uid: "test-uid-of-sandbox",    
+	partner: clientEnvData.partner,
+	uid: "test-uid-for-basic",    
 	user_token: null,
 	parent_element: document.getElementById("edicus_container"),
 	editor: null,
@@ -110,8 +110,10 @@ async function on_user_login(event) {
 
 		// 로그인 직후 프로젝트 목록 조회
 		await on_get_project_list(null);
-		$('#select-project-id').val(project_arr[0].project_id); // 첫 번째 프로젝트 선택
-		await on_select_project_id();
+		if (project_arr.length > 0) {
+			$('#select-project-id').val(project_arr[0].project_id); // 첫 번째 프로젝트 선택
+			await on_select_project_id();
+		}
 	} catch (err) {
 		console.error('Login failed:', err);
 		alert('로그인에 실패했습니다.');
@@ -119,7 +121,6 @@ async function on_user_login(event) {
 }
 
 function on_user_logout(event) {
-	// client_env.uid = null;
 	client_env.user_token = null;
 	$('#input_user_id').val(client_env.uid);
 	update_login_ui(false);
@@ -280,7 +281,7 @@ function create_product(obj) {
 
 function populate_template_dropdown() {
 	const $select = $('#select-template');
-	edicusTemplates.forEach((template, index) => {
+	clientEnvData.edicusBasicTemplates.forEach((template, index) => {
 		const $option = $('<option></option>');
 		$option.text(template.title);
 		$option.attr('value', index);
@@ -294,7 +295,7 @@ function on_btn_create_one(event) {
 		alert('템플릿을 선택해주세요.');
 		return;
 	}
-	create_product(edicusTemplates[selectedIndex]);
+	create_product(clientEnvData.edicusBasicTemplates[selectedIndex]);
 }
 
 

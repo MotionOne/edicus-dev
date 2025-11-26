@@ -6,11 +6,11 @@
  * 
 */
 
+import * as clientEnvData from '../.client-env.js';
 import * as server from './server.js';
 import * as projectModule from './project.js';
 import * as orderModule from './order.js';
 import { update_project_data_table } from './table-ui.js';
-import { edicusTemplates } from './edicus-templates.js';
 import { openTnViewProject } from './open-tnview.js';
 import { createTnViewProject } from './create-tnview.js';
 import { Context } from './context.js';
@@ -25,8 +25,8 @@ import { Context } from './context.js';
 	- uid는 에디쿠스 서버에서 별도의 생성 절차가 없습니다. 해당 uid가 사용한 적이 없으면 내부적으로 계정을 생성하며, 있으면 기존 계정을 사용합니다.
 */
 let client_env = {
-	partner: "sandbox", // 발급받은 partner 코드 (.env.js 파일의 apiKey는 이 partner 코드로 발급받은 키를 사용해야 합니다.)
-	uid: "vdp-tester-uid-of-sandbox",    
+	partner: clientEnvData.partner,
+	uid: "test-uid-for-vdp",    
 	user_token: null,
 	parent_element: document.getElementById("edicus_container"),
 	editor: null,
@@ -88,7 +88,7 @@ async function doUserLogin() {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 function on_create_tnview(event) {
 	const selectedIndex = $('#select-template').val();
-	createTnViewProject(context, edicusTemplates[selectedIndex]); // TnView 프로젝트 생성
+	createTnViewProject(context, clientEnvData.edicusVdpTemplates[selectedIndex]); // TnView 프로젝트 생성
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -179,7 +179,7 @@ async function refresh_project_data_table(projectId) {
 
 function populate_template_dropdown() {
 	const $select = $('#select-template');
-	edicusTemplates.forEach((template, index) => {
+	clientEnvData.edicusVdpTemplates.forEach((template, index) => {
 		const $option = $('<option></option>');
 		$option.text(template.title);
 		$option.attr('value', index);

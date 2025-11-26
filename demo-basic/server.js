@@ -12,7 +12,7 @@
 /*
     { apiHost, apiKey }를 .env.js 파일에서 가져옵니다.
 */
-import { server_env } from '../.env.js';
+import { server_env } from '../.server-env.js';
 
 /**
  * Edicus API 호출을 위한 공통 함수 (Async/Await 버전)
