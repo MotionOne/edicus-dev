@@ -17,7 +17,7 @@ import { Context } from './context.js';
 	- uid는 에디쿠스 서버에서 별도의 생성 절차가 없습니다. 해당 uid가 사용한 적이 없으면 내부적으로 계정을 생성하며, 있으면 기존 계정을 사용합니다.
 */
 let client_env = {
-	partner: "sandbox", // 에디쿠스 데모용으로만 사용하는 partner 코드
+	partner: "sandbox", // 발급받은 partner 코드 (.env.js 파일의 apiKey는 이 partner 코드로 발급받은 키를 사용해야 합니다.)
 	uid: "vdp-tester-uid-of-sandbox",    
 	user_token: null,
 	parent_element: document.getElementById("edicus_container"),
