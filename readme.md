@@ -28,9 +28,9 @@ export let server_env = {
 - [tailwindcss](https://tailwindcss.com/) - 컴팩트한 css 처리를 위해 사용
 
 ## http-server로 띄우기
-- 설치 : npm install --global http-server (github: https://github.com/indexzero/http-server)
-- 실행 : http-server -c-1 -p 4300    (local file cache가 되는 것을 막기 위해 argument순서 지켜야 합니다.)
-- 참고: 이 프로젝트의 루트 폴더를 웹으로 서비스할 수 있으면 어떤 방법이든 상관없습니다.
+- 설치 : `npm install --global http-server` ([http-server github 페이지](https://github.com/http-party/http-server))
+- 실행 : `http-server -c-1 -p 4300`
+- 참고 : 이 프로젝트의 루트 폴더를 웹으로 서비스할 수 있으면 어떤 방법이든 상관없습니다.
 
 
 ## 테스트 사이트 접속
