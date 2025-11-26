@@ -1,5 +1,5 @@
 
-// 발급받은 partner 코드 (.env.js 파일의 apiKey는 이 partner 코드로 발급받은 키를 사용해야 합니다.)
+// 발급받은 partner 코드 (.server-env.js 파일의 apiKey는 이 partner 코드로 발급받은 키를 사용해야 합니다.)
 export let partner = "sandbox"; 
 
 
