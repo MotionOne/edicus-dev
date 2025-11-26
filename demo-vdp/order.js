@@ -84,7 +84,7 @@ export async function on_cancel_order_project(context, projectOrderId) {
 			alert(`주문이 취소되었습니다. (projectId: ${projectId})`)
 		else {
 			console.log('cancel failed: ', err);
-			alert(`주문 취소에 실패했습니다. (projectId: ${projectId}) ${err.message}`)
+			alert(`주문 취소에 실패했습니다(주문 완료된 프로젝트는 취소할 수 없습니다) (projectId: ${projectId}) ${err.message}`)
 		}
 	} catch (error) {
 		console.error('Failed to cancel order:', error);

@@ -88,7 +88,7 @@ function on_create_tnview(event) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 function on_open_tnview() {
 	let projectId = get_project_id();
-	context.orderId = get_order_id();
+	context.orderId = get_order_id(projectId);
 	openTnViewProject(projectId, context); // TnView 프로젝트 열기
 }
 
@@ -127,8 +127,8 @@ function get_project_id() {
 	return $('#select-project-id option:selected').val()
 }
 
-function get_order_id() {
-	let project = project_arr.find(p => p.project_id === context.projectId);
+function get_order_id(projectId) {
+	let project = project_arr.find(p => p.project_id === projectId);
 	return project ? project.order_id : null;
 }
 
@@ -161,6 +161,7 @@ async function refresh_project_data_table(projectId) {
 		const projectData = await server.get_project_data(client_env.uid, projectId);
 		console.log('project data: ', projectData)
         context.orderId = projectData.order_id;
+		context.setOrderStatus(projectData.status);
 		update_project_data_table(projectData);
 	} catch (err) {
 		console.error('Failed to get project data:', err);

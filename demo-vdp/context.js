@@ -99,6 +99,34 @@ export class Context {
 		let dataRows = this.vdpUtil.getDataRows();
 		this.client_env.editor.post_to_tnview('set-data-row', dataRows);  // edicus tnview에 데이터를 업데이트한다.
 	}
+
+	setOrderStatus(status) {
+		const $container = $('#order_status_container');
+		if (status) {
+			let displayStatus = status;
+			let colorClass = 'text-gray-700';
+			
+			switch(status) {
+				case 'editing':
+					displayStatus = '편집 중 (Editing)';
+					colorClass = 'text-blue-600';
+					break;
+				case 'ordering':
+					displayStatus = '주문 진행 중 (Ordering)';
+					colorClass = 'text-orange-600';
+					break;
+				case 'ordered':
+					displayStatus = '주문 완료 (Ordered)';
+					colorClass = 'text-green-600';
+					break;
+			}
+			
+			$container.text(`프로젝트 상태: ${displayStatus}`);
+			$container.removeClass('text-gray-700 text-blue-600 text-orange-600 text-green-600').addClass(colorClass);
+		} else {
+			$container.empty();
+		}
+	}
 		
 	removeAllFormFields() {
 		$('#front-page').empty();
@@ -107,12 +135,15 @@ export class Context {
 
 	// isProjectOpen 상태에 따라 에디터 컨테이너 표시/숨김 업데이트
 	updateEditorContainerVisibility() {
-		const el = this.client_env.parent_element;
-		el.style.display = this.isProjectOpen ? 'block' : 'none';
-
-		const btnList = document.getElementById('btn_list');
-		if (btnList) {
-			btnList.style.display = this.isProjectOpen ? 'inline-block' : 'none';
+		const container = document.getElementById('formview_container');
+		if (container) {
+			if (this.isProjectOpen) {
+				container.classList.remove('hidden');
+				container.classList.add('flex');
+			} else {
+				container.classList.add('hidden');
+				container.classList.remove('flex');
+			}
 		}
 	}
 
@@ -133,6 +164,10 @@ export class Context {
 	}
 
 	saveVdpData() {
+		if (this.orderId !== null) {
+			alert('주문 상태인 프로젝트는 수정할 수 없습니다.');
+			return;
+		}
 		let vdpData = this.vdpUtil.getDataRows();
 		this.vdpStorage.save(this.projectId, vdpData); // VDP 데이터는 db에 따로 저장한다.
 		this.client_env.editor.post_to_tnview('save'); // 편집기의 "save-doc-report" 이벤트가 발생된다.

@@ -86,35 +86,36 @@
 		<input type='button' id='btn_create_tnview' value='생성' class="btn-custom">
 	</div>
 
-    <!-- 에디터 영역 -->
-	<div class="ml-[110px] my-4">
-		<div class="bg-gray-100 p-2 rounded border border-gray-200 inline-block shadow-inner">
-			<div id='edicus_container' class='hidden relative w-[800px] h-[600px] bg-white shadow'></div>
+	<div id="formview_container" class="hidden fixed inset-0 z-50 bg-gray-900/50 flex justify-center items-center">
+		<div class="bg-white rounded-lg shadow-xl p-6 max-w-[95vw] max-h-[95vh] overflow-auto flex flex-col items-center">
+			<!-- 에디터 영역 -->
+			<div class="bg-gray-100 p-2 rounded border border-gray-200 inline-block shadow-inner mb-4">
+				<div id='edicus_container' class='relative w-[800px] h-[600px] bg-white shadow'></div>
+			</div>
+
+			<!-- 폼 필드 영역 -->
+			<div id='form_fields_container' class="flex gap-4 p-4 bg-gray-50 border border-gray-200 rounded-lg mb-4 min-h-[100px] w-full box-border">
+				<div id="front-page" class="flex-1"></div>
+				<div id="back-page" class="flex-1"></div>
+			</div>
+
+			<div id="order_status_container" class="text-center font-bold text-lg mt-2 min-h-[28px]"></div>
+			
+			<!-- 버튼 영역 -->
+			<div id="btn_list" class="mt-4 ">
+				<div class="inline-block">
+					<div class="space-x-1">
+						<input type='button' id='btn_tentative_order_vdp' value='잠정 주문 (vdp-dataset 포함)' class="btn-custom">
+						<input type='button' id='btn_definitive_order_project' value='확정 주문' class="btn-custom">
+						<input type='button' id='btn_cancel_order_project' value='주문 취소' class="btn-custom">
+					</div>				
+				</div>
+				<div class="inline-block border-l pl-4 ml-3 border-gray-300">
+					<input type='button' id='btn_save_vdp' value='저장하기' class="btn-custom">
+					<input type='button' id='btn_close' value='닫기' class="btn-custom">
+				</div>
+			</div>		
 		</div>
 	</div>
-
-	<hr class="my-6 border-gray-200">
-
-    <!-- 폼 필드 및 하단 버튼 섹션 -->
-	<div class="ml-[110px] mb-10">
-		<div id='form_fields_container' class="flex gap-4 p-4 bg-gray-50 border border-gray-200 rounded-lg mb-4 min-h-[100px]">
-			<div id="front-page" class="flex-1"></div>
-			<div id="back-page" class="flex-1"></div>
-		</div>
-		<div id="btn_list" style="display: none;" class="mt-4 space-x-2">
-			<div class="space-x-1">
-				<input type='button' id='btn_save_vdp' value='저장하기' class="btn-custom">
-				<input type='button' id='btn_close' value='닫기' class="btn-custom">
-			</div>
-			<div>
-				<div class="space-x-1 mt-2">
-					<input type='button' id='btn_tentative_order_vdp' value='잠정 주문 (vdp-dataset 포함)' class="btn-custom">
-					<input type='button' id='btn_definitive_order_project' value='확정 주문' class="btn-custom">
-					<input type='button' id='btn_cancel_order_project' value='주문 취소' class="btn-custom">
-				</div>				
-			</div>
-		</div>		
-	</div>
-
 </body>
 </html>
