@@ -7,6 +7,7 @@ import * as server from './server.js';
  */
 export function createTnViewProject(context, obj) {
 	context.vdpUtil.reset();
+    context.orderId = null;
 
     // 프로젝트가 이미 열려있으면 먼저 닫기
 	if (context.isProjectOpen) {
@@ -105,6 +106,7 @@ function handleDocChanged(context, data) {
 function handleProjectIdCreated(context, data) {
     console.log('project-id-created: ', data.info.project_id)
     context.projectId = data.info.project_id;
+    context.orderId = null;
     // 고객사 DB에 필요한 정보 저장
 }
 

@@ -7,6 +7,7 @@ import * as server from './server.js';
 
 /**
  * TnView 프로젝트 열기
+ * @param {string} projectId - 프로젝트 ID
  * @param {Object} context - Context 객체 (varItems, tnViewCatalog, setupPageSizes, build_form_fields 등 포함)
  */
 export function openTnViewProject(projectId, context) {

@@ -87,7 +87,9 @@ function on_create_tnview(event) {
 // TnView 프로젝트 열기
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 function on_open_tnview() {
-	openTnViewProject(get_project_id(), context); // TnView 프로젝트 열기
+	let projectId = get_project_id();
+	context.orderId = get_order_id();
+	openTnViewProject(projectId, context); // TnView 프로젝트 열기
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -125,6 +127,11 @@ function get_project_id() {
 	return $('#select-project-id option:selected').val()
 }
 
+function get_order_id() {
+	let project = project_arr.find(p => p.project_id === context.projectId);
+	return project ? project.order_id : null;
+}
+
 async function on_get_project_list(event) {
 	try {
 		const data = await server.get_project_list(client_env.uid);
@@ -153,6 +160,7 @@ async function refresh_project_data_table(projectId) {
 	try {
 		const projectData = await server.get_project_data(client_env.uid, projectId);
 		console.log('project data: ', projectData)
+        context.orderId = projectData.order_id;
 		update_project_data_table(projectData);
 	} catch (err) {
 		console.error('Failed to get project data:', err);
@@ -180,13 +188,21 @@ async function on_tentative_order_with_vdp() {
 }
 
 async function on_definitive_order_project() {
+    if (context.orderId === null) {
+        alert('주문번호가 없습니다.');
+        return;
+    }
+
 	await orderModule.on_definitive_order_project(context)
     await refresh_project_data_table(context.projectId);
 }
 
 async function on_cancel_order_project() {
-	var project = project_arr.find(function(project) { return project.project_id == context.projectId })
-	await orderModule.on_cancel_order_project(context, project.order_id)
+    if (context.orderId === null) {
+        alert('주문번호가 없습니다.');
+        return;
+    }
+	await orderModule.on_cancel_order_project(context, context.orderId)
     await refresh_project_data_table(context.projectId);
 }	
 

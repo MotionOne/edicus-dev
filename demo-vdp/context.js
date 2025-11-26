@@ -9,12 +9,12 @@ export class Context {
 	constructor(client_env) {
 		this.client_env = client_env;
 		this.projectId = null;
+		this.orderId = null;
 		this.isProjectOpen = false;
 		this.vdpUtil = new VdpUtil();
-		this.editorBoxSize = {};
 		this.vdpStorage = new VdpStorage();
+		this.editorBoxSize = {};
 	}
-
 
 	loadVdpData(projectId) {
 		this.vdpUtil.reset();
