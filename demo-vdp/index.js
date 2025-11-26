@@ -42,14 +42,24 @@ onMount();
 async function onMount() {
 	client_env.editor = window.edicusSDK.init({});
     
-    bind_button_events();
-    await doUserLogin();
+	// input 필드에 기본 uid 설정
+	$('#input_user_id').val(client_env.uid);
+
+	// 파트너 코드 표시
+	$('#partner_code').text(client_env.partner);
 
 	// 템플릿 목록을 드롭다운에 채우기
 	populate_template_dropdown();    
+
+    bind_button_events();
+    await on_user_login();
+
 }
 
 function bind_button_events() {
+	$('#btn_user_login').click(on_user_login);
+	$('#btn_user_logout').click(on_user_logout);
+
 	$('#select-project-id').change(on_select_project_id);
 	$('#btn_open_tnview').click(on_open_tnview);
 	$('#btn_delete_project').click(on_delete_project);
@@ -63,24 +73,58 @@ function bind_button_events() {
 	$('#btn_cancel_order_project').click(on_cancel_order_project);    
 }
 
+function update_login_ui(is_logged_in) {
+	if (is_logged_in) {
+		$('#logged_user_id').text(client_env.uid);
+		$('#login_status').show();
+		$('#login_form').hide();
+	} else {
+		$('#login_status').hide();
+		$('#login_form').show();
+	}
+}
 
-async function doUserLogin() {
-	$('#input_user_id').val(client_env.uid);
+async function on_user_login(event) {
+	/*  
+		고객사 자체 login이 성공하면 uid를 확보하도록 하고, 
+		이 uid를 이용해 edicus server로 부터 token을 받으면 edicus 사용 준비가 완료됩니다.
+
+		uid 설명
+		- 고객사 server에서 생성하여 edicus에 전달하는 unique id입니다.
+		- edicus 계정과 1:1 대응
+		- 이미 이와 유사한 id가 있으면 아래 제한사항만 만족하면 그대로 써도 됩니다.
+		- 숫자, 알파벳, "-"으로 구성되며, 64자로 제한됩니다.
+	*/
+
+	// input 필드에서 uid 읽어오기
+	var uid = $('#input_user_id').val();
+	if (!uid) {
+		alert('User ID를 입력해주세요.');
+		return;
+	}
+	client_env.uid = uid;
 
 	try {
 		const data = await server.get_custom_token(client_env.uid);
 		client_env.user_token = data.token;
+		update_login_ui(true);
 
 		// 로그인 직후 프로젝트 목록 조회
 		await on_get_project_list(null);
-        if (project_arr.length > 0) {
-		    $('#select-project-id').val(project_arr[0].project_id); // 첫 번째 프로젝트 선택
-		    await on_select_project_id();
-        }
+		if (project_arr.length > 0) {
+			$('#select-project-id').val(project_arr[0].project_id); // 첫 번째 프로젝트 선택
+			await on_select_project_id();
+		}
 	} catch (err) {
 		console.error('Login failed:', err);
 		alert('로그인에 실패했습니다.');
 	}
+}
+
+function on_user_logout(event) {
+	client_env.user_token = null;
+	$('#input_user_id').val(client_env.uid);
+	update_login_ui(false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////

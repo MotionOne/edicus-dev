@@ -32,13 +32,16 @@ let client_env = {
 let project_arr = [];
 let project_data = null;
 
+onMount()
 
-// 이 소스파일 끝에서 init()을 호출함.
-function init() {
+function onMount() {
 	client_env.editor = window.edicusSDK.init({});
 
 	// input 필드에 기본 uid 설정
 	$('#input_user_id').val(client_env.uid);
+
+	// 파트너 코드 표시
+	$('#partner_code').text(client_env.partner);
 
 	// 템플릿 목록을 드롭다운에 채우기
 	populate_template_dropdown();
@@ -297,6 +300,3 @@ function on_btn_create_one(event) {
 	}
 	create_product(clientEnvData.edicusBasicTemplates[selectedIndex]);
 }
-
-
-init();    

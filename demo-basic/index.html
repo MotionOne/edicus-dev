@@ -42,9 +42,15 @@
         </a>
     </div>
 
+    <!-- 파트너 코드 표시 -->
+    <div id="partner_info" class="flex items-center mb-6">
+        <div class='w-[110px] font-semibold text-gray-700'>파트너 코드 </div>
+        <div id='partner_code' class="text-gray-500 text-md"></div>
+    </div>
+
     <!-- 로그인 및 로그아웃 관련 UI -->
     <div class="mb-6 flex items-center">	
-		<span class='inline-block w-[110px] font-semibold text-gray-700'>로그인 : </span>
+		<span class='inline-block w-[110px] font-semibold text-gray-700'>로그인 </span>
 		<span id='login_status' style='display: none;' class="flex items-center">
 			<strong id='logged_user_id' class="text-blue-700 mr-4"></strong>
 			<input type='button' id='btn_user_logout' value='Logout' class="btn-custom">
@@ -58,13 +64,13 @@
 	<hr class="my-6 border-gray-200">
 
 	<div class="mb-6 flex items-center">	
-		<span class='inline-block w-[110px] font-semibold text-gray-700'>옵션 :</span>
+		<span class='inline-block w-[110px] font-semibold text-gray-700'>옵션</span>
 	  <label class="flex items-center cursor-pointer"><input id='checkbox_mobile' type='checkbox' class="mr-2">mobile</label>
 	</div>
 
 	<div class="mb-6">	
         <div class="flex items-center mb-2">
-            <span class='inline-block w-[110px] font-semibold text-gray-700'>프로젝트 :</span>
+            <span class='inline-block w-[110px] font-semibold text-gray-700'>프로젝트</span>
             <select id='select-project-id' class="border border-gray-300 rounded px-2 py-1.5 bg-white mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm min-w-[200px]">
                 <option >select project id here</option>
             </select>
@@ -81,13 +87,13 @@
 	</div>		
 
 	<div class="mb-6">	
-		<span class='inline-block w-[110px] font-semibold text-gray-700'>썸네일  : </span>
+		<span class='inline-block w-[110px] font-semibold text-gray-700'>썸네일 </span>
 		<div id='preview_tn_container' class="mt-2 ml-[110px]"></div>
 	</div>
 
 	<div class="mb-6">	
         <div class="flex items-center">
-            <span class='inline-block w-[110px] font-semibold text-gray-700'>주문 : </span>
+            <span class='inline-block w-[110px] font-semibold text-gray-700'>주문 </span>
             <div class="space-x-1">
                 <input type='button' id='btn_tentative_order_project' value='잠정 주문' class="btn-custom">
                 <input type='button' id='btn_tentative_order_vdp' value='잠정 주문 (vdp-dataset 포함)' class="btn-custom">
