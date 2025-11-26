@@ -1,0 +1,24 @@
+{
+  "name": "edicus-integration-demo",
+  "version": "1.0.0",
+  "description": "Edicus Cloud Editor Integration Demo",
+  "scripts": {
+    "start": "http-server -c-1 -p 4300"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MotionOne/edicus-dev.git"
+  },
+  "keywords": [
+    "edicus",
+    "web-to-print",
+    "editor",
+    "integration",
+    "demo"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
