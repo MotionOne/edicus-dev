@@ -1,9 +1,17 @@
+/**
+ * Edicus Cloud Editor VDP 테스트 모듈
+ * 
+ * @license
+ * Copyright (c) 2025 MoitionOne Corporation Inc.
+ * 
+*/
+
 import * as server from './server.js';
+import * as projectModule from './project.js';
+import * as orderModule from './order.js';
 import { update_project_data_table } from './table-ui.js';
 import { edicusTemplates } from './edicus-templates.js';
-import * as projectModule from './project.js';
 import { openTnViewProject } from './open-tnview.js';
-import * as orderModule from './order.js';
 import { createTnViewProject } from './create-tnview.js';
 import { Context } from './context.js';
 

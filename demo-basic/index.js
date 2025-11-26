@@ -6,23 +6,9 @@
  * 
 */
 
-/*  테스트 방법
-
-	http로 서비스 하기
-	- 4300 port로 test.html을 웹서버로 띄우고 테스트 해야 합니다
-	  
-	http-server로 띄우기 (참고용)
-	- 설치 : npm install --global http-server (github: https://github.com/indexzero/http-server)
-	- 실행 : http-server -c-1 -p 4300 (참고: -c-1 옵션은 cache 비활성화 옵션)
-
-	테스트 사이트 접속
-	- http://localhost:4300/test.html
-*/
-
-
 import * as server from './server.js';
-import * as orderModule from './order.js';
 import * as projectModule from './project.js';
+import * as orderModule from './order.js';
 import { update_project_data_table } from './table-ui.js';
 import { edicusTemplates } from './edicus-templates.js';
 

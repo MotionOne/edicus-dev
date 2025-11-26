@@ -20,7 +20,7 @@ export async function on_tentative_order_with_vdp(context) {
 		order_count: 1,
 		total_price: 23500,
 		partner_order_id: 'abcd1234', // 에디쿠스 주문번호에 대응하는 고객사의 주문번호. 추후 고객사의 주문 추적에 활용됩니다.
-		order_name: '홍길동',
+		order_name: '홍길동',	// 실제 주문자명
 		vdp_dataset: vdp_dataset
 	}
     /*
@@ -81,14 +81,14 @@ export async function on_cancel_order_project(context, projectOrderId) {
 	try {
 		const err = await server.cancel_order_project(client_env.uid, projectOrderId);
 		if (err == null)
-			alert(`주문이 취소되었습니다. (projectId: ${projectId})`)
+			alert(`주문을 취소하였습니다. (projectId: ${projectId})`)
 		else {
 			console.log('cancel failed: ', err);
-			alert(`주문 취소에 실패했습니다(주문 완료된 프로젝트는 취소할 수 없습니다) (projectId: ${projectId}) ${err.message}`)
+			alert(`주문 취소를 실패하였습니다(주문 완료된 프로젝트는 취소할 수 없습니다) (projectId: ${projectId}) ${err.message}`)
 		}
 	} catch (error) {
 		console.error('Failed to cancel order:', error);
-		alert(`주문 취소에 실패했습니다. (projectId: ${projectId}) ${error.message}`)
+		alert(`주문 취소를 실패하였습니다. (projectId: ${projectId}) ${error.message}`)
 	}
 }
 

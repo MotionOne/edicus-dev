@@ -57,8 +57,6 @@ export class Context {
 				} 
 			*/       
 	
-			// $('#front-page').css('width', this.editorBoxSize.width + 'px');
-			// $('#back-page').css('width', this.editorBoxSize.width + 'px');
 			textItems.forEach((textItem) => {
 				let $container = $(`<div><div style="display:inline-block; width: 80px;">${textItem.var_title} </div></div>`);
 	
