@@ -3,7 +3,6 @@
 
 ## 개요
 - edicus편집기 운용방식과 ediusSDK를 사용하는 방법을 파악하기 위한 용도입니다.
-- 이해를 돕기위해 jQuery 이외의 라이브러리는 사용하지 않고 제작되었습니다.
 - 4300 port로 test.html을 웹서버로 서비스 해야 합니다.
 - 실제 데모를 운용해 보기 위해서는 모션원으로부터 apiKey를 발급받아야 합니다.
 
@@ -30,8 +29,8 @@ export let server_env = {
 
 ## http-server로 띄우기
 - 설치 : npm install --global http-server (github: https://github.com/indexzero/http-server)
-- 실행 : http-server -c-1 -p 4300    (local file cache가 되는 것을 막기 위해 argument순서 지킬 것.)
-- 참고: 이 프로젝트의 루트 폴더를 웹으로 서비스할 수 있는 방법이면 어떤 방법이든 상관없습니다.
+- 실행 : http-server -c-1 -p 4300    (local file cache가 되는 것을 막기 위해 argument순서 지켜야 합니다.)
+- 참고: 이 프로젝트의 루트 폴더를 웹으로 서비스할 수 있으면 어떤 방법이든 상관없습니다.
 
 
 ## 테스트 사이트 접속
