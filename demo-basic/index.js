@@ -9,6 +9,7 @@
 import * as clientEnvData from '../.client-env.js';
 import * as server from './server.js';
 import * as projectModule from './project.js';
+import { openEditor } from './open-editor.js';
 import * as orderModule from './order.js';
 import { update_project_data_table } from './table-ui.js';
 import { Context } from './context.js';
@@ -174,7 +175,7 @@ function get_order_id(projectId) {
 
 function on_open_project() {
 	context.mobile = document.querySelector('#checkbox_mobile').checked;
-	projectModule.on_open_project(context);
+	openEditor(context);
 }
 
 async function on_clone_project() {

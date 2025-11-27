@@ -9,70 +9,8 @@ import * as server from './server.js';
  * 프로젝트 열기
  * @param {Object} context - Context 객체
  */
-export function on_open_project(context) {
-    let { editor } = context.client_env;
-	
-	// 프로젝트가 이미 열려있으면 먼저 닫기
-	if (context.isProjectOpen) {
-		console.log('기존 편집기를 닫고 새로운 프로젝트를 엽니다...')
-		context.closeEditor();
-	}
+// export function on_open_project(context) { ... } // Moved to open-editor.js
 
-	var params = {
-		partner: context.client_env.partner,
-		mobile: context.mobile,
-		parent_element: context.client_env.parent_element,
-		token: context.client_env.user_token,
-		prjid: context.projectId,
-		// run_mode: '',
-		// edit_mode: ''
-	}
-	editor.open_project(params, function(err, data) {
-		console.log('callback data: ', data)
-
-		if (data.action == 'close' || data.action == 'goto-cart') {
-			context.closeEditor();
-		}
-		else if (data.action == 'save-doc-report' && data.info.status === 'end') {
-			// 저장직후 여러 결과물을 확인 가능. 
-			/*
-				참고
-					저장직전 : https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#heading=h.t5ibodidcrng
-					저장직후 : https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#heading=h.etcff8vztldb
-			*/
-
-			console.log('[save-doc-report] data.info.docInfo:', data.info.docInfo)
-		}
-		else if (data.action == 'request-help-message') {
-			// mobile모드에서 사진탭의 도움말 버튼을 클릭한 경우 이벤트 발생 (자체 도움 메시지 출력용)
-			/* 참고
-				https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#bookmark=id.k1dp1go7tw63
-			*/
-			if (data.info.case == 'photo-import')
-				alert("received 'request-help-message(photo-import)' action")
-
-		}
-		else if (data.action == 'request-user-token') {
-			// Edicus로 부터 user token요청을 받으면 "send-token" action으로 대응한다.
-			/* 참고
-				https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#heading=h.ctloxkjukfm
-			*/
-			server.get_custom_token(context.client_env.uid).then(data => {
-				context.client_env.user_token = data.token;
-				$('#action-log').text('user token received.')
-
-				let info = {
-					token: data.token
-				}
-				editor.post_to_editor("send-user-token", info)
-			}).catch(err => {
-				console.error('Failed to get custom token:', err);
-			})
-		}
-	})
-
-    context.showEditor();
-}
 
 /**
  * 프로젝트 복제
