@@ -12,15 +12,41 @@
 
 
 ## 사전 작업
-- 프로젝트의 root 폴더에 .env.js 파일을 생성해야 합니다.
+- 프로젝트의 root 폴더에 `.server-env.js`와 `.client-env.js` 파일을 생성해야 합니다.
+- 이 두 파일은 버전관리 되지 않도록 .gitignore에서 등록되어 있습니다. (apiKey가 노출되지 않도록 각별히 주의해야 합니다.)
+- 각 파일은 `.server-env.sample.js`와 `.client-env.sample.js`를 참고 바랍니다. partner코드가 "sandbox"인 경우에 대한 샘플입니다.
 ```javascript
+// .server-env.js
+
+
 export let server_env = {
     apiHost: 'https://api-dot-edicusbase.appspot.com',
 	apiKey: '발급받은 edicus api key를 입력하세요' // 모션원에서 발급받은 api를 입력해야 합니다.
 }
 ```
-- 이 파일은 .gitignore에서 버전관리 되지 않도록 제외되어 있습니다. 
-- apiKey가 노출되지 않도록 각별히 주의해야 합니다.
+
+```javascript
+// .client-env.js
+
+// 발급받은 partner 코드 (.env.js 파일의 apiKey는 이 partner 코드로 발급받은 키를 사용해야 합니다.)
+export let partner = "sandbox"; 
+
+export let edicusBasicTemplates = [
+	{
+		ps_code: '90x50@NC',
+		template_uri: 'gcs://template/partners/sandbox/res/template/2704164.json',
+		title: '명함 샘플 1',
+	},
+]
+
+export let edicusVdpTemplates = [
+	{
+		ps_code: '90x50@NC',
+		template_uri: 'gcs://template/partners/sandbox/res/template/3113133.json',
+		title: 'VDP 명함 샘플 1',
+	},
+]
+```
 
 ## 의존성
 기능 파악을 목적으로 하기 때문에 모던 프레임워크 사용을 하지 않고 기본적인 라이브러리만 사용합니다.
