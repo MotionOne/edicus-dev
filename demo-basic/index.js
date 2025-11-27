@@ -11,6 +11,7 @@ import * as server from './server.js';
 import * as projectModule from './project.js';
 import * as orderModule from './order.js';
 import { update_project_data_table } from './table-ui.js';
+import { Context } from './context.js';
 
 /*
 	uid 설명
@@ -27,14 +28,16 @@ let client_env = {
 	user_token: null,
 	parent_element: document.getElementById("edicus_container"),
 	editor: null,
-	isProjectOpen: false,
 }
+
+let context = null;
 let project_arr = [];
 let project_data = null;
 
 onMount()
 
 function onMount() {
+	context = new Context(client_env);
 	client_env.editor = window.edicusSDK.init({});
 
 	// input 필드에 기본 uid 설정
@@ -66,12 +69,6 @@ function bind_button_events() {
 	$('#btn_cancel_order_project').click(on_cancel_order_project);
 	
 	$('#btn_create_one').click(on_btn_create_one);
-}
-
-
-// isProjectOpen 상태에 따라 에디터 컨테이너 표시/숨김 업데이트
-function updateEditorContainerVisibility() {
-	client_env.parent_element.style.display = client_env.isProjectOpen ? 'block' : 'none';
 }
 
 
@@ -167,36 +164,23 @@ function get_project_id() {
 	return $('#select-project-id option:selected').val()
 }
 
-function close_editor() {
-	client_env.editor.destroy({
-		parent_element: client_env.parent_element
-	})
-	client_env.isProjectOpen = false;
-	updateEditorContainerVisibility();
-}
-
-
 function on_open_project() {
 	var project_id = get_project_id()
 	var mobile = document.querySelector('#checkbox_mobile').checked;
-	projectModule.on_open_project(client_env, project_id, mobile);
-	updateEditorContainerVisibility();
+	projectModule.on_open_project(context, project_id, mobile);
 }
 
 async function on_clone_project() {
 	var project_id = get_project_id()
-	await projectModule.on_clone_project(client_env, project_id);
+	await projectModule.on_clone_project(context, project_id);
 	await on_get_project_list(null);
 }
 
 async function on_delete_project() {
-	if (client_env.isProjectOpen) {
-		close_editor();
-	}
-
-	var project_id = get_project_id()
 	// 프로젝트 삭제
-	await projectModule.on_delete_project(client_env, project_id); 
+    // on_delete_project in project.js now handles closing if open
+	var project_id = get_project_id()
+	await projectModule.on_delete_project(context, project_id); 
 	// 프로젝트 목록 갱신
 	await on_get_project_list(null);
 	// 첫 번째 프로젝트 선택
@@ -231,12 +215,8 @@ async function on_cancel_order_project() {
 
 function create_product(obj) {
 	// 프로젝트가 이미 열려있으면 먼저 닫기
-	if (client_env.isProjectOpen) {
-		client_env.editor.close({
-			parent_element: client_env.parent_element
-		})
-		client_env.isProjectOpen = false;
-		updateEditorContainerVisibility();
+	if (context.isProjectOpen) {
+		context.closeEditor();
 	}
 
 	var mobile = document.querySelector('#checkbox_mobile').checked;
@@ -256,11 +236,7 @@ function create_product(obj) {
 			console.log('project-id-created: ', data.project_id)
 		}
 		else if (data.action == 'close' || data.action == 'goto-cart') {
-			client_env.editor.destroy({
-				parent_element: client_env.parent_element,        
-			})
-			client_env.isProjectOpen = false; 
-			updateEditorContainerVisibility();
+			context.closeEditor();
 		}
 		else if (data.action == 'request-user-token') {
 			// Edicus로 부터 user token요청을 받으면 "send-user-token" action으로 대응한다.
@@ -277,9 +253,7 @@ function create_product(obj) {
 		}
 	})
 	
-	// 프로젝트 열림 상태로 설정
-	client_env.isProjectOpen = true;
-	updateEditorContainerVisibility();
+	context.showEditor();
 }
 
 function populate_template_dropdown() {

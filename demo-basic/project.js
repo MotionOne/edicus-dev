@@ -7,28 +7,25 @@ import * as server from './server.js';
 
 /**
  * 프로젝트 열기
- * @param {Object} client_env - 클라이언트 환경 객체
+ * @param {Object} context - Context 객체
  * @param {string} project_id - 프로젝트 ID
  */
-export function on_open_project(client_env, project_id, mobile = false) {
-    let { editor } = client_env;
+export function on_open_project(context, project_id, mobile = false) {
+    let { editor } = context.client_env;
 	
 	// 프로젝트가 이미 열려있으면 먼저 닫기
-	if (client_env.isProjectOpen) {
+	if (context.isProjectOpen) {
 		console.log('기존 편집기를 닫고 새로운 프로젝트를 엽니다...')
-		editor.destroy({
-			parent_element: client_env.parent_element
-		})
-		client_env.isProjectOpen = false;
+		context.closeEditor();
 	}
 
 	console.log(project_id)
 	
 	var params = {
-		partner: client_env.partner,
+		partner: context.client_env.partner,
 		mobile: mobile,
-		parent_element: client_env.parent_element,
-		token: client_env.user_token,
+		parent_element: context.client_env.parent_element,
+		token: context.client_env.user_token,
 		prjid: project_id,
 		// run_mode: '',
 		// edit_mode: ''
@@ -37,11 +34,7 @@ export function on_open_project(client_env, project_id, mobile = false) {
 		console.log('callback data: ', data)
 
 		if (data.action == 'close' || data.action == 'goto-cart') {
-			editor.close({
-				parent_element: client_env.parent_element
-			})
-			client_env.isProjectOpen = false;
-			client_env.parent_element.style.display = 'none';
+			context.closeEditor();
 		}
 		else if (data.action == 'save-doc-report' && data.info.status === 'end') {
 			// 저장직후 여러 결과물을 확인 가능. 
@@ -67,8 +60,8 @@ export function on_open_project(client_env, project_id, mobile = false) {
 			/* 참고
 				https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit#heading=h.ctloxkjukfm
 			*/
-			server.get_custom_token(client_env.uid).then(data => {
-				client_env.user_token = data.token;
+			server.get_custom_token(context.client_env.uid).then(data => {
+				context.client_env.user_token = data.token;
 				$('#action-log').text('user token received.')
 
 				let info = {
@@ -81,23 +74,22 @@ export function on_open_project(client_env, project_id, mobile = false) {
 		}
 	})
 
-    client_env.isProjectOpen = true;
-    client_env.parent_element.style.display = 'block';
+    context.showEditor();
 }
 
 /**
  * 프로젝트 복제
- * @param {Object} client_env - 클라이언트 환경 객체
+ * @param {Object} context - Context 객체
  * @param {string} project_id - 프로젝트 ID
  */
-export async function on_clone_project(client_env, project_id) {
+export async function on_clone_project(context, project_id) {
 	console.log(project_id)
 
 	if (window.confirm('프로젝트를 복제하시겠습니까?') != true)
 		return;
 
 	try {
-		const result = await server.clone_project(client_env.uid, project_id);
+		const result = await server.clone_project(context.client_env.uid, project_id);
 		if (result) {
 			alert("cloned project: " + result.project_id)
 		}
@@ -113,17 +105,21 @@ export async function on_clone_project(client_env, project_id) {
 
 /**
  * 프로젝트 삭제
- * @param {Object} client_env - 클라이언트 환경 객체
+ * @param {Object} context - Context 객체
  * @param {string} project_id - 프로젝트 ID
  */
-export async function on_delete_project(client_env, project_id) {
+export async function on_delete_project(context, project_id) {
 	console.log(project_id)
 
 	if (window.confirm('프로젝트를 삭제하시겠습니까?') != true)
 		return;
 
+    if (context.isProjectOpen) {
+		context.closeEditor();
+	}
+
 	try {
-		const err = await server.delete_project(client_env.uid, project_id);
+		const err = await server.delete_project(context.client_env.uid, project_id);
 		if (err == null) {
 			alert('project ' + project_id + ' is deleted.')
 		}
