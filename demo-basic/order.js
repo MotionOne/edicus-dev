@@ -10,7 +10,8 @@ import * as server from './server.js';
  * - 사용자는 편집기를 열더라도 편집 내용을 저장할 수 없습니다. 
  * - 잠정주문 상태가 되면 주문상태가 "ordering" 으로 변경됨.
  */
-export async function on_tentative_order_project(client_env, project_id) {
+export async function on_tentative_order_project(context) {
+	const { client_env, projectId: project_id } = context;
 	console.log(project_id)
 
 	var order = {
@@ -35,54 +36,13 @@ export async function on_tentative_order_project(client_env, project_id) {
 }
 
 /**
- * VDP 데이터셋을 포함한 잠정 주문 처리
- */
-export async function on_tentative_order_with_vdp(client_env, project_id) {
-	console.log(project_id)
-
-	// dataset of "variable data printing" mode
-	var vdp_dataset = {
-		rows: [{
-			cols: [{id:'name', value:'정 진 수'}, {id:'title-role', value:'영업 이사'}]
-		}, {
-			cols: [{id:'name', value:'이 정 민'}, {id:'title-role', value:'마케팅 부장'}]
-		}, {
-			cols: [{id:'name', value:'김 준 호'}, {id:'title-role', value:'개발 부장'}]
-		}]		
-	}
-	var order = {
-		order_for_test: false,		// default:false
-		order_count: 1,
-		total_price: 23500,
-		partner_order_id: 'test',
-		order_name: 'test',
-		vdp_dataset: vdp_dataset
-	}
-    /*
-        주문상태(order.status)가 "editing" 인 경우에만 잠정 주문 가능.
-        주문이 성공하면 주문상태가 "ordering" 으로 변경됨.
-    */
-	try {
-		const err = await server.tentative_order_project(client_env.uid, project_id, order);
-		if (err == null)
-			alert(`잠정 주문이 완료되었습니다. (project_id: ${project_id})`)
-		else {
-			console.log('order failed: ', err);
-			alert(`잠정 주문이 실패했습니다. (project_id: ${project_id}) ${err.message}`)
-		}
-	} catch (error) {
-		console.error('Failed to order project:', error);
-		alert(`잠정 주문이 실패했습니다. (project_id: ${project_id}) ${error.message}`)
-	}
-}
-
-/**
  * 확정 주문 처리
  * - 확정주문 상태가 되면 취소 불가능한 주문상태가 됩니다. 
  * - 생산파일(pdf나 jpg등) 렌더링을 하게 되며 렌더링이 완료되믄 생산파일을 다운로드 할 수 있습니다.
  * - 확정주문 상태가 되면 주문상태가 "ordered" 으로 변경됨.
  */
-export async function on_definitive_order_project(client_env, project_id) {
+export async function on_definitive_order_project(context) {
+	const { client_env, projectId: project_id } = context;
     /*
         주문상태(order.status)가 "ordering" 인 경우에만 확정 주문 가능.
         주문이 성공하면 주문상태가 "ordered" 으로 변경됨.
@@ -104,10 +64,8 @@ export async function on_definitive_order_project(client_env, project_id) {
 /**
  * 주문 취소 처리
  */
-export async function on_cancel_order_project(client_env, project_arr, project_id) {
-	// console.log(project_id)
-
-	var project = project_arr.find(function(project) { return project.project_id == project_id })
+export async function on_cancel_order_project(context, projectOrderId) {
+	const { client_env, projectId: project_id } = context;
 
     /*
         주문상태(order.status)가 "ordering", 즉 잠정 주문 상태인 경우에만 주문 취소 가능.
@@ -115,7 +73,7 @@ export async function on_cancel_order_project(client_env, project_arr, project_i
         참고: 확정 주문은 취소가 불가능합니다.
     */
 	try {
-		const err = await server.cancel_order_project(client_env.uid, project.order_id);
+		const err = await server.cancel_order_project(client_env.uid, projectOrderId);
 		if (err == null)
 			alert(`주문이 취소되었습니다. (project_id: ${project_id})`)
 		else {
@@ -127,4 +85,3 @@ export async function on_cancel_order_project(client_env, project_arr, project_i
 		alert(`주문 취소에 실패했습니다. (project_id: ${project_id}) ${error.message}`)
 	}
 }
-

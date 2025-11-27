@@ -7,6 +7,7 @@ export class Context {
 		this.client_env = client_env;
 		this.projectId = null;
 		this.isProjectOpen = false;
+        this.mobile = false;
 	}
 
 	// isProjectOpen 상태에 따라 에디터 컨테이너 표시/숨김 업데이트

@@ -64,7 +64,6 @@ function bind_button_events() {
 	$('#btn_delete_project').click(on_delete_project);
 	
 	$('#btn_tentative_order_project').click(on_tentative_order_project);
-	$('#btn_tentative_order_vdp').click(on_tentative_order_with_vdp);
 	$('#btn_definitive_order_project').click(on_definitive_order_project);
 	$('#btn_cancel_order_project').click(on_cancel_order_project);
 	
@@ -146,71 +145,73 @@ async function on_get_project_list(event) {
 }
 
 async function on_select_project_id() {
-	var project_id = get_project_id()
+	context.projectId = get_project_id();
+	context.orderId = get_order_id(context.projectId);
 
+	refresh_project_data_table(context.projectId);
+	on_get_preview_tn();
+}
+
+async function refresh_project_data_table(projectId) {
 	try {
-		const data = await server.get_project_data(client_env.uid, project_id);
-		console.log('project data: ', data)
-		project_data = data;
-		update_project_data_table(project_data);
+		const projectData = await server.get_project_data(client_env.uid, projectId);
+		// console.log('project data: ', projectData)
+        context.orderId = projectData.order_id;
+		update_project_data_table(projectData);
 	} catch (err) {
 		console.error('Failed to get project data:', err);
 	}
-
-	on_get_preview_tn();
-}
+}    
 
 function get_project_id() {
 	return $('#select-project-id option:selected').val()
 }
 
+function get_order_id(projectId) {
+	let project = project_arr.find(p => p.project_id === projectId);
+	return project ? project.order_id : null;
+}
+
 function on_open_project() {
-	var project_id = get_project_id()
-	var mobile = document.querySelector('#checkbox_mobile').checked;
-	projectModule.on_open_project(context, project_id, mobile);
+	context.mobile = document.querySelector('#checkbox_mobile').checked;
+	projectModule.on_open_project(context);
 }
 
 async function on_clone_project() {
-	var project_id = get_project_id()
-	await projectModule.on_clone_project(context, project_id);
+	await projectModule.on_clone_project(context);
 	await on_get_project_list(null);
 }
 
 async function on_delete_project() {
-	// 프로젝트 삭제
-    // on_delete_project in project.js now handles closing if open
-	var project_id = get_project_id()
-	await projectModule.on_delete_project(context, project_id); 
+	await projectModule.on_delete_project(context); 
 	// 프로젝트 목록 갱신
 	await on_get_project_list(null);
 	// 첫 번째 프로젝트 선택
-	project_id = project_arr[0].project_id;
+	context.projectId = project_arr[0].project_id;
 	on_select_project_id();
 }
 
 async function on_get_preview_tn() {
-	var project_id = get_project_id()
-	await projectModule.on_get_preview_tn(project_id);
+	await projectModule.on_get_preview_tn(context.projectId);
 }
 
 async function on_tentative_order_project() {
-	var project_id = get_project_id()
-	await orderModule.on_tentative_order_project(client_env, project_id)
-}
-
-async function on_tentative_order_with_vdp() {
-	var project_id = get_project_id()
-	await orderModule.on_tentative_order_with_vdp(client_env, project_id)
+	await orderModule.on_tentative_order_project(context)
+	await refresh_project_data_table(context.projectId);
 }
 
 async function on_definitive_order_project() {
-	var project_id = get_project_id()
-	await orderModule.on_definitive_order_project(client_env, project_id)
+	await orderModule.on_definitive_order_project(context)
+	await refresh_project_data_table(context.projectId);
 }
 
 async function on_cancel_order_project() {
-	var project_id = get_project_id()
-	await orderModule.on_cancel_order_project(client_env, project_arr, project_id)
+	if (context.orderId === null) {
+        alert('주문번호가 없습니다.');
+        return;
+    }
+	await orderModule.on_cancel_order_project(context, context.orderId)
+	await refresh_project_data_table(context.projectId);
 }	
 
 function create_product(obj) {

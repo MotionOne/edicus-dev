@@ -218,7 +218,6 @@ async function refresh_project_data_table(projectId) {
 	} catch (err) {
 		console.error('Failed to get project data:', err);
 	}
-
 }    
 
 function populate_template_dropdown() {
