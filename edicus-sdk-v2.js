@@ -1,10 +1,11 @@
 /*
 	DEVELOPER NOTICE
-	- valila javascript 구문만 사용할 것. (ES6구문 사용 금지)
-	- IE11등 하위 호환성을 위해.
-	- 금지 대상 : let, =>, 등
+	
+	이 파일은 Edicus Editor를 연동하기 위한 클라이언트 사이드 SDK입니다.
+	이 코드를 임의로 수정할 경우, 편집기 연동에 문제가 발생할 수 있습니다.
+	최신 버전의 SDK 사용을 권장하며, 문의사항은 기술지원팀에 연락 바랍니다.
 
-	polyfill.js를 통해 Array의 forEAch(), find()추가 하였음.
+	Copyright (c) MotionOne Inc. All rights reserved.
 */
 
 window.edicusSDK = { ver: '2.0.3' }
@@ -37,7 +38,6 @@ window.edicusSDK._create_context = function(config) {
 window.edicusSDK.init = function(config) {
     var ctx = window.edicusSDK._create_context(config);
 
-	// addEventListener는 IE11부터 사용가능. 이전은 attachEvent임
 	ctx.messageListener = function(event) {		
 		// console.log('received from iframe : ', event);
 		/*	iframe내의 editor가 window.parent.postMessage()을 통해 message를 리턴하면,
