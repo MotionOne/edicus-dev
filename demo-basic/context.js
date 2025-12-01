@@ -29,7 +29,7 @@ export class Context {
 
 	closeEditor() {
 		if (this.client_env.editor) {
-			this.client_env.editor.destroy({
+			this.client_env.editor.close({
 				parent_element: this.client_env.parent_element
 			})
 		}
