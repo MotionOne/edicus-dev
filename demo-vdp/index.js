@@ -181,7 +181,7 @@ function get_project_id() {
 
 function get_order_id(projectId) {
 	let project = project_arr.find(p => p.project_id === projectId);
-	return project ? project.order_id : null;
+	return project?.order_id || null;
 }
 
 async function on_get_project_list(event) {
