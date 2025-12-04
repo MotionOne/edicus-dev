@@ -66,3 +66,17 @@ export let edicusVdpTemplates = [
 ## Edicus 문서
 - [Edicus Javascript SDK](https://docs.google.com/document/d/1buvh-TjQtAqddAD4-QFxBHKFDESRxInsxFcViuEwNZc/edit?tab=t.0)  
 - [Edicus Server API](https://docs.google.com/document/d/1OhWdgv9Sz8By4N48eY0uO_84M3keLVQvdpdpK9u_3bA/edit?tab=t.0#)
+
+## 화면 캡쳐
+기본 편집기 데모
+
+![screen](./screenshots/editor-basic-page.png)
+
+편집기
+
+![screen](./screenshots/editor-basic-editor.png)
+
+
+VDP 편집기 데모
+
+![screen](./screenshots/editor-vdp.png)
