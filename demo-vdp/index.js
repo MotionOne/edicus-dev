@@ -47,7 +47,11 @@ async function onMount() {
 
 	// 파트너 코드 표시
 	$('#partner_code').text(client_env.partner);
-
+	// "sandbox" 파트너 코드인 경우 테스트용 코드임을 표시
+	if (client_env.partner === 'sandbox') {
+		$('#partner_code').append('<span class="ml-2 text-blue-500 text-sm">(테스트용 파트너 코드 입니다. 만약 발급받은 코드가 있으면 그것을 사용하세요.)</span>');
+	}
+	
 	// 템플릿 목록을 드롭다운에 채우기
 	populate_template_dropdown();    
 
