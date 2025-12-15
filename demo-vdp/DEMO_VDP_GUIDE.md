@@ -147,3 +147,4 @@ export async function tentative_order_project_with_vdp(user_id, project_id, orde
 *   **API 명세서**: 소스 코드 내 주석의 Google Docs 링크 참조.
 *   **VDP 데이터 구조**: `vdp-util.js` 및 `vdp_catalog` 데이터 구조를 참고하여 데이터 매핑 로직을 이해하세요.
 
+

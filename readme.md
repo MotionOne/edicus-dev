@@ -50,8 +50,8 @@ export let edicusVdpTemplates = [
 
 ## 데모별 가이드
 
-- [Edicus Basic Demo Guide](./DEMO_BASIC_GUIDE.md)
-- [Edicus VDP Demo Guide](./DEMO_VDP_GUIDE.md)
+- [Edicus Basic Demo Guide](./demo-basic/DEMO_BASIC_GUIDE.md)
+- [Edicus VDP Demo Guide](./demo-vdp/DEMO_VDP_GUIDE.md)
 
 ## 의존성
 기능 파악을 목적으로 하기 때문에 모던 프레임워크 사용을 하지 않고 기본적인 라이브러리만 사용합니다.
