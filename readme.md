@@ -1,4 +1,4 @@
-# Edicus Cloud Editor / Site Integration Test
+# Edicus Cloud Editor 데모 코드
 에디쿠스 편집기 데모 페이지입니다. 
 
 ## 개요
@@ -48,10 +48,11 @@ export let edicusVdpTemplates = [
 ]
 ```
 
-## 데모별 가이드
+## 가이드 문서
 
-- [Edicus Basic Demo Guide](./demo-basic/readme.md)
-- [Edicus VDP Demo Guide](./demo-vdp/readme.md)
+- [Edicus 기본 편집기 데모 가이드](./demo-basic/readme.md)
+- [Edicus VDP 데모 가이드](./demo-vdp/readme.md)
+- [주문 프로세스 가이드](./ORDER_PROCESS.md)
 
 ## 의존성
 기능 파악을 목적으로 하기 때문에 모던 프레임워크 사용을 하지 않고 기본적인 라이브러리만 사용합니다.
