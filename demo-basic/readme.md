@@ -136,7 +136,7 @@ export function openEditor(context) {
         // 이벤트 처리 (저장, 종료 등)
         if (data.action === 'close') {
             context.closeEditor();
-        } else if (data.action === 'save-doc-report') {
+        } else if (data.action === 'save-doc-report' && data.info.status === 'end') {
             console.log('저장 완료:', data);
         }
     });
