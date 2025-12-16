@@ -1,6 +1,6 @@
 # Edicus 주문 프로세스 가이드
 
-이 문서는 Edicus SDK를 이용한 인쇄물 편집 및 주문 시스템의 라이프사이클을 설명합니다. 주문 프로세스는 크게 **잠정 주문(Tentative Order)**과 **확정 주문(Definitive Order)**의 두 가지 핵심 단계를 거쳐 완료됩니다.
+이 문서는 Edicus SDK를 이용한 인쇄물 편집 및 주문 시스템의 라이프사이클을 설명합니다. 주문 프로세스는 크게 <strong>잠정 주문(Tentative Order)</strong>과 <strong>확정 주문(Definitive Order)</strong>의 두 가지 핵심 단계를 거쳐 완료됩니다.
 
 ## 주문 상태 흐름도 (Lifecycle)
 
