@@ -55,7 +55,7 @@ export let edicusVdpTemplates = [
 - [주문 프로세스 가이드](./ORDER_PROCESS.md)
 
 ## 의존성
-기능 파악을 목적으로 하기 때문에 모던 프레임워크 사용을 하지 않고 기본적인 라이브러리만 사용합니다.
+기능 파악을 목적으로 하기 때문에 아래 라이브러리만 사용합니다.
 - JQuery
 - [tailwindcss](https://tailwindcss.com/) - 컴팩트한 css 처리를 위해 사용
 
